@@ -3,6 +3,7 @@ import {RGBColor, SketchPicker} from 'react-color'
 import styled from "styled-components";
 
 export interface ColourPickerProps {
+    colour: RGBColor,
     onSelect: (colour: RGBColor) => void;
 }
 
@@ -14,15 +15,16 @@ const Container = styled.div`
   }
 `
 
-export function ColourPicker({ onSelect }: ColourPickerProps) {
-    const [ colour, setColour ] = useState({r: 100, g: 40, b: 120} as RGBColor)
+export function ColourPicker(props: ColourPickerProps) {
+    const [ activeColour, setActiveColour ] = useState(props.colour as RGBColor)
+
     return (
         <Container>
             <SketchPicker
                 width='auto'
-                color={colour}
-                onChange={color => setColour(color.rgb)}
-                onChangeComplete={color => onSelect(color.rgb)}
+                color={activeColour}
+                onChange={color => setActiveColour(color.rgb)}
+                onChangeComplete={color => props.onSelect(color.rgb)}
             />
         </Container>
     )

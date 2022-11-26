@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from "styled-components";
-import {ColourPicker} from "./components/colour-picker/ColourPicker";
 import {ColourGuesser} from "./features/colour-guesser/ColourGuesser";
 
 const Header = styled.h1`
