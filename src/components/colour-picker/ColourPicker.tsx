@@ -4,7 +4,8 @@ import styled from "styled-components";
 
 const Container = styled.div`
   text-align: center;
-  .div {
+  .sketch-picker {
+    width: 100%;
     margin: auto;
   }
 `
@@ -14,6 +15,7 @@ export function ColourPicker() {
     return (
         <Container>
             <SketchPicker
+                width='auto'
                 color={colour}
                 onChange={color => setColour(color.rgb)}
             />
