@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from "styled-components";
+import {ColourPicker} from "./components/colour-picker/ColourPicker";
 
 const Header = styled.h1`
   text-align: center;
@@ -18,7 +19,7 @@ const Section = styled.div`
   display: inline-block;
   left: 0;
   right: 0;
-  padding: 0 10px;
+  padding: 0 10px 20px 10px;
   text-align: center;
 `
 
@@ -26,18 +27,18 @@ const SectionHeader = styled.h4`
     margin: 10px 0;
 `
 
-function App() {
+export function App() {
   return (
       <>
           <Header>Prismatic</Header>
           <Main>
               <Section>
                   <SectionHeader>Colour Picker</SectionHeader>
-                  <p>Hello world</p>
+                  <ColourPicker/>
               </Section>
               <Section>
                   <SectionHeader>Response View</SectionHeader>
-                  <p>Hello world</p>
+
               </Section>
               <Section>
                   <SectionHeader>Debug Info</SectionHeader>
@@ -47,5 +48,3 @@ function App() {
       </>
   );
 }
-
-export default App;
