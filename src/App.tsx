@@ -28,23 +28,22 @@ const SectionHeader = styled.h4`
 `
 
 export function App() {
-  return (
-      <>
-          <Header>Prismatic</Header>
-          <Main>
-              <Section>
-                  <SectionHeader>Colour Picker</SectionHeader>
-                  <ColourPicker/>
-              </Section>
-              <Section>
-                  <SectionHeader>Response View</SectionHeader>
-
-              </Section>
-              <Section>
-                  <SectionHeader>Debug Info</SectionHeader>
-                  <p>Hello world</p>
-              </Section>
-          </Main>
-      </>
-  );
+    return (
+        <>
+            <Header>Prismatic</Header>
+            <Main>
+                <Section>
+                    <SectionHeader>Colour Picker</SectionHeader>
+                    <ColourPicker/>
+                </Section>
+                <Section>
+                    <SectionHeader>Response View</SectionHeader>
+                </Section>
+                <Section>
+                    <SectionHeader>Debug Info</SectionHeader>
+                    <p>Hello world</p>
+                </Section>
+            </Main>
+        </>
+    );
 }

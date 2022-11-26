@@ -1,4 +1,5 @@
-import { SketchPicker } from 'react-color'
+import React, { useState } from 'react';
+import {RGBColor, SketchPicker} from 'react-color'
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -9,10 +10,13 @@ const Container = styled.div`
 `
 
 export function ColourPicker() {
+    const [ colour, setColour ] = useState({r: 100, g: 40, b: 120} as RGBColor)
     return (
         <Container>
-            <SketchPicker/>
+            <SketchPicker
+                color={colour}
+                onChange={color => setColour(color.rgb)}
+            />
         </Container>
     )
-
 }
