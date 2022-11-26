@@ -1,40 +1,59 @@
 import styled from "styled-components";
 import {ColourPicker} from "../../components/colour-picker/ColourPicker";
-import React from "react";
+import React, {CSSProperties, useState} from "react";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {selectColour, selectColourGuesserState} from "./colourGuesserSlice";
-import {RGBColor} from "react-color";
-import {RGBToHex} from "../../app/utils/colourMath";
+import {RGBToHex, RGBToHSL} from "../../app/utils/colourMath";
 
-interface GuessButtonProps {
-    textColour: string;
-}
+const WHITE = {r: 255, g: 255, b: 255}
+const BLACK = {r: 0, g: 0, b: 0}
 
 const GuessButton = styled.button.attrs(props => ({
     type: 'button',
-}))<GuessButtonProps>`
+}))`
   background-color: transparent;
   border-radius: 3px;
-  border: 2px solid ${props => props.textColour};
-  color: ${props => props.textColour};
+  border: 2px solid;
   display: inline-block;
   font-size: 1em;
   margin: 1em 0 0 0;
   padding: 0.25em 1em;
   width: 100%;
-  //box-shadow: rgba(0, 0, 0, 0.15) 0 0 0 1px, rgba(0, 0, 0, 0.15) 0 8px 16px;
 `
 
 export function ColourGuesser() {
+    const [ hovering, setHovering ] = useState(false)
     const { colour } = useAppSelector(selectColourGuesserState)
     const dispatch = useAppDispatch()
 
-    console.log(RGBToHex(colour))
+    const lowLuminance = RGBToHSL(colour).l < 50
+    let mainColour = colour
+    let accentColour = lowLuminance ? WHITE : BLACK
+    let addShadow = lowLuminance
+
+    if (hovering) {
+        mainColour = accentColour
+        accentColour = colour
+        addShadow = !addShadow
+    }
+
+    const buttonStyle: CSSProperties = {
+        backgroundColor: RGBToHex(mainColour),
+        borderColor: RGBToHex(accentColour),
+        color: RGBToHex(accentColour),
+        boxShadow: addShadow ? 'rgba(0, 0, 0, 0.15) 0 0 0 1px, rgba(0, 0, 0, 0.15) 0 8px 16px' : 'none',
+    }
 
     return (
         <>
-            <ColourPicker colour={colour} onSelect={(newColour) => dispatch(selectColour(newColour))}/>
-            <GuessButton textColour='palevioletred' style={{backgroundColor: RGBToHex(colour)}}>Make a guess</GuessButton>
+            <ColourPicker colour={mainColour} onSelect={(newColour) => dispatch(selectColour(newColour))}/>
+            <GuessButton
+                style={buttonStyle}
+                onMouseEnter={() => setHovering(true)}
+                onMouseLeave={() => setHovering(false)}
+            >
+                Make a guess
+            </GuessButton>
         </>
     )
 }

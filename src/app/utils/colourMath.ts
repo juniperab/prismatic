@@ -70,14 +70,14 @@ export function RGBToHSL(rgb: RGBColor): HSLColor {
 
     if (max === min) {
         // Achromatic
-        return { h: 0, s: 0, l };
+        return { h: 0, s: 0, l: Math.round(l * 100) };
     }
 
     const d = max - min;
     s = l >= 0.5 ? d / (2 - (max + min)) : d / (max + min);
     switch (max) {
         case r:
-            h = ((g - b) / d + 0) * 60;
+            h = ((g - b) / d) * 60;
             break;
         case g:
             h = ((b - r) / d + 2) * 60;
