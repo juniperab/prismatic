@@ -38,7 +38,7 @@ const HintBox = styled.div`
   }
 `
 
-type HintColour = AnyColor | undefined
+type HintColour = {label: string, colour: AnyColor} | undefined
 
 export function GuessDisplay() {
     const { previousGuesses, target } = useAppSelector(selectColourGuesserState)
@@ -55,7 +55,13 @@ export function GuessDisplay() {
         const b = {h: hsvG.h, s: diffS, v: 100}
         const c = {h: hsvG.h, s: diffV, v: 100}
         const d = {h: 100, s: 100, v: 100}
-        return [a, b, c, d, a]
+        return [
+            {label: 'G', colour: guess},
+            {label: 'A', colour: a},
+            {label: 'B', colour: b},
+            {label: 'C', colour: c},
+            {label: 'D', colour: d},
+        ]
     }
 
     function renderGuessResult(guess: AnyColor, key?: number) {
@@ -64,14 +70,16 @@ export function GuessDisplay() {
             {
                 hints.map((hint, idx) => {
                     let hintStyle: CSSProperties = {}
+                    let hintText: string = ''
                     if (hint) {
                         hintStyle = {
-                            backgroundColor: toHex(hint)
+                            backgroundColor: toHex(hint.colour)
                         }
+                        hintText = hint.label
                     }
                     return (
                         <HintBox key={idx} style={hintStyle}>
-                            <span>{idx}</span>
+                            <span>{hintText}</span>
                         </HintBox>
                     )
                 })
