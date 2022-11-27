@@ -2,7 +2,7 @@ import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {selectColourGuesserState} from "../colour-guesser/colourGuesserSlice";
 import styled from "styled-components";
 import {RGBColor} from "react-color";
-import {AnyColor, toHex, toHSL, toHSV, toRGB} from "../../app/utils/colourMath";
+import {AnyColor, hueDiff, rotateHue, toHex, toHSL, toHSV, toRGB} from "../../app/utils/colourMath";
 import {selectPuzzleState, setMode} from "../../app/modules/puzzle/puzzleSlice";
 
 const DataView = styled.div`
@@ -85,9 +85,12 @@ export function DebugDisplay() {
                         const rgbG = toRGB(guess)
                         const hslG = toHSL(guess)
                         const hsvG = toHSV(guess)
-                        const rgbDiffString = `ΔRGB: ${rgbG.r - rgbT.r}, ${rgbG.g - rgbT.g}, ${rgbG.b - rgbT.b}`
-                        const hslDiffString = `ΔHSL: ${hslG.h - hslT.h} ${hslG.s - hslT.s}% ${hslG.l - hslT.l}%`
-                        const hsvDiffString = `ΔHSV: ${hsvG.h - hsvT.h} ${hsvG.s - hsvT.s}% ${hsvG.v - hsvT.v}%`
+                        const rgbDiffString = 'ΔRGB: ' +
+                            `${rgbT.r - rgbG.r}, ${rgbT.g - rgbG.g}, ${rgbT.b - rgbG.b}`
+                        const hslDiffString = 'ΔHSL: ' +
+                            `${hueDiff({to: hslT.h, from: hslG.h})} ${hslT.s - hslG.s}% ${hslT.l - hslG.l}%`
+                        const hsvDiffString = 'ΔHSV: ' +
+                            `${hueDiff({to: hsvT.h, from: hsvG.h})} ${hsvT.s - hsvG.s}% ${hsvT.v - hsvG.v}%`
                         let diffString = ''
                         switch (mode) {
                             case 'rgb': diffString = rgbDiffString; break

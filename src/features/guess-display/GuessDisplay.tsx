@@ -60,23 +60,48 @@ function getHintsHSV(guess: AnyColor, target: AnyColor, spec: HintSpec): HintCol
 
     // get a hint for the hue of the target colour
     function getHueHint() {
+        // the absolute different between the hue of the guess and the hue of the target
         const diff = hueDiff({from: hsvG.h, to: hsvT.h})
-        // the hue of the hint is the hue of the guess rotated a set distance in the direction of the target hue
+        // the percentage of the cutoff distance that the hue of the guess lies away from the hue of the target.
+        // N.B. 100% = the guess is at the cutoff
+        const diffPct = Math.min(Math.abs(diff) / spec.hueCutoff, 1) * 100
         const hue = rotateHue(hsvG.h, spec.hueStep * Math.sign(diff))
-        // the saturation of the hint is the percentage of the cutoff distance that the hue of the guess is located
-        // relative to the hue of the target
-        const saturation = Math.min(Math.abs(diff) / spec.hueCutoff, 1) * 100
-        // the value of the hint is 0 if the hue of the guess is further from the target than the cutoff
-        // and 100 if it is closer
+        const saturation = diffPct
         const value = Math.abs(diff) > spec.hueCutoff ? 0 : 100
         return {label: 'H', colour: {h: hue, s: saturation, v: value}}
+    }
+
+    // get a hint for the saturation of the target colour
+    function getSaturationHint() {
+        // the absolute different between the saturation of the guess and the saturation of the target
+        const diff = hsvT.s - hsvG.s
+        // the percentage of the cutoff distance that the saturation of the guess lies away from the saturation
+        // of the target. N.B. 100% = the guess is at the cutoff
+        const diffPct = Math.min(Math.abs(diff) / spec.saturationCutoff, 1) * 100
+        const hue = hsvG.h // use the hue of the guess
+        const saturation = diffPct
+        const value = diff < 0 ? 0 : 100 // 'Price is Right' rules
+        return {label: 'S', colour: {h: hue, s: saturation, v: value}}
+    }
+
+    // get a hint for the value of the target colour
+    function getValueHint() {
+        // the absolute different between the value of the guess and the value of the target
+        const diff = hsvT.v - hsvG.v
+        // the percentage of the cutoff distance that the value of the guess lies away from the value of the target.
+        // N.B. 100% = the guess is at the cutoff
+        const diffPct = Math.min(Math.abs(diff) / spec.valueCutoff, 1) * 100
+        const hue = hsvG.h // hue doesn't matter
+        const saturation = 0 // hint will always be greyscale
+        const value = diff > 0 ? 0 : (100 - diffPct / 4) // inverted 'Price is Right' rules, in [75% and 100%]
+        return {label: 'V', colour: {h: hue, s: saturation, v: value}}
     }
 
     return [
         {label: '?', colour: guess},
         getHueHint(),
-        undefined,
-        undefined,
+        getSaturationHint(),
+        getValueHint(),
         undefined,
     ]
 }

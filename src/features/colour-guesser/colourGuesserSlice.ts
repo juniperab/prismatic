@@ -14,7 +14,7 @@ const initialState: ColourGuesserState = {
         {r: 208, g: 2, b: 27},
         {r: 65, g: 117, b: 5},
         {r: 88, g: 149, b: 91},
-        {r: 80, g: 55, b: 101},
+        {r: 64, g: 27, b: 94},
     ],
 }
 
