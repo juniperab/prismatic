@@ -3,7 +3,7 @@ import {ColourPicker} from "../../components/colour-picker/ColourPicker";
 import React, {CSSProperties, useState} from "react";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {guessCurrentColour, selectColour, selectColourGuesserState} from "./colourGuesserSlice";
-import {RGBToHex, RGBToHSL} from "../../app/utils/colourMath";
+import {toHex, toHSL} from "../../app/utils/colourMath";
 
 const WHITE = {r: 255, g: 255, b: 255}
 const BLACK = {r: 0, g: 0, b: 0}
@@ -27,7 +27,7 @@ export function ColourGuesser() {
     const { colour } = useAppSelector(selectColourGuesserState)
     const dispatch = useAppDispatch()
 
-    const lowLuminance = RGBToHSL(colour).l < 50
+    const lowLuminance = toHSL(colour).l < 50
     let mainColour = colour
     let accentColour = lowLuminance ? WHITE : BLACK
     let addShadow = lowLuminance
@@ -39,9 +39,9 @@ export function ColourGuesser() {
     }
 
     const buttonStyle: CSSProperties = {
-        backgroundColor: RGBToHex(mainColour),
-        borderColor: RGBToHex(accentColour),
-        color: RGBToHex(accentColour),
+        backgroundColor: toHex(mainColour),
+        borderColor: toHex(accentColour),
+        color: toHex(accentColour),
         boxShadow: addShadow ? 'rgba(0, 0, 0, 0.15) 0 0 0 1px, rgba(0, 0, 0, 0.15) 0 8px 16px' : 'none',
     }
 

@@ -1,8 +1,8 @@
 import {useAppSelector} from "../../app/hooks";
 import {selectColourGuesserState} from "../colour-guesser/colourGuesserSlice";
-import {RGBToHex, RGBToHSL} from "../../app/utils/colourMath";
 import styled from "styled-components";
 import {RGBColor} from "react-color";
+import {toHex, toHSL} from "../../app/utils/colourMath";
 
 const DataView = styled.div`
   text-align: left;
@@ -24,12 +24,10 @@ const DataView = styled.div`
 
 export function DebugDisplay() {
     const { colour, previousGuesses, target } = useAppSelector(selectColourGuesserState)
-    const hsl = RGBToHSL(colour)
-    const hex = RGBToHex(colour).toUpperCase()
 
     function swatch(rgb: RGBColor) {
-        const hsl = RGBToHSL(rgb)
-        const hex = RGBToHex(rgb).toUpperCase()
+        const hsl = toHSL(rgb)
+        const hex = toHex(rgb)
         const swatchTextColour = hsl.l < 50 ? 'white' : 'black'
         return (
             <span className='swatch' style={{backgroundColor: hex, color: swatchTextColour}}>
@@ -39,7 +37,7 @@ export function DebugDisplay() {
     }
 
     function describeColour(rgb: RGBColor) {
-        const hsl = RGBToHSL(rgb)
+        const hsl = toHSL(rgb)
 
         return (
             <ul>

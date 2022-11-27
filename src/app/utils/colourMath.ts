@@ -1,165 +1,131 @@
-// Reference: https://www.jameslmilner.com/posts/converting-rgb-hex-hsl-colors/
-
 import {HSLColor, RGBColor} from "react-color";
+import convert from "color-convert";
 
-export function HSLToRGB(hsl: HSLColor): RGBColor {
-    const { h, s, l } = hsl;
-
-    const hDecimal = h / 100;
-    const sDecimal = s / 100;
-    const lDecimal = l / 100;
-
-    let r, g, b;
-
-    if (s === 0) {
-        return { r: lDecimal, g: lDecimal, b: lDecimal };
-    }
-
-    const HueToRGB = (p: number, q: number, t: number) => {
-        if (t < 0) t += 1;
-        if (t > 1) t -= 1;
-        if (t < 1 / 6) return p + (q - p) * 6 * t;
-        if (t < 1 / 2) return q;
-        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-        return p;
-    };
-
-    let q =
-        lDecimal < 0.5
-            ? lDecimal * (1 + sDecimal)
-            : lDecimal + sDecimal - lDecimal * sDecimal;
-    let p = 2 * lDecimal - q;
-
-    r = HueToRGB(p, q, hDecimal + 1 / 3);
-    g = HueToRGB(p, q, hDecimal);
-    b = HueToRGB(p, q, hDecimal - 1 / 3);
-
-    return { r: r * 255, g: g * 255, b: b * 255 };
+export interface HSVColor {
+    a?: number | undefined;
+    h: number;
+    s: number;
+    v: number;
 }
 
-export function HSLToHex(hsl: HSLColor): string {
-    const { h, s, l } = hsl;
-
-    const hDecimal = l / 100;
-    const a = (s * Math.min(hDecimal, 1 - hDecimal)) / 100;
-    const f = (n: number) => {
-        const k = (n + h / 30) % 12;
-        const color = hDecimal - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-
-        // Convert to Hex and prefix with "0" if required
-        return Math.round(255 * color)
-            .toString(16)
-            .padStart(2, "0");
-    };
-    return `#${f(0)}${f(8)}${f(4)}`;
+function isRGB(colour: any): colour is RGBColor {
+    const rgb = colour as RGBColor
+    return rgb.r !== undefined && rgb.g !== undefined && rgb.b !== undefined
 }
 
-export function RGBToHSL(rgb: RGBColor): HSLColor {
-    const { r: r255, g: g255, b: b255 } = rgb;
-
-    const r = r255 / 255;
-    const g = g255 / 255;
-    const b = b255 / 255;
-
-    let max = Math.max(r, g, b);
-    let min = Math.min(r, g, b);
-
-    let h = (max + min) / 2;
-    let s = h;
-    let l = h;
-
-    if (max === min) {
-        // Achromatic
-        return { h: 0, s: 0, l: Math.round(l * 100) };
-    }
-
-    const d = max - min;
-    s = l >= 0.5 ? d / (2 - (max + min)) : d / (max + min);
-    switch (max) {
-        case r:
-            h = ((g - b) / d) * 60;
-            break;
-        case g:
-            h = ((b - r) / d + 2) * 60;
-            break;
-        case b:
-            h = ((r - g) / d + 4) * 60;
-            break;
-    }
-
-    return { h: Math.round(h), s: Math.round(s * 100), l: Math.round(l * 100) };
+function isHSL(colour: any): colour is HSLColor {
+    const hsl = colour as HSLColor
+    return hsl.h !== undefined && hsl.s !== undefined && hsl.l !== undefined
 }
 
-export function RGBToHex(rgb: RGBColor): string {
-    const f = (n: number) => {
-        // Convert to Hex and prefix with "0" if required
-        return n.toString(16).padStart(2, "0");
-    }
-    return `#${f(rgb.r)}${f(rgb.g)}${f(rgb.b)}`;
+function isHSV(colour: any): colour is HSVColor {
+    const hsv = colour as HSVColor
+    return hsv.h !== undefined && hsv.s !== undefined && hsv.v !== undefined
 }
 
-
-export function HexToHSL(hex: string): HSLColor {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-
-    if (!result) {
-        throw new Error("Could not parse Hex Color");
+export function to3(colour: RGBColor | HSLColor | HSVColor): [number, number, number] {
+    if (isRGB(colour)) {
+        return [colour.r, colour.g, colour.b]
+    } else if (isHSL(colour)) {
+        return [colour.h, colour.s, colour.l]
+    } else if (isHSV(colour)) {
+        return [colour.h, colour.s, colour.v]
     }
-
-    const rHex = parseInt(result[1], 16);
-    const gHex = parseInt(result[2], 16);
-    const bHex = parseInt(result[3], 16);
-
-    const r = rHex / 255;
-    const g = gHex / 255;
-    const b = bHex / 255;
-
-    const max = Math.max(r, g, b);
-    const min = Math.min(r, g, b);
-
-    let h = (max + min) / 2;
-    let s = h;
-    let l = h;
-
-    if (max === min) {
-        // Achromatic
-        return { h: 0, s: 0, l };
-    }
-
-    const d = max - min;
-    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-    switch (max) {
-        case r:
-            h = (g - b) / d + (g < b ? 6 : 0);
-            break;
-        case g:
-            h = (b - r) / d + 2;
-            break;
-        case b:
-            h = (r - g) / d + 4;
-            break;
-    }
-    h /= 6;
-
-    s = s * 100;
-    s = Math.round(s);
-    l = l * 100;
-    l = Math.round(l);
-    h = Math.round(360 * h);
-
-    return { h, s, l };
+    throw new Error("invalid colour type")
 }
 
-export function HexToRGB(hex: string): RGBColor {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-
-    if (!result) {
-        throw new Error("Could not parse Hex Color");
-    }
-
-    const rHex = parseInt(result[1], 16);
-    const gHex = parseInt(result[2], 16);
-    const bHex = parseInt(result[3], 16);
-
-    return {r: rHex, g: gHex, b: bHex}
+export function asRGB(colour: [number, number, number]): RGBColor {
+    return {r: colour[0], g: colour[1], b: colour[2]}
 }
+
+export function asHSL(colour: [number, number, number]): HSLColor {
+    return {h: colour[0], s: colour[1], l: colour[2]}
+}
+
+export function asHSV(colour: [number, number, number]): HSVColor {
+    return {h: colour[0], s: colour[1], v: colour[2]}
+}
+
+export function asHex(colour: string): string {
+    return `#${colour.toUpperCase()}`
+}
+
+export function toRGB(colour: RGBColor | HSLColor | HSVColor): RGBColor {
+    if (isRGB(colour)) {
+        return colour
+    } else if (isHSL(colour)) {
+        return asRGB(convert.hsl.rgb(to3(colour)))
+    } else if (isHSV(colour)) {
+        return asRGB(convert.hsv.rgb(to3(colour)))
+    }
+    throw new Error("invalid colour type")
+}
+
+export function toHSL(colour: RGBColor | HSLColor | HSVColor): HSLColor {
+    if (isRGB(colour)) {
+        return asHSL(convert.rgb.hsl(to3(colour)))
+    } else if (isHSL(colour)) {
+        return colour
+    } else if (isHSV(colour)) {
+        return asHSL(convert.hsv.hsl(to3(colour)))
+    }
+    throw new Error("invalid colour type")
+}
+
+export function toHSV(colour: RGBColor | HSLColor | HSVColor): HSVColor {
+    if (isRGB(colour)) {
+        return asHSV(convert.rgb.hsv(to3(colour)))
+    } else if (isHSL(colour)) {
+        return asHSV(convert.hsl.hsv(to3(colour)))
+    } else if (isHSV(colour)) {
+        return colour
+    }
+    throw new Error("invalid colour type")
+}
+
+export function toHex(colour: RGBColor | HSLColor | HSVColor): string {
+    if (isRGB(colour)) {
+        return asHex(convert.rgb.hex(to3(colour)))
+    } else if (isHSL(colour)) {
+        return asHex(convert.hsl.hex(to3(colour)))
+    } else if (isHSV(colour)) {
+        return asHex(convert.hsv.hex(to3(colour)))
+    }
+    throw new Error("invalid colour type")
+}
+
+// export function RGBToHSL(colour: RGBColor): HSLColor {
+//     return asHSL(convert.rgb.hsl(to3(colour)))
+// }
+//
+// export function RGBToHSV(colour: RGBColor): HSVColor {
+//     return asHSV(convert.rgb.hsv(to3(colour)))
+// }
+//
+// export function RGBToHex(colour: RGBColor): string {
+//     return asHex(convert.rgb.hex(to3(colour)))
+// }
+//
+// export function HSLToRGB(colour: HSLColor): RGBColor {
+//     return asRGB(convert.hsl.rgb(to3(colour)))
+// }
+//
+// export function HSLToHSV(colour: HSLColor): HSVColor {
+//     return asHSV(convert.hsl.hsv(to3(colour)))
+// }
+//
+// export function HSLToHex(colour: HSLColor): string {
+//     return asHex(convert.hsl.hex(to3(colour)))
+// }
+//
+// export function HSVToRGB(colour: HSVColor): RGBColor {
+//     return asRGB(convert.hsv.rgb(to3(colour)))
+// }
+//
+// export function HSVToHSL(colour: HSVColor): HSLColor {
+//     return asHSL(convert.hsv.hsl(to3(colour)))
+// }
+//
+// export function HSVToHex(colour: HSVColor): string {
+//     return asHex(convert.hsv.hex(to3(colour)))
+// }
