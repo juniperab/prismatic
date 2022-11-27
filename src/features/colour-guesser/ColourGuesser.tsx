@@ -2,7 +2,7 @@ import styled from "styled-components";
 import {ColourPicker} from "../../components/colour-picker/ColourPicker";
 import React, {CSSProperties, useState} from "react";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
-import {selectColour, selectColourGuesserState} from "./colourGuesserSlice";
+import {guessCurrentColour, selectColour, selectColourGuesserState} from "./colourGuesserSlice";
 import {RGBToHex, RGBToHSL} from "../../app/utils/colourMath";
 
 const WHITE = {r: 255, g: 255, b: 255}
@@ -23,6 +23,7 @@ const GuessButton = styled.button.attrs(props => ({
 
 export function ColourGuesser() {
     const [ hovering, setHovering ] = useState(false)
+    const [ clicking, setClicking ] = useState(false)
     const { colour } = useAppSelector(selectColourGuesserState)
     const dispatch = useAppDispatch()
 
@@ -31,7 +32,7 @@ export function ColourGuesser() {
     let accentColour = lowLuminance ? WHITE : BLACK
     let addShadow = lowLuminance
 
-    if (hovering) {
+    if (hovering !== clicking) {
         mainColour = accentColour
         accentColour = colour
         addShadow = !addShadow
@@ -51,6 +52,9 @@ export function ColourGuesser() {
                 style={buttonStyle}
                 onMouseEnter={() => setHovering(true)}
                 onMouseLeave={() => setHovering(false)}
+                onMouseDown={() => setClicking(true)}
+                onMouseUp={() => setClicking(false)}
+                onClick={() => dispatch(guessCurrentColour())}
             >
                 Make a guess
             </GuessButton>

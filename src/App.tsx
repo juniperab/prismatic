@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from "styled-components";
 import {ColourGuesser} from "./features/colour-guesser/ColourGuesser";
+import {GuessDisplay} from "./features/guess-display/GuessDisplay";
+import {DebugDisplay} from "./features/debug-display/DebugDisplay";
 
 const Header = styled.h1`
   text-align: center;
@@ -38,10 +40,11 @@ export function App() {
                 </Section>
                 <Section>
                     <SectionHeader>Response View</SectionHeader>
+                    <GuessDisplay/>
                 </Section>
                 <Section>
                     <SectionHeader>Debug Info</SectionHeader>
-                    <p>Hello world</p>
+                    <DebugDisplay/>
                 </Section>
             </Main>
         </>
