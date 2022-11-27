@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import {useAppSelector} from "../../app/hooks";
 import {selectColourGuesserState} from "../colour-guesser/colourGuesserSlice";
-import {HSLColor, RGBColor} from "react-color";
-import {AnyColor, HSVColor, toHex, toHSV} from "../../app/utils/colourMath";
+import {AnyColor, hueDiff, rotateHue, toHex, toHSV} from "../../app/utils/colourMath";
 import {CSSProperties} from "react";
+import {selectPuzzleState} from "../../app/modules/puzzle/puzzleSlice";
 
 const GuessList = styled.div`
   height: 360px;
@@ -40,32 +40,45 @@ const HintBox = styled.div`
 
 type HintColour = {label: string, colour: AnyColor} | undefined
 
+/**
+ * Generate hints about the target colour, across multiple dimensions of the colour space,
+ * based on the colour that was guessed.
+ *
+ * For each hint dimension:
+ *  - if the guess was too far away (based on a cutoff) from the target on that dimension, the hint will be black.
+ *  - if the guess was exactly correct on that dimension, the hint will be white.
+ *  - the closer the guess is to correct, the less saturated (more white) the hint will be.
+ *
+ * When all hints are white, the target colour will have been guessed exactly.
+ *
+ * @param guess     The guess that was made by the player
+ * @param target    The colour that the player is trying to identify
+ */
+function getHints(guess: AnyColor, target: AnyColor): HintColour[] {
+    const hsvG = toHSV(guess)
+    const hsvT = toHSV(target)
+
+    const hueCutoff = 90
+    const hueDifference = hueDiff({from: hsvG.h, to: hsvT.h})
+    const hueHintHue = rotateHue(hsvG.h, 90 * Math.sign(hueDifference))
+    const hueHintSaturation = Math.min(Math.abs(hueDifference) / hueCutoff, 1) * 100
+    const hueHintValue = Math.abs(hueDifference) > hueCutoff ? 0 : 100
+
+    return [
+        {label: '?', colour: guess},
+        {label: 'H', colour: {h: hueHintHue, s: hueHintSaturation, v: hueHintValue}},
+        undefined,
+        undefined,
+        undefined,
+    ]
+}
+
 export function GuessDisplay() {
-    const { previousGuesses, target } = useAppSelector(selectColourGuesserState)
+    const { previousGuesses } = useAppSelector(selectColourGuesserState)
+    const { mode, target } = useAppSelector(selectPuzzleState)
 
-    function getHints(guess: AnyColor): HintColour[] {
-        const hsvG = toHSV(guess)
-        const hsvT = toHSV(target)
-
-        const diffH = Math.abs(hsvT.h - hsvG.h) * 100 / 255
-        const diffS = Math.abs(hsvT.s - hsvG.s)
-        const diffV = Math.abs(hsvT.v - hsvG.v)
-
-        const a = {h: hsvG.h, s: diffH, v: 100}
-        const b = {h: hsvG.h, s: diffS, v: 100}
-        const c = {h: hsvG.h, s: diffV, v: 100}
-        const d = {h: 100, s: 100, v: 100}
-        return [
-            {label: 'G', colour: guess},
-            {label: 'A', colour: a},
-            {label: 'B', colour: b},
-            {label: 'C', colour: c},
-            {label: 'D', colour: d},
-        ]
-    }
-
-    function renderGuessResult(guess: AnyColor, key?: number) {
-        const hints = getHints(guess)
+    function renderGuessResult(guess: AnyColor, key: number) {
+        const hints = getHints(guess, target)
         return <GuessBox key={key}>
             {
                 hints.map((hint, idx) => {
@@ -89,7 +102,7 @@ export function GuessDisplay() {
 
     return (
         <GuessList>
-            {previousGuesses.map((guessRgb, idx) => renderGuessResult(guessRgb, idx))}
+            {previousGuesses.map((guess, idx) => renderGuessResult(guess, idx))}
         </GuessList>
     )
 }

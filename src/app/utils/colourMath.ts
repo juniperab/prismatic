@@ -111,3 +111,29 @@ export function toHex(colour: AnyColor): string {
     }
     throw new Error("invalid colour type")
 }
+
+/**
+ * Rotate a hue around the colour wheel by some number of degrees. The result will be in [0, 360).
+ *
+ * @param hue           the original hue
+ * @param degrees       the number of degrees to rotate (may be positive or negative)
+ */
+export function rotateHue(hue: number, degrees: number): number {
+    let newHue = (hue + degrees) % 360
+    while (newHue < 0) newHue += 360
+    return newHue
+}
+
+/**
+ * Return the number of degree needed to rotate from a to b.
+ * The result will always be on [-180, 180]
+ *
+ * @param hues      the starting- and ending-point hues
+ */
+export function hueDiff(hues: {to: number, from: number}): number {
+    // normalize the given hues onto [0, 360), just in case
+    let diff = rotateHue(hues.to, 0) - rotateHue(hues.from, 0)
+    while (diff > 180) diff -= 360
+    while (diff < -180) diff += 360
+    return diff
+}

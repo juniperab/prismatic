@@ -6,7 +6,6 @@ import {RootState} from "../../app/store";
 export interface ColourGuesserState {
     colour: RGBColor;
     previousGuesses: RGBColor[];
-    target: RGBColor;
 }
 
 const initialState: ColourGuesserState = {
@@ -16,7 +15,6 @@ const initialState: ColourGuesserState = {
         {r: 139, g: 87, b: 42},
         {r: 144, g: 19, b: 254},
     ],
-    target: {r: 40, g: 200, b: 100},
 }
 
 export const colourGuesserSlice = createSlice({
