@@ -10,8 +10,12 @@ export interface ColourGuesserState {
 }
 
 const initialState: ColourGuesserState = {
-    colour: {r: 40, g: 200, b: 100},
-    previousGuesses: [],
+    colour: {r: 75, g: 144, b: 226},
+    previousGuesses: [
+        {r: 208, g: 2, b: 27},
+        {r: 139, g: 87, b: 42},
+        {r: 144, g: 19, b: 254},
+    ],
     target: {r: 40, g: 200, b: 100},
 }
 

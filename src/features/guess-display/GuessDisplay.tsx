@@ -2,14 +2,15 @@ import styled from "styled-components";
 import {useAppSelector} from "../../app/hooks";
 import {selectColourGuesserState} from "../colour-guesser/colourGuesserSlice";
 import {HSLColor, RGBColor} from "react-color";
-import {HSVColor, toHex, toHSV} from "../../app/utils/colourMath";
+import {AnyColor, HSVColor, toHex, toHSV} from "../../app/utils/colourMath";
+import {CSSProperties} from "react";
 
 const GuessList = styled.div`
   height: 360px;
   overflow-y: scroll;
 `
 
-const Guess = styled.div`
+const GuessBox = styled.div`
   height: 25px;
   width: auto;
   margin: 10px;
@@ -20,59 +21,67 @@ const Guess = styled.div`
   justify-content: stretch;
   align-items: center;
   gap: 10px;
-  div {
-    display: inline-block;
-    height: 100%;
-    background-color: blue;
-    flex: none;
-    flex-grow: 1;
+`
+
+const HintBox = styled.div`
+  border: 1px dotted black;
+  background-color: transparent;
+  text-align: center;
+
+  display: inline-table;
+  height: 100%;
+  flex: none;
+  flex-grow: 1;
+  span {
+    display: table-cell;
+    vertical-align: middle;
   }
 `
+
+type HintColour = AnyColor | undefined
 
 export function GuessDisplay() {
     const { previousGuesses, target } = useAppSelector(selectColourGuesserState)
 
-    // const redHue = 0;
-    // const greenHue = 120;
-    // const blueHue = 240;
-    // function rotateHue(hue: number, n: number): number {
-    //     return (hue + n) % 360
-    // }
-    // function hint(hue: number, diff: number): string {
-    //     const d = (diff / 255 / 2 + 0.5) * 100
-    //     const hsv =  {h: hue, s: d, v: 100}
-    //     return toHex(hsv)
-    // }
+    function getHints(guess: AnyColor): HintColour[] {
+        const hsvG = toHSV(guess)
+        const hsvT = toHSV(target)
 
-    function getHints(guess: HSVColor): {hintH: HSVColor, hintS: HSVColor, hintV: HSVColor} {
-        const tgt = toHSV(target)
+        const diffH = Math.abs(hsvT.h - hsvG.h) * 100 / 255
+        const diffS = Math.abs(hsvT.s - hsvG.s)
+        const diffV = Math.abs(hsvT.v - hsvG.v)
 
-        const diffH = Math.abs(tgt.h - guess.h) * 100 / 255
-        const diffS = Math.abs(tgt.s - guess.s)
-        const diffV = Math.abs(tgt.v - guess.v)
-
-        const hintH = {h: guess.h, s: diffH, v: 100}
-        const hintS = {h: guess.h, s: diffS, v: 100}
-        const hintV = {h: guess.h, s: diffV, v: 100}
-        return {hintH, hintS, hintV}
+        const a = {h: hsvG.h, s: diffH, v: 100}
+        const b = {h: hsvG.h, s: diffS, v: 100}
+        const c = {h: hsvG.h, s: diffV, v: 100}
+        const d = {h: 100, s: 100, v: 100}
+        return [a, b, c, d, a]
     }
 
-    function renderGuessResult(rgb: RGBColor, key?: number) {
-        const hsv = toHSV(rgb)
-        const hints = getHints(toHSV(rgb))
-        return <Guess key={key}>
-            <div style={{backgroundColor: toHex(rgb), flexGrow: 2}}/>
-            <div style={{backgroundColor: toHex(hints.hintH)}}/>
-            <div style={{backgroundColor: toHex(hints.hintS)}}/>
-            <div style={{backgroundColor: toHex(hints.hintV)}}/>
-        </Guess>
+    function renderGuessResult(guess: AnyColor, key?: number) {
+        const hints = getHints(guess)
+        return <GuessBox key={key}>
+            {
+                hints.map((hint, idx) => {
+                    let hintStyle: CSSProperties = {}
+                    if (hint) {
+                        hintStyle = {
+                            backgroundColor: toHex(hint)
+                        }
+                    }
+                    return (
+                        <HintBox key={idx} style={hintStyle}>
+                            <span>{idx}</span>
+                        </HintBox>
+                    )
+                })
+            }
+        </GuessBox>
     }
 
     return (
         <GuessList>
             {previousGuesses.map((guessRgb, idx) => renderGuessResult(guessRgb, idx))}
-            <br/><br/>
-            {renderGuessResult(target)}
         </GuessList>
     )
 }
