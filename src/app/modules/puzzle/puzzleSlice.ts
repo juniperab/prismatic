@@ -4,12 +4,22 @@ import {RootState} from "../../store";
 
 export type PuzzleMode = 'rgb' | 'hsl' | 'hsv'
 
+export interface HintSpec {
+    hueCutoff: number;
+    hueStep: number;
+}
+
 export interface PuzzleState {
+    hintSpec: HintSpec;
     mode: PuzzleMode;
     target: RGBColor;
 }
 
 const initialState: PuzzleState = {
+    hintSpec: {
+        hueCutoff: 60,
+        hueStep: 30,
+    },
     mode: 'hsv',
     target: {r: 40, g: 200, b: 100},
 }

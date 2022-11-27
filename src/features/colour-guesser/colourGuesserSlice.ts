@@ -12,8 +12,9 @@ const initialState: ColourGuesserState = {
     colour: {r: 75, g: 144, b: 226},
     previousGuesses: [
         {r: 208, g: 2, b: 27},
-        {r: 139, g: 87, b: 42},
-        {r: 144, g: 19, b: 254},
+        {r: 65, g: 117, b: 5},
+        {r: 88, g: 149, b: 91},
+        {r: 80, g: 55, b: 101},
     ],
 }
 
