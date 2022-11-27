@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import {useAppSelector} from "../../app/hooks";
 import {selectColourGuesserState} from "../colour-guesser/colourGuesserSlice";
-import {RGBColor} from "react-color";
-import {toHex} from "../../app/utils/colourMath";
+import {HSLColor, RGBColor} from "react-color";
+import {HSVColor, toHex, toHSV} from "../../app/utils/colourMath";
 
 const GuessList = styled.div`
   height: 360px;
@@ -32,23 +32,39 @@ const Guess = styled.div`
 export function GuessDisplay() {
     const { previousGuesses, target } = useAppSelector(selectColourGuesserState)
 
-    const redHue = 0;
-    const greenHue = 120;
-    const blueHue = 240;
+    // const redHue = 0;
+    // const greenHue = 120;
+    // const blueHue = 240;
+    // function rotateHue(hue: number, n: number): number {
+    //     return (hue + n) % 360
+    // }
+    // function hint(hue: number, diff: number): string {
+    //     const d = (diff / 255 / 2 + 0.5) * 100
+    //     const hsv =  {h: hue, s: d, v: 100}
+    //     return toHex(hsv)
+    // }
 
-    function hint(hue: number, diff: number): string {
-        const diffLuminance = (diff / 255 / 2 + 0.5) * 100
+    function getHints(guess: HSVColor): {hintH: HSVColor, hintS: HSVColor, hintV: HSVColor} {
+        const tgt = toHSV(target)
 
-        const hsl =  {h: hue, s: 100, l: diffLuminance}
-        return toHex(hsl)
+        const diffH = Math.abs(tgt.h - guess.h) * 100 / 255
+        const diffS = Math.abs(tgt.s - guess.s)
+        const diffV = Math.abs(tgt.v - guess.v)
+
+        const hintH = {h: guess.h, s: diffH, v: 100}
+        const hintS = {h: guess.h, s: diffS, v: 100}
+        const hintV = {h: guess.h, s: diffV, v: 100}
+        return {hintH, hintS, hintV}
     }
 
     function renderGuessResult(rgb: RGBColor, key?: number) {
+        const hsv = toHSV(rgb)
+        const hints = getHints(toHSV(rgb))
         return <Guess key={key}>
             <div style={{backgroundColor: toHex(rgb), flexGrow: 2}}/>
-            <div style={{backgroundColor: hint(redHue, target.r - rgb.r)}}/>
-            <div style={{backgroundColor: hint(greenHue, target.g - rgb.g)}}/>
-            <div style={{backgroundColor: hint(blueHue, target.b - rgb.b)}}/>
+            <div style={{backgroundColor: toHex(hints.hintH)}}/>
+            <div style={{backgroundColor: toHex(hints.hintS)}}/>
+            <div style={{backgroundColor: toHex(hints.hintV)}}/>
         </Guess>
     }
 
