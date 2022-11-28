@@ -3,6 +3,7 @@ import styled from "styled-components";
 import {ColourGuesser} from "./features/colour-guesser/ColourGuesser";
 import {GuessDisplay} from "./features/guess-display/GuessDisplay";
 import {DebugDisplay} from "./features/debug-display/DebugDisplay";
+import logoFile from './logo.jpg'
 
 const Header = styled.h1`
   text-align: center;
@@ -32,7 +33,7 @@ const SectionHeader = styled.h4`
 export function App() {
     return (
         <>
-            <Header>Prismatic</Header>
+            <Header><img src={logoFile} width='24px'/> Prismatic</Header>
             <Main>
                 <Section>
                     <SectionHeader>Colour Picker</SectionHeader>
