@@ -1,15 +1,16 @@
 {
   "files": {
     "main.css": "/prismatic/static/css/main.e6c13ad2.css",
-    "main.js": "/prismatic/static/js/main.96906626.js",
+    "main.js": "/prismatic/static/js/main.7ec546ea.js",
     "static/js/787.a039ecf8.chunk.js": "/prismatic/static/js/787.a039ecf8.chunk.js",
+    "static/media/logo.jpg": "/prismatic/static/media/logo.433f75e1f515122ad308.jpg",
     "index.html": "/prismatic/index.html",
     "main.e6c13ad2.css.map": "/prismatic/static/css/main.e6c13ad2.css.map",
-    "main.96906626.js.map": "/prismatic/static/js/main.96906626.js.map",
+    "main.7ec546ea.js.map": "/prismatic/static/js/main.7ec546ea.js.map",
     "787.a039ecf8.chunk.js.map": "/prismatic/static/js/787.a039ecf8.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.96906626.js"
+    "static/js/main.7ec546ea.js"
   ]
 }
