@@ -6,6 +6,8 @@ import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {guessColour, guessCurrentColour, selectColour, selectColourGuesserState} from "./colourGuesserSlice";
 import {AnyColor, isColourMatch, toHex, toHSL, toRGB} from "../../app/utils/colourMath";
 import {selectPuzzleState, startNewGame} from "../../app/modules/puzzle/puzzleSlice";
+import {Rules} from "../rules/Rules";
+import {selectAppState, setHelpVisible} from "../../app/modules/app/appSlice";
 
 const WHITE = '#FFFFFF'
 const BLACK = '#000000'
@@ -30,6 +32,16 @@ const NewGameButton = styled(GuessButton)`
 
 const GiveUpButton = styled(GuessButton)``
 
+const HelpLink = styled.a`
+  display: block;
+  text-align: center;
+  margin-top: 15px;
+  &:hover {
+    text-decoration: underline;
+    cursor: help;
+  }
+`
+
 export function ColourGuesser() {
     const [ hovering, setHovering ] = useState(false)
     const [ clicking, setClicking ] = useState(false)
@@ -37,6 +49,7 @@ export function ColourGuesser() {
     const [ clickingGU, setClickingGU ] = useState(false)
     const { colour, previousGuesses, startingColour } = useAppSelector(selectColourGuesserState)
     const { precision, target } = useAppSelector(selectPuzzleState)
+    const { showHelp } = useAppSelector(selectAppState)
     const dispatch = useAppDispatch()
 
     const lowLuminance = toHSL(colour).l < 50
@@ -133,6 +146,7 @@ export function ColourGuesser() {
                 onSelect={(newColour) => {console.log(newColour); dispatch(selectColour(newColour))}}
             />
             {renderButton()}
+            <HelpLink onClick={() => dispatch(setHelpVisible(true))}>How to play</HelpLink>
         </>
     )
 }

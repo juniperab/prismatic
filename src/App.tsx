@@ -4,6 +4,9 @@ import {ColourGuesser} from "./features/colour-guesser/ColourGuesser";
 import {GuessDisplay} from "./features/guess-display/GuessDisplay";
 import {DebugDisplay} from "./features/debug-display/DebugDisplay";
 import logoFile from './logo.jpg'
+import {Rules} from "./features/rules/Rules";
+import {useAppSelector} from "./app/hooks";
+import {selectAppState} from "./app/modules/app/appSlice";
 
 const Header = styled.h1`
   text-align: center;
@@ -31,9 +34,11 @@ const SectionHeader = styled.h4`
 `
 
 export function App() {
+    const { showHelp } = useAppSelector(selectAppState)
     return (
         <>
-            <Header><img src={logoFile} width='24px'/> Prismatic</Header>
+            <Header><img alt='logo' src={logoFile} width='24px'/> Prismatic</Header>
+            {showHelp && <Rules/>}
             <Main>
                 <Section>
                     <SectionHeader>Colour Picker</SectionHeader>

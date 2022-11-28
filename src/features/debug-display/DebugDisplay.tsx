@@ -1,8 +1,7 @@
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {selectColourGuesserState} from "../colour-guesser/colourGuesserSlice";
 import styled from "styled-components";
-import {RGBColor} from "react-color";
-import {AnyColor, hueDiff, rotateHue, toHex, toHSL, toHSV, toRGB} from "../../app/utils/colourMath";
+import {AnyColor, hueDiff, toHex, toHSL, toHSV, toRGB} from "../../app/utils/colourMath";
 import {selectPuzzleState, setMode} from "../../app/modules/puzzle/puzzleSlice";
 import {useState} from "react";
 

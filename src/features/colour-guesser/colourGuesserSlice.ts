@@ -1,4 +1,3 @@
-import {RGBColor} from "react-color";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {RootState} from "../../app/store";
 import {AnyColor, generateRandomColour} from "../../app/utils/colourMath";

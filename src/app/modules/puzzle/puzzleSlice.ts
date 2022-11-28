@@ -1,11 +1,8 @@
-import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {RGBColor} from "react-color";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {AppThunk, RootState} from "../../store";
-import {AnyColor, fromKeyword, generateRandomColour, HexColor, toKeyword} from "../../utils/colourMath";
+import {AnyColor, fromKeyword, generateRandomColour, toKeyword} from "../../utils/colourMath";
 import {
     clearGuesses,
-    guessCurrentColour,
-    selectColour,
     setStartingColour
 } from "../../../features/colour-guesser/colourGuesserSlice";
 
