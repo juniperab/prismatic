@@ -8,7 +8,7 @@ import {useState} from "react";
 
 const DataView = styled.div`
   text-align: left;
-  height: 390px;
+  //height: 390px;
   overflow-y: scroll;
   font-family: monospace;
   font-size: x-small;

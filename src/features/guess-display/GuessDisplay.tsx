@@ -7,7 +7,7 @@ import {HintSpec, PuzzleMode, selectPuzzleState} from "../../app/modules/puzzle/
 import convert from "color-convert";
 
 const GuessList = styled.div`
-  height: 390px;
+  //height: 390px;
   overflow-y: scroll;
 `
 

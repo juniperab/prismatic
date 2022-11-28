@@ -2,7 +2,12 @@ import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {RGBColor} from "react-color";
 import {AppThunk, RootState} from "../../store";
 import {AnyColor, fromKeyword, generateRandomColour, HexColor, toKeyword} from "../../utils/colourMath";
-import {clearGuesses, guessCurrentColour, selectColour} from "../../../features/colour-guesser/colourGuesserSlice";
+import {
+    clearGuesses,
+    guessCurrentColour,
+    selectColour,
+    setStartingColour
+} from "../../../features/colour-guesser/colourGuesserSlice";
 
 export type PuzzleMode = 'rgb' | 'hsl' | 'hsv'
 
@@ -56,5 +61,6 @@ export const startNewGame =
         (dispatch, getState) => {
             const newTarget = fromKeyword(toKeyword(generateRandomColour()))
             dispatch(clearGuesses())
+            dispatch(setStartingColour(getState().colourGuesser.colour))
             dispatch(setTarget(newTarget));
         };

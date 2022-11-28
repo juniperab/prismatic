@@ -7,6 +7,7 @@ describe('colour-guesser reducer', () => {
             {r: 140, g: 201, b: 13},
             {r: 42, g: 198, b: 58},
         ],
+        startingColour: {r: 40, g: 200, b: 100},
     }
     it('should handle initial state', () => {
         expect(reducer(undefined, { type: 'unknown' })).toEqual({

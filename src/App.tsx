@@ -12,7 +12,7 @@ const Main = styled.div`
   column-gap: 10px;
   display: grid;
   grid: 1fr / repeat(3, 1fr);
-  margin: auto;
+  margin: auto auto 30px auto;
   width: 800px;
 `
 

@@ -35,7 +35,7 @@ export function ColourGuesser() {
     const [ clicking, setClicking ] = useState(false)
     const [ hoveringGU, setHoveringGU ] = useState(false)
     const [ clickingGU, setClickingGU ] = useState(false)
-    const { colour, previousGuesses } = useAppSelector(selectColourGuesserState)
+    const { colour, previousGuesses, startingColour } = useAppSelector(selectColourGuesserState)
     const { precision, target } = useAppSelector(selectPuzzleState)
     const dispatch = useAppDispatch()
 
@@ -129,6 +129,7 @@ export function ColourGuesser() {
         <>
             <ColourPicker
                 colour={toRGB(colour)}
+                extraSwatches={[startingColour, ...previousGuesses]}
                 onSelect={(newColour) => {console.log(newColour); dispatch(selectColour(newColour))}}
             />
             {renderButton()}
