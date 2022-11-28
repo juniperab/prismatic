@@ -1,12 +1,13 @@
 import styled from "styled-components";
 import {useAppSelector} from "../../app/hooks";
 import {selectColourGuesserState} from "../colour-guesser/colourGuesserSlice";
-import {AnyColor, hueDiff, rotateHue, toHex, toHSV} from "../../app/utils/colourMath";
+import {AnyColor, hueDiff, rotateHue, toHex, toHSL, toHSV, toKeyword} from "../../app/utils/colourMath";
 import {CSSProperties} from "react";
 import {HintSpec, PuzzleMode, selectPuzzleState} from "../../app/modules/puzzle/puzzleSlice";
+import convert from "color-convert";
 
 const GuessList = styled.div`
-  height: 360px;
+  height: 390px;
   overflow-y: scroll;
 `
 
@@ -38,7 +39,7 @@ const HintBox = styled.div`
   }
 `
 
-type HintColour = {label: string, colour: AnyColor} | undefined
+type HintColour = {label?: string, colour: AnyColor, match?: boolean} | undefined
 
 /**
  * Generate hints about the target colour, across multiple dimensions of the colour space,
@@ -51,10 +52,12 @@ type HintColour = {label: string, colour: AnyColor} | undefined
  *
  * When all hints are white, the target colour will have been guessed exactly.
  *
- * @param guess     The guess that was made by the player
- * @param target    The colour that the player is trying to identify
+ * @param guess         The guess that was made by the player
+ * @param target        The colour that the player is trying to identify
+ * @param spec          The specifications for how to generator hints
+ * @param precision     The amount by which a guess may differ from the target and still be considered a match
  */
-function getHintsHSV(guess: AnyColor, target: AnyColor, spec: HintSpec): HintColour[] {
+function getHintsHSV(guess: AnyColor, target: AnyColor, spec: HintSpec, precision: number): HintColour[] {
     const hsvG = toHSV(guess)
     const hsvT = toHSV(target)
 
@@ -62,6 +65,9 @@ function getHintsHSV(guess: AnyColor, target: AnyColor, spec: HintSpec): HintCol
     function getHueHint() {
         // the absolute different between the hue of the guess and the hue of the target
         const diff = hueDiff({from: hsvG.h, to: hsvT.h})
+        if (Math.abs(diff) <= precision) {
+            return {label: 'H', colour: {h: hsvG.h, s: 0, v: 100}, match: true}
+        }
         // the percentage of the cutoff distance that the hue of the guess lies away from the hue of the target.
         // N.B. 100% = the guess is at the cutoff
         const diffPct = Math.min(Math.abs(diff) / spec.hueCutoff, 1) * 100
@@ -75,6 +81,9 @@ function getHintsHSV(guess: AnyColor, target: AnyColor, spec: HintSpec): HintCol
     function getSaturationHint() {
         // the absolute different between the saturation of the guess and the saturation of the target
         const diff = hsvT.s - hsvG.s
+        if (Math.abs(diff) <= precision) {
+            return {label: 'S', colour: {h: hsvG.h, s: 0, v: 100}, match: true}
+        }
         // the percentage of the cutoff distance that the saturation of the guess lies away from the saturation
         // of the target. N.B. 100% = the guess is at the cutoff
         const diffPct = Math.min(Math.abs(diff) / spec.saturationCutoff, 1) * 100
@@ -88,49 +97,61 @@ function getHintsHSV(guess: AnyColor, target: AnyColor, spec: HintSpec): HintCol
     function getValueHint() {
         // the absolute different between the value of the guess and the value of the target
         const diff = hsvT.v - hsvG.v
+        if (Math.abs(diff) <= precision) {
+            return {label: 'V', colour: {h: hsvG.h, s: 0, v: 100}, match: true}
+        }
         // the percentage of the cutoff distance that the value of the guess lies away from the value of the target.
         // N.B. 100% = the guess is at the cutoff
         const diffPct = Math.min(Math.abs(diff) / spec.valueCutoff, 1) * 100
         const hue = hsvG.h // hue doesn't matter
         const saturation = 0 // hint will always be greyscale
-        const value = diff > 0 ? 0 : (100 - diffPct / 4) // inverted 'Price is Right' rules, in [75% and 100%]
+        const value = diff > 0 ? 0 : (100 - (diffPct * spec.valueStep / 100)) // inverted 'Price is Right' rules
         return {label: 'V', colour: {h: hue, s: saturation, v: value}}
     }
 
     return [
-        {label: '?', colour: guess},
+        {colour: guess, match: true},
         getHueHint(),
         getSaturationHint(),
         getValueHint(),
-        undefined,
     ]
 }
 
-function getHints(mode: PuzzleMode, guess: AnyColor, target: AnyColor, spec: HintSpec) {
+function getHints(mode: PuzzleMode, guess: AnyColor, target: AnyColor, spec: HintSpec, precision: number) {
     switch (mode) {
-        case "rgb": return [{label: '?', colour: guess}]
-        case 'hsl': return [{label: '?', colour: guess}]
-        case "hsv": return getHintsHSV(guess, target, spec)
+        case "rgb": return [{label: 'rgb not implemented', colour: guess}]
+        case 'hsl': return [{label: 'hsl not implemented', colour: guess}]
+        case "hsv": return getHintsHSV(guess, target, spec, precision)
     }
     throw new Error('invalid mode')
 }
 
 export function GuessDisplay() {
     const { previousGuesses } = useAppSelector(selectColourGuesserState)
-    const { hintSpec, mode, target } = useAppSelector(selectPuzzleState)
+    const { hintSpec, mode, precision, target } = useAppSelector(selectPuzzleState)
 
     function renderGuessResult(guess: AnyColor, key: number) {
-        const hints = getHints(mode, guess, target, hintSpec)
+        let hints = getHints(mode, guess, target, hintSpec, precision)
+        if (hints.every(hint => hint === undefined || hint.match)) {
+            hints = [{label: toKeyword(target), colour: target, match: true}]
+        }
         return <GuessBox key={key}>
             {
                 hints.map((hint, idx) => {
                     let hintStyle: CSSProperties = {}
-                    let hintText: string = ''
+                    let hintText: JSX.Element | string = <>&nbsp;</>
                     if (hint) {
                         hintStyle = {
-                            backgroundColor: toHex(hint.colour)
+                            backgroundColor: toHex(hint.colour),
+                            border: idx > 0 && hint.match ? '2px dashed black' : '1px dotted black',
+                            fontWeight: idx > 0 && hint.match ? 'bold' : 'normal',
+                            flexGrow: idx === 0 ? 2 : 1,
+                            margin: hint.match ? 0 : '0 1px',
                         }
-                        hintText = hint.label
+                        hintText = hint?.label ? hint.label : hintText
+                        if (hint.label?.length !== undefined && hint.label.length > 1 && toHSL(hint.colour).l < 50) {
+                            hintStyle.color = '#FFFFFF'
+                        }
                     }
                     return (
                         <HintBox key={idx} style={hintStyle}>

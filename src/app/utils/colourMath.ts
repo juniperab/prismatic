@@ -112,6 +112,23 @@ export function toHex(colour: AnyColor): string {
     throw new Error("invalid colour type")
 }
 
+export function toKeyword(colour: AnyColor): string {
+    if (isRGB(colour)) {
+        return convert.rgb.keyword(to3(colour))
+    } else if (isHSL(colour)) {
+        return convert.hsl.keyword(to3(colour))
+    } else if (isHSV(colour)) {
+        return convert.hsv.keyword(to3(colour))
+    }  else if (isHex(colour)) {
+        return convert.hex.keyword(colour.slice(1))
+    }
+    throw new Error("invalid colour type")
+}
+
+export function fromKeyword(keyword: string): AnyColor {
+    return asRGB(convert.keyword.rgb(keyword as any))
+}
+
 /**
  * Rotate a hue around the colour wheel by some number of degrees. The result will be in [0, 360).
  *
@@ -136,4 +153,15 @@ export function hueDiff(hues: {to: number, from: number}): number {
     while (diff > 180) diff -= 360
     while (diff < -180) diff += 360
     return diff
+}
+
+export function isColourMatch(a: AnyColor, b: AnyColor, precision: number): boolean {
+    const hsvA = toHSV(a)
+    const hsvB = toHSV(b)
+    const diffs = [hueDiff({to: hsvB.h, from: hsvA.h}), hsvB.s - hsvA.s, hsvB.v - hsvA.v]
+    return diffs.every(diff => Math.abs(diff) <= precision)
+}
+
+export function generateRandomColour(): AnyColor {
+    return {r: Math.random() * 256, g: Math.random() * 256, b: Math.random() * 256}
 }

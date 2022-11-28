@@ -20,7 +20,7 @@ const Section = styled.div`
   border: 2px solid black;
   display: inline-block;
   left: 0;
-  padding: 0 10px 20px 10px;
+  padding: 0 10px 15px 10px;
   right: 0;
   text-align: center;
 `

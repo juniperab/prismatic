@@ -1,6 +1,8 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {RGBColor} from "react-color";
-import {RootState} from "../../store";
+import {AppThunk, RootState} from "../../store";
+import {AnyColor, fromKeyword, generateRandomColour, HexColor, toKeyword} from "../../utils/colourMath";
+import {clearGuesses, guessCurrentColour, selectColour} from "../../../features/colour-guesser/colourGuesserSlice";
 
 export type PuzzleMode = 'rgb' | 'hsl' | 'hsv'
 
@@ -8,7 +10,6 @@ export interface HintSpec {
     hueCutoff: number;
     hueStep: number;
     saturationCutoff: number,
-    saturationStep: number,
     valueCutoff: number,
     valueStep: number,
 }
@@ -16,19 +17,20 @@ export interface HintSpec {
 export interface PuzzleState {
     hintSpec: HintSpec;
     mode: PuzzleMode;
-    target: RGBColor;
+    precision: number,
+    target: AnyColor;
 }
 
 const initialState: PuzzleState = {
     hintSpec: {
-        hueCutoff: 60,
-        hueStep: 30,
-        saturationCutoff: 33,
-        saturationStep: 25,
-        valueCutoff: 33,
+        hueCutoff: 90,
+        hueStep: 90,
+        saturationCutoff: 25,
+        valueCutoff: 25,
         valueStep: 25,
     },
     mode: 'hsv',
+    precision: 3,
     target: {r: 40, g: 200, b: 100},
 }
 
@@ -39,12 +41,20 @@ export const puzzleSlice = createSlice({
         setMode: (state, action: PayloadAction<PuzzleMode>) => {
             state.mode = action.payload
         },
-        setTarget: (state, action: PayloadAction<RGBColor>) => {
+        setTarget: (state, action: PayloadAction<AnyColor>) => {
             state.target = action.payload
-        },
+        }
     }
 })
 
 export const { setMode, setTarget } = puzzleSlice.actions
 export const selectPuzzleState = (state: RootState) => state.puzzle
 export default puzzleSlice.reducer
+
+export const startNewGame =
+    (): AppThunk =>
+        (dispatch, getState) => {
+            const newTarget = fromKeyword(toKeyword(generateRandomColour()))
+            dispatch(clearGuesses())
+            dispatch(setTarget(newTarget));
+        };

@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {RGBColor, SketchPicker} from 'react-color'
 import styled from "styled-components";
+import {AnyColor, toRGB} from "../../app/utils/colourMath";
 
 export interface ColourPickerProps {
-    colour: RGBColor,
-    onSelect: (colour: RGBColor) => void;
+    colour: AnyColor,
+    onSelect: (colour: AnyColor) => void;
 }
 
 const Container = styled.div`
@@ -18,9 +19,14 @@ const Container = styled.div`
 export function ColourPicker(props: ColourPickerProps) {
     const [ activeColour, setActiveColour ] = useState(props.colour as RGBColor)
 
+    useEffect(() => {
+        setActiveColour(toRGB(props.colour))
+    }, [props])
+
     return (
         <Container>
             <SketchPicker
+                disableAlpha={true}
                 width='auto'
                 color={activeColour}
                 onChange={color => setActiveColour(color.rgb)}

@@ -1,36 +1,39 @@
 import {RGBColor} from "react-color";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {RootState} from "../../app/store";
+import {AnyColor, generateRandomColour} from "../../app/utils/colourMath";
 
 
 export interface ColourGuesserState {
-    colour: RGBColor;
-    previousGuesses: RGBColor[];
+    colour: AnyColor;
+    previousGuesses: AnyColor[];
 }
 
 const initialState: ColourGuesserState = {
-    colour: {r: 75, g: 144, b: 226},
-    previousGuesses: [
-        {r: 208, g: 2, b: 27},
-        {r: 65, g: 117, b: 5},
-        {r: 88, g: 149, b: 91},
-        {r: 64, g: 27, b: 94},
-    ],
+    colour: generateRandomColour(), // TODO: this should not be done in the initialState, I think
+    previousGuesses: [],
 }
 
 export const colourGuesserSlice = createSlice({
     name: 'colourGuesser',
     initialState,
     reducers: {
+        guessColour: (state, action: PayloadAction<AnyColor>) => {
+            state.colour = action.payload
+            state.previousGuesses.push(action.payload)
+        },
         guessCurrentColour: (state) => {
             state.previousGuesses.push(state.colour)
         },
-        selectColour: (state, action: PayloadAction<RGBColor>) => {
+        selectColour: (state, action: PayloadAction<AnyColor>) => {
             state.colour = action.payload
         },
+        clearGuesses: (state) => {
+            state.previousGuesses = []
+        }
     }
 })
 
-export const { guessCurrentColour, selectColour  } = colourGuesserSlice.actions
+export const { guessColour, guessCurrentColour, selectColour, clearGuesses  } = colourGuesserSlice.actions
 export const selectColourGuesserState = (state: RootState) => state.colourGuesser
 export default colourGuesserSlice.reducer
