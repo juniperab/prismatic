@@ -2,6 +2,8 @@
 
 A colour-guessing puzzle game.
 
+[Play now](https://juniperab.github.io/prismatic)
+
 ## How to play
 
 In Prismatic, you guess colours to gather information about a secret colour.
