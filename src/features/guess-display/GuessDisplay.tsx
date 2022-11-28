@@ -4,7 +4,6 @@ import {selectColourGuesserState} from "../colour-guesser/colourGuesserSlice";
 import {AnyColor, hueDiff, rotateHue, toHex, toHSL, toHSV, toKeyword} from "../../app/utils/colourMath";
 import {CSSProperties} from "react";
 import {HintSpec, PuzzleMode, selectPuzzleState} from "../../app/modules/puzzle/puzzleSlice";
-import convert from "color-convert";
 
 const GuessList = styled.div`
   //height: 390px;
@@ -106,7 +105,7 @@ function getHintsHSV(guess: AnyColor, target: AnyColor, spec: HintSpec, precisio
         const hue = hsvG.h // hue doesn't matter
         const saturation = 0 // hint will always be greyscale
         const value = diff > 0 ? 0 : (100 - (diffPct * spec.valueStep / 100)) // inverted 'Price is Right' rules
-        return {label: 'V', colour: {h: hue, s: saturation, v: value}}
+        return {label: 'B', colour: {h: hue, s: saturation, v: value}}
     }
 
     return [
