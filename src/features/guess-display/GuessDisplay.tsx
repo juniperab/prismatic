@@ -97,7 +97,7 @@ function getHintsHSV(guess: AnyColor, target: AnyColor, spec: HintSpec, precisio
         // the absolute different between the value of the guess and the value of the target
         const diff = hsvT.v - hsvG.v
         if (Math.abs(diff) <= precision) {
-            return {label: 'V', colour: {h: hsvG.h, s: 0, v: 100}, match: true}
+            return {label: 'B', colour: {h: hsvG.h, s: 0, v: 100}, match: true}
         }
         // the percentage of the cutoff distance that the value of the guess lies away from the value of the target.
         // N.B. 100% = the guess is at the cutoff
