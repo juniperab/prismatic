@@ -1,8 +1,31 @@
 {
   "name": "prismatic",
+  "description": "A colour-guessing puzzle game",
   "version": "0.2.0",
-  "homepage": "https://juniperab.github.io/prismatic",
   "private": true,
+  "homepage": "https://juniperab.github.io/prismatic",
+  "bugs": {
+    "url": "https://github.com/juniperab/prismatic/issues",
+    "email": "prismatic@juniper.stormchasers.ca"
+  },
+  "license": "AGPL-3.0-or-later",
+  "author": {
+    "name": "Juniper Alanna Berry",
+    "url": "https://github.com/juniperab",
+    "email": "juniper@stormchasers.ca"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/juniperab/prismatic.git"
+  },
+  "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.0",
     "@testing-library/jest-dom": "^5.16.5",
@@ -28,13 +51,11 @@
     "typescript": "^4.9.3",
     "web-vitals": "^2.1.4"
   },
-  "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+  "devDependencies": {
+    "@types/color-convert": "^2.0.0",
+    "@types/lodash": "^4.14.190",
+    "gh-pages": "^4.0.0",
+    "sass": "^1.56.1"
   },
   "eslintConfig": {
     "extends": [
@@ -53,11 +74,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@types/color-convert": "^2.0.0",
-    "@types/lodash": "^4.14.190",
-    "gh-pages": "^4.0.0",
-    "sass": "^1.56.1"
   }
 }
