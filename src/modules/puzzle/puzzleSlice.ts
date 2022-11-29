@@ -9,29 +9,13 @@ import {generateRandomColour} from "../../lib/colour/colourMath";
 
 export type PuzzleMode = 'rgb' | 'hsl' | 'hsb'
 
-export interface HintSpec {
-    hueCutoff: number;
-    hueStep: number;
-    saturationCutoff: number,
-    valueCutoff: number,
-    valueStep: number,
-}
-
 export interface PuzzleState {
-    hintSpec: HintSpec;
     mode: PuzzleMode;
     precision: number,
     target: AnyColor;
 }
 
 const initialState: PuzzleState = {
-    hintSpec: {
-        hueCutoff: 90,
-        hueStep: 90,
-        saturationCutoff: 25,
-        valueCutoff: 25,
-        valueStep: 25,
-    },
     mode: 'hsb',
     precision: 3,
     target: {r: 40, g: 200, b: 100},

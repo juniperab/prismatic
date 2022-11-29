@@ -3,8 +3,10 @@ import {useAppSelector} from "../../redux/hooks";
 import {selectColourGuesserState} from "../colour-guesser/colourGuesserSlice";
 import {AnyColor, toHex, toHSL, toHSB, toKeyword} from "../../lib/colour/colourConversions";
 import {CSSProperties} from "react";
-import {HintSpec, PuzzleMode, selectPuzzleState} from "../../modules/puzzle/puzzleSlice";
+import {PuzzleMode, selectPuzzleState} from "../../modules/puzzle/puzzleSlice";
 import {hueDiff, rotateHue} from "../../lib/colour/colourMath";
+import {selectConfigState} from "../../modules/config/configSlice";
+import {HintConfig, HSBHintConfig} from "../../modules/config/hintConfig";
 
 const GuessList = styled.div`
   //height: 390px;
@@ -54,10 +56,10 @@ type HintColour = {label?: string, colour: AnyColor, match?: boolean} | undefine
  *
  * @param guess         The guess that was made by the player
  * @param target        The colour that the player is trying to identify
- * @param spec          The specifications for how to generator hints
+ * @param config        The specifications for how to generator hints
  * @param precision     The amount by which a guess may differ from the target and still be considered a match
  */
-function getHintsHSB(guess: AnyColor, target: AnyColor, spec: HintSpec, precision: number): HintColour[] {
+function getHintsHSB(guess: AnyColor, target: AnyColor, config: HSBHintConfig, precision: number): HintColour[] {
     const hsbG = toHSB(guess)
     const hsbT = toHSB(target)
 
@@ -70,10 +72,10 @@ function getHintsHSB(guess: AnyColor, target: AnyColor, spec: HintSpec, precisio
         }
         // the percentage of the cutoff distance that the hue of the guess lies away from the hue of the target.
         // N.B. 100% = the guess is at the cutoff
-        const diffPct = Math.min(Math.abs(diff) / spec.hueCutoff, 1) * 100
-        const hue = rotateHue(hsbG.h, spec.hueStep * Math.sign(diff))
+        const diffPct = Math.min(Math.abs(diff) / config.hueCutoff, 1) * 100
+        const hue = rotateHue(hsbG.h, config.hueStep * Math.sign(diff))
         const saturation = diffPct
-        const value = Math.abs(diff) > spec.hueCutoff ? 0 : 100
+        const value = Math.abs(diff) > config.hueCutoff ? 0 : 100
         return {label: 'H', colour: {h: hue, s: saturation, b: value}}
     }
 
@@ -86,7 +88,7 @@ function getHintsHSB(guess: AnyColor, target: AnyColor, spec: HintSpec, precisio
         }
         // the percentage of the cutoff distance that the saturation of the guess lies away from the saturation
         // of the target. N.B. 100% = the guess is at the cutoff
-        const diffPct = Math.min(Math.abs(diff) / spec.saturationCutoff, 1) * 100
+        const diffPct = Math.min(Math.abs(diff) / config.saturationCutoff, 1) * 100
         const hue = hsbG.h // use the hue of the guess
         const saturation = diffPct
         const value = diff < 0 ? 0 : 100 // 'Price is Right' rules
@@ -102,10 +104,10 @@ function getHintsHSB(guess: AnyColor, target: AnyColor, spec: HintSpec, precisio
         }
         // the percentage of the cutoff distance that the value of the guess lies away from the value of the target.
         // N.B. 100% = the guess is at the cutoff
-        const diffPct = Math.min(Math.abs(diff) / spec.valueCutoff, 1) * 100
+        const diffPct = Math.min(Math.abs(diff) / config.brightnessCutoff, 1) * 100
         const hue = hsbG.h // hue doesn't matter
         const saturation = 0 // hint will always be greyscale
-        const value = diff > 0 ? 0 : (100 - (diffPct * spec.valueStep / 100)) // inverted 'Price is Right' rules
+        const value = diff > 0 ? 0 : (100 - (diffPct * config.brightnessStep / 100)) // inverted 'Price is Right' rules
         return {label: 'B', colour: {h: hue, s: saturation, b: value}}
     }
 
@@ -117,21 +119,22 @@ function getHintsHSB(guess: AnyColor, target: AnyColor, spec: HintSpec, precisio
     ]
 }
 
-function getHints(mode: PuzzleMode, guess: AnyColor, target: AnyColor, spec: HintSpec, precision: number) {
+function getHints(mode: PuzzleMode, guess: AnyColor, target: AnyColor, config: HintConfig, precision: number) {
     switch (mode) {
         case "rgb": return [{label: 'rgb not implemented', colour: guess}]
         case 'hsl': return [{label: 'hsl not implemented', colour: guess}]
-        case "hsb": return getHintsHSB(guess, target, spec, precision)
+        case "hsb": return getHintsHSB(guess, target, config.hsb, precision)
     }
     throw new Error('invalid mode')
 }
 
 export function GuessDisplay() {
     const { previousGuesses } = useAppSelector(selectColourGuesserState)
-    const { hintSpec, mode, precision, target } = useAppSelector(selectPuzzleState)
+    const { mode, precision, target } = useAppSelector(selectPuzzleState)
+    const config = useAppSelector(selectConfigState)
 
     function renderGuessResult(guess: AnyColor, key: number) {
-        let hints = getHints(mode, guess, target, hintSpec, precision)
+        let hints = getHints(mode, guess, target, config.hint, precision)
         if (hints.every(hint => hint === undefined || hint.match)) {
             hints = [{label: toKeyword(target), colour: target, match: true}]
         }

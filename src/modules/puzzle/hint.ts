@@ -10,7 +10,7 @@ export interface BaseHint {
     guessedColour: AnyColor;
 }
 export interface HSVHint extends BaseHint {
-    hue: HintItem;
-    saturation: HintItem;
-    brightness: HintItem;
+    hue?: HintItem;
+    saturation?: HintItem;
+    brightness?: HintItem;
 }
