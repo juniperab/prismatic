@@ -5,8 +5,8 @@ import {GuessDisplay} from "./features/guess-display/GuessDisplay";
 import {DebugDisplay} from "./features/debug-display/DebugDisplay";
 import logoFile from './logo.jpg'
 import {Rules} from "./features/rules/Rules";
-import {useAppSelector} from "./app/hooks";
-import {selectAppState} from "./app/modules/app/appSlice";
+import {useAppSelector} from "./redux/hooks";
+import {selectAppState} from "./modules/app/appSlice";
 
 const Header = styled.h1`
   text-align: center;

@@ -1,7 +1,7 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import app from "./modules/app/appSlice";
+import app from "../modules/app/appSlice";
 import colourGuesser from "../features/colour-guesser/colourGuesserSlice";
-import puzzle from "./modules/puzzle/puzzleSlice";
+import puzzle from "../modules/puzzle/puzzleSlice";
 
 export const store = configureStore({
   reducer: {

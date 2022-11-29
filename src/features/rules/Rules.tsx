@@ -3,8 +3,8 @@ import colorPickerImageFile from './colour-picker.png'
 import guess1ImageFile from './guess1.png'
 import guess2ImageFile from './guess2.png'
 import solutionImageFile from './solution.png'
-import {useAppDispatch} from "../../app/hooks";
-import {setHelpVisible} from "../../app/modules/app/appSlice";
+import {useAppDispatch} from "../../redux/hooks";
+import {setHelpVisible} from "../../modules/app/appSlice";
 
 const RulesWrapper = styled.div`
   position: fixed;

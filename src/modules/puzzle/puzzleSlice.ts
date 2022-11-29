@@ -1,12 +1,13 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {AppThunk, RootState} from "../../store";
-import {AnyColor, fromKeyword, generateRandomColour, toKeyword} from "../../utils/colourMath";
+import {AppThunk, RootState} from "../../redux/store";
+import {AnyColor, fromKeyword, toKeyword} from "../../lib/colour/colourConversions";
 import {
     clearGuesses,
     setStartingColour
-} from "../../../features/colour-guesser/colourGuesserSlice";
+} from "../../features/colour-guesser/colourGuesserSlice";
+import {generateRandomColour} from "../../lib/colour/colourMath";
 
-export type PuzzleMode = 'rgb' | 'hsl' | 'hsv'
+export type PuzzleMode = 'rgb' | 'hsl' | 'hsb'
 
 export interface HintSpec {
     hueCutoff: number;
@@ -31,7 +32,7 @@ const initialState: PuzzleState = {
         valueCutoff: 25,
         valueStep: 25,
     },
-    mode: 'hsv',
+    mode: 'hsb',
     precision: 3,
     target: {r: 40, g: 200, b: 100},
 }

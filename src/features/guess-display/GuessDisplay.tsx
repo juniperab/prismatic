@@ -1,9 +1,10 @@
 import styled from "styled-components";
-import {useAppSelector} from "../../app/hooks";
+import {useAppSelector} from "../../redux/hooks";
 import {selectColourGuesserState} from "../colour-guesser/colourGuesserSlice";
-import {AnyColor, hueDiff, rotateHue, toHex, toHSL, toHSV, toKeyword} from "../../app/utils/colourMath";
+import {AnyColor, toHex, toHSL, toHSB, toKeyword} from "../../lib/colour/colourConversions";
 import {CSSProperties} from "react";
-import {HintSpec, PuzzleMode, selectPuzzleState} from "../../app/modules/puzzle/puzzleSlice";
+import {HintSpec, PuzzleMode, selectPuzzleState} from "../../modules/puzzle/puzzleSlice";
+import {hueDiff, rotateHue} from "../../lib/colour/colourMath";
 
 const GuessList = styled.div`
   //height: 390px;
@@ -56,56 +57,56 @@ type HintColour = {label?: string, colour: AnyColor, match?: boolean} | undefine
  * @param spec          The specifications for how to generator hints
  * @param precision     The amount by which a guess may differ from the target and still be considered a match
  */
-function getHintsHSV(guess: AnyColor, target: AnyColor, spec: HintSpec, precision: number): HintColour[] {
-    const hsvG = toHSV(guess)
-    const hsvT = toHSV(target)
+function getHintsHSB(guess: AnyColor, target: AnyColor, spec: HintSpec, precision: number): HintColour[] {
+    const hsbG = toHSB(guess)
+    const hsbT = toHSB(target)
 
     // get a hint for the hue of the target colour
-    function getHueHint() {
+    function getHueHint(): HintColour {
         // the absolute different between the hue of the guess and the hue of the target
-        const diff = hueDiff({from: hsvG.h, to: hsvT.h})
+        const diff = hueDiff(hsbT.h, hsbG.h)
         if (Math.abs(diff) <= precision) {
-            return {label: 'H', colour: {h: hsvG.h, s: 0, v: 100}, match: true}
+            return {label: 'H', colour: {h: hsbG.h, s: 0, b: 100}, match: true}
         }
         // the percentage of the cutoff distance that the hue of the guess lies away from the hue of the target.
         // N.B. 100% = the guess is at the cutoff
         const diffPct = Math.min(Math.abs(diff) / spec.hueCutoff, 1) * 100
-        const hue = rotateHue(hsvG.h, spec.hueStep * Math.sign(diff))
+        const hue = rotateHue(hsbG.h, spec.hueStep * Math.sign(diff))
         const saturation = diffPct
         const value = Math.abs(diff) > spec.hueCutoff ? 0 : 100
-        return {label: 'H', colour: {h: hue, s: saturation, v: value}}
+        return {label: 'H', colour: {h: hue, s: saturation, b: value}}
     }
 
     // get a hint for the saturation of the target colour
-    function getSaturationHint() {
+    function getSaturationHint(): HintColour {
         // the absolute different between the saturation of the guess and the saturation of the target
-        const diff = hsvT.s - hsvG.s
+        const diff = hsbT.s - hsbG.s
         if (Math.abs(diff) <= precision) {
-            return {label: 'S', colour: {h: hsvG.h, s: 0, v: 100}, match: true}
+            return {label: 'S', colour: {h: hsbG.h, s: 0, b: 100}, match: true}
         }
         // the percentage of the cutoff distance that the saturation of the guess lies away from the saturation
         // of the target. N.B. 100% = the guess is at the cutoff
         const diffPct = Math.min(Math.abs(diff) / spec.saturationCutoff, 1) * 100
-        const hue = hsvG.h // use the hue of the guess
+        const hue = hsbG.h // use the hue of the guess
         const saturation = diffPct
         const value = diff < 0 ? 0 : 100 // 'Price is Right' rules
-        return {label: 'S', colour: {h: hue, s: saturation, v: value}}
+        return {label: 'S', colour: {h: hue, s: saturation, b: value}}
     }
 
     // get a hint for the value of the target colour
-    function getValueHint() {
+    function getValueHint(): HintColour {
         // the absolute different between the value of the guess and the value of the target
-        const diff = hsvT.v - hsvG.v
+        const diff = hsbT.b - hsbG.b
         if (Math.abs(diff) <= precision) {
-            return {label: 'B', colour: {h: hsvG.h, s: 0, v: 100}, match: true}
+            return {label: 'B', colour: {h: hsbG.h, s: 0, b: 100}, match: true}
         }
         // the percentage of the cutoff distance that the value of the guess lies away from the value of the target.
         // N.B. 100% = the guess is at the cutoff
         const diffPct = Math.min(Math.abs(diff) / spec.valueCutoff, 1) * 100
-        const hue = hsvG.h // hue doesn't matter
+        const hue = hsbG.h // hue doesn't matter
         const saturation = 0 // hint will always be greyscale
         const value = diff > 0 ? 0 : (100 - (diffPct * spec.valueStep / 100)) // inverted 'Price is Right' rules
-        return {label: 'B', colour: {h: hue, s: saturation, v: value}}
+        return {label: 'B', colour: {h: hue, s: saturation, b: value}}
     }
 
     return [
@@ -120,7 +121,7 @@ function getHints(mode: PuzzleMode, guess: AnyColor, target: AnyColor, spec: Hin
     switch (mode) {
         case "rgb": return [{label: 'rgb not implemented', colour: guess}]
         case 'hsl': return [{label: 'hsl not implemented', colour: guess}]
-        case "hsv": return getHintsHSV(guess, target, spec, precision)
+        case "hsb": return getHintsHSB(guess, target, spec, precision)
     }
     throw new Error('invalid mode')
 }
@@ -164,7 +165,7 @@ export function GuessDisplay() {
 
     return (
         <GuessList>
-            {previousGuesses.map((guess, idx) => renderGuessResult(guess, idx))}
+            {previousGuesses.map((guess: AnyColor, idx: number) => renderGuessResult(guess, idx))}
         </GuessList>
     )
 }

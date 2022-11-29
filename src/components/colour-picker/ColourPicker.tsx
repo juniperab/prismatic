@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {RGBColor, SketchPicker} from 'react-color'
 import styled from "styled-components";
-import {AnyColor, toHex, toRGB} from "../../app/utils/colourMath";
+import {AnyColor, toHex, toRGB} from "../../lib/colour/colourConversions";
 
 export interface ColourPickerProps {
     colour: AnyColor,

@@ -1,6 +1,7 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {RootState} from "../../app/store";
-import {AnyColor, generateRandomColour} from "../../app/utils/colourMath";
+import {RootState} from "../../redux/store";
+import {AnyColor} from "../../lib/colour/colourConversions";
+import {generateRandomColour} from "../../lib/colour/colourMath";
 
 
 export interface ColourGuesserState {

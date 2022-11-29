@@ -1,9 +1,10 @@
-import {useAppDispatch, useAppSelector} from "../../app/hooks";
+import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 import {selectColourGuesserState} from "../colour-guesser/colourGuesserSlice";
 import styled from "styled-components";
-import {AnyColor, hueDiff, toHex, toHSL, toHSV, toRGB} from "../../app/utils/colourMath";
-import {selectPuzzleState, setMode} from "../../app/modules/puzzle/puzzleSlice";
+import {AnyColor, toHex, toHSL, toHSB, toRGB} from "../../lib/colour/colourConversions";
+import {selectPuzzleState, setMode} from "../../modules/puzzle/puzzleSlice";
 import {useState} from "react";
+import {hueDiff} from "../../lib/colour/colourMath";
 
 const DataView = styled.div`
   text-align: left;
@@ -49,12 +50,12 @@ export function DebugDisplay() {
     function describeColour(colour: AnyColor) {
         const rgb = toRGB(colour)
         const hsl = toHSL(colour)
-        const hsv = toHSV(colour)
+        const hsb = toHSB(colour)
 
         return (
             <ul>
                 <li>Hex: {swatch(rgb)} RGB: {rgb.r}, {rgb.g}, {rgb.b}</li>
-                <li>HSL/V: {hsl.h} {hsl.s}% {hsl.l}% / {hsv.h} {hsv.s}% {hsv.v}%</li>
+                <li>HSL/V: {hsl.h} {hsl.s}% {hsl.l}% / {hsb.h} {hsb.s}% {hsb.b}%</li>
             </ul>
         )
     }
@@ -69,8 +70,8 @@ export function DebugDisplay() {
                     <Toggle onClick={() => dispatch(setMode('hsl'))}>
                         {mode === 'hsl' ? '[' : ''}HSL{mode === 'hsl' ? ']' : ''}
                     </Toggle>&nbsp;
-                    <Toggle onClick={() => dispatch(setMode('hsv'))}>
-                        {mode === 'hsv' ? '[' : ''}HSV{mode === 'hsv' ? ']' : ''}
+                    <Toggle onClick={() => dispatch(setMode('hsb'))}>
+                        {mode === 'hsb' ? '[' : ''}HSB{mode === 'hsb' ? ']' : ''}
                     </Toggle>
                 </label>
                 <br/><br/>
@@ -81,24 +82,24 @@ export function DebugDisplay() {
                 <label>Previous Guesses</label>
                 <ul style={{fontSize: 'xx-small'}}>
                     {
-                        previousGuesses.map((guess, idx) => {
+                        previousGuesses.map((guess: AnyColor, idx: number) => {
                             const rgbT = toRGB(target)
                             const hslT = toHSL(target)
-                            const hsvT = toHSV(target)
+                            const hsbT = toHSB(target)
                             const rgbG = toRGB(guess)
                             const hslG = toHSL(guess)
-                            const hsvG = toHSV(guess)
+                            const hsbG = toHSB(guess)
                             const rgbDiffString = 'ΔRGB: ' +
                                 `${rgbT.r - rgbG.r}, ${rgbT.g - rgbG.g}, ${rgbT.b - rgbG.b}`
                             const hslDiffString = 'ΔHSL: ' +
-                                `${hueDiff({to: hslT.h, from: hslG.h})} ${hslT.s - hslG.s}% ${hslT.l - hslG.l}%`
-                            const hsvDiffString = 'ΔHSV: ' +
-                                `${hueDiff({to: hsvT.h, from: hsvG.h})} ${hsvT.s - hsvG.s}% ${hsvT.v - hsvG.v}%`
+                                `${hueDiff(hslT.h, hslG.h)} ${hslT.s - hslG.s}% ${hslT.l - hslG.l}%`
+                            const hsbDiffString = 'HSB: ' +
+                                `${hueDiff(hsbT.h, hsbG.h)} ${hsbT.s - hsbG.s}% ${hsbT.b - hsbG.b}%`
                             let diffString = ''
                             switch (mode) {
                                 case 'rgb': diffString = rgbDiffString; break
                                 case 'hsl': diffString = hslDiffString; break
-                                case 'hsv': diffString = hsvDiffString; break
+                                case 'hsb': diffString = hsbDiffString; break
                             }
                             return (
                                 <li key={idx}>
