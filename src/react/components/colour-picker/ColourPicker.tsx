@@ -16,23 +16,25 @@ const Container = styled.div`
   }
 `
 
-export function ColourPicker (props: ColourPickerProps): ReactElement {
-  const [activeColour, setActiveColour] = useState(props.currentColour as RGBColor)
+export function ColourPicker(props: ColourPickerProps): ReactElement {
+  const [activeColour, setActiveColour] = useState(
+    props.currentColour as RGBColor
+  )
 
   useEffect(() => {
     setActiveColour(toRGB(props.currentColour))
   }, [props])
 
   return (
-        <Container>
-            <SketchPicker
-                disableAlpha={true}
-                width='auto'
-                color={activeColour}
-                onChange={color => setActiveColour(color.rgb)}
-                onChangeComplete={color => props.onSelect(color.rgb)}
-                presetColors={[]}
-            />
-        </Container>
+    <Container>
+      <SketchPicker
+        disableAlpha={true}
+        width="auto"
+        color={activeColour}
+        onChange={(color) => setActiveColour(color.rgb)}
+        onChangeComplete={(color) => props.onSelect(color.rgb)}
+        presetColors={[]}
+      />
+    </Container>
   )
 }

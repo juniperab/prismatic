@@ -8,21 +8,21 @@ const hintConfig: HintConfig = {
     greenCutoff: 128,
     greenMaxStep: 64,
     blueCutoff: 128,
-    blueMaxStep: 64
+    blueMaxStep: 64,
   },
   hsl: {
     hueCutoff: 90,
     hueStep: 90,
-    saturationMaxStep: 25
+    saturationMaxStep: 25,
   },
   hsb: {
     hueCutoff: 90,
     hueStep: 60,
     saturationMaxStep: 25,
-    brightnessMaxStep: 25
-  }
+    brightnessMaxStep: 25,
+  },
 }
 
 export const puzzleConfig: PuzzleConfig = {
-  hint: hintConfig
+  hint: hintConfig,
 }

@@ -5,18 +5,22 @@ import { PuzzleHSB } from '../puzzle'
 import { HintConfigHSB } from './hintConfig'
 import { bounded } from '../../math/math'
 
-export function generateHintHSB (guess: HSBColor, puzzle: PuzzleHSB, config: HintConfigHSB): HSBHint {
+export function generateHintHSB(
+  guess: HSBColor,
+  puzzle: PuzzleHSB,
+  config: HintConfigHSB
+): HSBHint {
   const { answer, precision } = puzzle
   return {
     type: 'hsb',
     guessedColour: guess,
     hue: getHueHint(guess, answer, precision, config),
     saturation: getSaturationHint(guess, answer, precision, config),
-    brightness: getBrightnessHint(guess, answer, precision, config)
+    brightness: getBrightnessHint(guess, answer, precision, config),
   }
 }
 
-function getHueHint (
+function getHueHint(
   guess: HSBColor,
   target: HSBColor,
   precision: number,
@@ -30,10 +34,14 @@ function getHueHint (
   }
   const value = bounded(diff / config.hueStep, -1, 1)
   const hue = rotateHue(guess.h, config.hueStep * Math.sign(diff))
-  return { match: false, colour: { h: hue, s: Math.abs(value) * 100, b: 100 }, value }
+  return {
+    match: false,
+    colour: { h: hue, s: Math.abs(value) * 100, b: 100 },
+    value,
+  }
 }
 
-function getSaturationHint (
+function getSaturationHint(
   guess: HSBColor,
   target: HSBColor,
   precision: number,
@@ -46,10 +54,14 @@ function getSaturationHint (
     return
   }
   const value = bounded(diff / config.saturationMaxStep, -1, 1)
-  return { match: false, colour: { h: guess.h, s: Math.abs(value) * 100, b: 100 }, value }
+  return {
+    match: false,
+    colour: { h: guess.h, s: Math.abs(value) * 100, b: 100 },
+    value,
+  }
 }
 
-function getBrightnessHint (
+function getBrightnessHint(
   guess: HSBColor,
   target: HSBColor,
   precision: number,
@@ -62,5 +74,9 @@ function getBrightnessHint (
     return
   }
   const value = bounded(diff / config.brightnessMaxStep, -1, 1)
-  return { match: false, colour: { h: guess.h, s: 0, b: Math.abs(1 - Math.abs(value)) * 100 }, value }
+  return {
+    match: false,
+    colour: { h: guess.h, s: 0, b: Math.abs(1 - Math.abs(value)) * 100 },
+    value,
+  }
 }

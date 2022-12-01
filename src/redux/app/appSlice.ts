@@ -6,7 +6,7 @@ export interface AppState {
 }
 
 const initialState: AppState = {
-  showHelp: false
+  showHelp: false,
 }
 
 export const appSlice = createSlice({
@@ -15,8 +15,8 @@ export const appSlice = createSlice({
   reducers: {
     setHelpVisible: (state, action: PayloadAction<boolean>) => {
       state.showHelp = action.payload
-    }
-  }
+    },
+  },
 })
 
 export const { setHelpVisible } = appSlice.actions

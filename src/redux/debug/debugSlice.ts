@@ -7,7 +7,7 @@ export interface DebugState {
 }
 
 const initialState: DebugState = {
-  displayMode: 'hsb'
+  displayMode: 'hsb',
 }
 
 export const debugSlice = createSlice({
@@ -16,8 +16,8 @@ export const debugSlice = createSlice({
   reducers: {
     setDisplayMode: (state, action: PayloadAction<PuzzleMode>) => {
       state.displayMode = action.payload
-    }
-  }
+    },
+  },
 })
 
 export const { setDisplayMode } = debugSlice.actions

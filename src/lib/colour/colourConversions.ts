@@ -14,32 +14,32 @@ export type AnyColor = RGBColor | HSLColor | HSBColor | HexColor | NamedColor
 
 type ColourTriple = [number, number, number]
 
-export function isRGB (colour: any): colour is RGBColor {
+export function isRGB(colour: any): colour is RGBColor {
   const rgb = colour as RGBColor
   return rgb.r !== undefined && rgb.g !== undefined && rgb.b !== undefined
 }
 
-export function isHSL (colour: any): colour is HSLColor {
+export function isHSL(colour: any): colour is HSLColor {
   const hsl = colour as HSLColor
   return hsl.h !== undefined && hsl.s !== undefined && hsl.l !== undefined
 }
 
-export function isHSB (colour: any): colour is HSBColor {
+export function isHSB(colour: any): colour is HSBColor {
   const hsb = colour as HSBColor
   return hsb.h !== undefined && hsb.s !== undefined && hsb.b !== undefined
 }
 
-export function isHex (colour: any): colour is HexColor {
+export function isHex(colour: any): colour is HexColor {
   const hex = colour as HexColor
   return hex.length === 7 && hex.charAt(0) === '#' && hex.toUpperCase() === hex
 }
 
-export function isNamed (colour: any): colour is NamedColor {
+export function isNamed(colour: any): colour is NamedColor {
   const named = colour as NamedColor
   return !isHex(colour) && named.length > 0 && named === named.toLowerCase()
 }
 
-function toTriple (colour: AnyColor): ColourTriple {
+function toTriple(colour: AnyColor): ColourTriple {
   if (isRGB(colour)) {
     return [colour.r, colour.g, colour.b]
   } else if (isHSL(colour)) {
@@ -50,27 +50,27 @@ function toTriple (colour: AnyColor): ColourTriple {
   throw new Error('invalid colour type')
 }
 
-function asRGB (colour: ColourTriple): RGBColor {
+function asRGB(colour: ColourTriple): RGBColor {
   return { r: colour[0], g: colour[1], b: colour[2] }
 }
 
-function asHSL (colour: ColourTriple): HSLColor {
+function asHSL(colour: ColourTriple): HSLColor {
   return { h: colour[0], s: colour[1], l: colour[2] }
 }
 
-function asHSB (colour: ColourTriple): HSBColor {
+function asHSB(colour: ColourTriple): HSBColor {
   return { h: colour[0], s: colour[1], b: colour[2] }
 }
 
-function asHex (colour: string): HexColor {
+function asHex(colour: string): HexColor {
   return `#${colour.toUpperCase()}`
 }
 
-function asNamed (colour: string): NamedColor {
+function asNamed(colour: string): NamedColor {
   return colour.toLowerCase()
 }
 
-export function toRGB (colour: AnyColor): RGBColor {
+export function toRGB(colour: AnyColor): RGBColor {
   if (isRGB(colour)) {
     return colour
   } else if (isHSL(colour)) {
@@ -85,7 +85,7 @@ export function toRGB (colour: AnyColor): RGBColor {
   throw new Error('invalid colour type')
 }
 
-export function toHSL (colour: AnyColor): HSLColor {
+export function toHSL(colour: AnyColor): HSLColor {
   if (isRGB(colour)) {
     return asHSL(convert.rgb.hsl(toTriple(colour)))
   } else if (isHSL(colour)) {
@@ -100,7 +100,7 @@ export function toHSL (colour: AnyColor): HSLColor {
   throw new Error('invalid colour type')
 }
 
-export function toHSB (colour: AnyColor): HSBColor {
+export function toHSB(colour: AnyColor): HSBColor {
   if (isRGB(colour)) {
     return asHSB(convert.rgb.hsv(toTriple(colour)))
   } else if (isHSL(colour)) {
@@ -115,7 +115,7 @@ export function toHSB (colour: AnyColor): HSBColor {
   throw new Error('invalid colour type')
 }
 
-export function toHex (colour: AnyColor): HexColor {
+export function toHex(colour: AnyColor): HexColor {
   if (isRGB(colour)) {
     return asHex(convert.rgb.hex(toTriple(colour)))
   } else if (isHSL(colour)) {
@@ -130,7 +130,7 @@ export function toHex (colour: AnyColor): HexColor {
   throw new Error('invalid colour type')
 }
 
-export function toNamed (colour: AnyColor): NamedColor {
+export function toNamed(colour: AnyColor): NamedColor {
   if (isRGB(colour)) {
     return asNamed(convert.rgb.keyword(toTriple(colour)))
   } else if (isHSL(colour)) {

@@ -6,7 +6,7 @@ export interface ConfigState {
 }
 
 const initialState: ConfigState = {
-  foo: 'bar'
+  foo: 'bar',
 }
 
 export const configSlice = createSlice({
@@ -15,8 +15,8 @@ export const configSlice = createSlice({
   reducers: {
     setFoo: (state, action: PayloadAction<string>) => {
       state.foo = action.payload
-    }
-  }
+    },
+  },
 })
 
 export const { setFoo } = configSlice.actions

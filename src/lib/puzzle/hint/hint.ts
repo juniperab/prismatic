@@ -34,17 +34,17 @@ export interface HSBHint extends BaseHint {
   brightness?: HintItem
 }
 
-export function isRGBHint (hint: Hint): hint is RGBHint {
+export function isRGBHint(hint: Hint): hint is RGBHint {
   const rgbHint = hint as RGBHint
   return rgbHint.type === 'rgb'
 }
 
-export function isHSLHint (hint: Hint): hint is HSLHint {
+export function isHSLHint(hint: Hint): hint is HSLHint {
   const hslHint = hint as HSLHint
   return hslHint.type === 'hsl'
 }
 
-export function isHSBHint (hint: Hint): hint is HSLHint {
+export function isHSBHint(hint: Hint): hint is HSLHint {
   const hsbHint = hint as HSBHint
   return hsbHint.type === 'hsb'
 }
@@ -55,7 +55,7 @@ export interface HintVisitor<T> {
   hsb: (hint: HSBHint) => T
 }
 
-export function visitHint<T> (hint: Hint, visitor: HintVisitor<T>): T {
+export function visitHint<T>(hint: Hint, visitor: HintVisitor<T>): T {
   if (isRGBHint(hint)) {
     return visitor.rgb(hint)
   } else if (isHSLHint(hint)) {
@@ -69,10 +69,13 @@ export function visitHint<T> (hint: Hint, visitor: HintVisitor<T>): T {
 const getHintItemsAsArrayVisitor: HintVisitor<Array<HintItem | undefined>> = {
   rgb: (hint) => [hint.red, hint.green, hint.blue],
   hsl: (hint) => [hint.hue, hint.saturation, hint.luminance],
-  hsb: (hint) => [hint.hue, hint.saturation, hint.brightness]
+  hsb: (hint) => [hint.hue, hint.saturation, hint.brightness],
 }
 
-export function visitHintItems<T> (hint: Hint, visitor: (hintItem: HintItem) => T): Array<T | undefined> {
+export function visitHintItems<T>(
+  hint: Hint,
+  visitor: (hintItem: HintItem) => T
+): Array<T | undefined> {
   const items = visitHint(hint, getHintItemsAsArrayVisitor)
-  return items.map(item => (item != null) ? visitor(item) : undefined)
+  return items.map((item) => (item != null ? visitor(item) : undefined))
 }

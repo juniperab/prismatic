@@ -1,4 +1,13 @@
-import { AnyColor, isHex, isHSB, isHSL, isRGB, toHSB, toHSL, toRGB } from './colourConversions'
+import {
+  AnyColor,
+  isHex,
+  isHSB,
+  isHSL,
+  isRGB,
+  toHSB,
+  toHSL,
+  toRGB,
+} from './colourConversions'
 
 /**
  * Rotate a hue around the colour wheel by some number of degrees. The result will be in [0, 360).
@@ -6,7 +15,7 @@ import { AnyColor, isHex, isHSB, isHSL, isRGB, toHSB, toHSL, toRGB } from './col
  * @param hue           the original hue
  * @param degrees       the number of degrees to rotate (which may be positive or negative)
  */
-export function rotateHue (hue: number, degrees: number): number {
+export function rotateHue(hue: number, degrees: number): number {
   let newHue = (hue + degrees) % 360
   while (newHue < 0) newHue += 360
   return newHue
@@ -19,7 +28,7 @@ export function rotateHue (hue: number, degrees: number): number {
  * @param to      the ending-point hues
  * @param from    the starting-point hues
  */
-export function hueDiff (to: number, from: number): number {
+export function hueDiff(to: number, from: number): number {
   // normalize the given hues onto [0, 360), just in case
   let diff = rotateHue(to, 0) - rotateHue(from, 0)
   while (diff > 180) diff -= 360
@@ -35,7 +44,11 @@ export function hueDiff (to: number, from: number): number {
  * @param b             the second colour to compare
  * @param precision     the maximum amount by which any component of the colours may differ yet be considered a match
  */
-export function isSameColour (a: AnyColor, b: AnyColor, precision: number): boolean {
+export function isSameColour(
+  a: AnyColor,
+  b: AnyColor,
+  precision: number
+): boolean {
   let diffs = [0, 0, 0]
   if (isRGB(a)) {
     const b2 = toRGB(b)
@@ -53,12 +66,16 @@ export function isSameColour (a: AnyColor, b: AnyColor, precision: number): bool
   } else {
     throw new Error('invalid colour type')
   }
-  return diffs.every(diff => Math.abs(diff) <= precision)
+  return diffs.every((diff) => Math.abs(diff) <= precision)
 }
 
 /**
  * Generate a random colour.
  */
-export function generateRandomColour (): AnyColor {
-  return { r: Math.random() * 256, g: Math.random() * 256, b: Math.random() * 256 }
+export function generateRandomColour(): AnyColor {
+  return {
+    r: Math.random() * 256,
+    g: Math.random() * 256,
+    b: Math.random() * 256,
+  }
 }

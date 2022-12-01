@@ -35,11 +35,11 @@ export interface PuzzleConfig {
   hint: HintConfig
 }
 
-export function getPuzzleId (puzzle: Puzzle): PuzzleId {
+export function getPuzzleId(puzzle: Puzzle): PuzzleId {
   return base64.encode(utf8.encode(JSON.stringify(puzzle)))
 }
 
-export function loadPuzzleById (id: PuzzleId): Puzzle {
+export function loadPuzzleById(id: PuzzleId): Puzzle {
   // theoretically, this function could load a stored puzzle definition from a database
   // for now, it will parse structured data stored in the PuzzleId string
   return JSON.parse(utf8.decode(base64.decode(id))) as Puzzle
