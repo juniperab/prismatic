@@ -1,13 +1,11 @@
-import * as _ from "lodash";
 import styled from "styled-components";
 import {ColourPicker} from "../../components/colour-picker/ColourPicker";
 import React, {CSSProperties, useState} from "react";
 import {useAppDispatch, useAppSelector} from "../../redux/hooks";
-import {guessColour, guessCurrentColour, selectColour, selectColourGuesserState} from "./colourGuesserSlice";
+import {selectColourGuesserState, setCurrentColour} from "./colourGuesserSlice";
 import {AnyColor, toHex, toHSL, toRGB} from "../../lib/colour/colourConversions";
-import {selectPuzzleState, startNewGame} from "../../modules/puzzle/puzzleSlice";
+import {getNextHint, giveUp, selectPuzzleState, startNewGame} from "../../modules/puzzle/puzzleSlice";
 import {setHelpVisible} from "../../modules/app/appSlice";
-import {isSameColour} from "../../lib/colour/colourMath";
 
 const WHITE = '#FFFFFF'
 const BLACK = '#000000'
@@ -47,17 +45,16 @@ export function ColourGuesser() {
     const [ clicking, setClicking ] = useState(false)
     const [ hoveringGU, setHoveringGU ] = useState(false)
     const [ clickingGU, setClickingGU ] = useState(false)
-    const { colour, previousGuesses, startingColour } = useAppSelector(selectColourGuesserState)
-    const { precision, target } = useAppSelector(selectPuzzleState)
+    const { currentColour } = useAppSelector(selectColourGuesserState)
+    const { answerName } = useAppSelector(selectPuzzleState)
     const dispatch = useAppDispatch()
 
-    const lowLuminance = toHSL(colour).l < 50
-    let mainColour: AnyColor = colour
+    const lowLuminance = toHSL(currentColour).l < 50
+    let mainColour: AnyColor = currentColour
     let accentColour: AnyColor = lowLuminance ? WHITE : BLACK
     let addShadow = lowLuminance
 
-    const gameOver = previousGuesses.length > 0 && isSameColour(target, _.last(previousGuesses) as AnyColor, precision)
-    if (gameOver) {
+    if (answerName) {
         mainColour = '#FFFFFF'
         accentColour = '#000000'
         addShadow = true
@@ -93,7 +90,8 @@ export function ColourGuesser() {
     }
 
     function renderButton() {
-        if (gameOver) {
+        if (answerName) {
+            // TODO: new game button does not work
             return (
                 <NewGameButton
                     style={buttonStyle}
@@ -117,7 +115,7 @@ export function ColourGuesser() {
                     onMouseLeave={() => setHovering(false)}
                     onMouseDown={() => setClicking(true)}
                     onMouseUp={() => setClicking(false)}
-                    onClick={() => dispatch(guessCurrentColour())}
+                    onClick={() => dispatch(getNextHint())}
                 >
                     Make a guess
                 </GuessButton>
@@ -128,7 +126,7 @@ export function ColourGuesser() {
                     onMouseLeave={() => setHoveringGU(false)}
                     onMouseDown={() => setClickingGU(true)}
                     onMouseUp={() => setClickingGU(false)}
-                    onClick={() => dispatch(guessColour(target))}
+                    onClick={() => dispatch(giveUp())}
                 >
                     Give Up
                 </GiveUpButton>
@@ -140,9 +138,8 @@ export function ColourGuesser() {
     return (
         <>
             <ColourPicker
-                colour={toRGB(colour)}
-                extraSwatches={[startingColour, ...previousGuesses]}
-                onSelect={(newColour) => {console.log(newColour); dispatch(selectColour(newColour))}}
+                currentColour={toRGB(currentColour)}
+                onSelect={(newColour) => dispatch(setCurrentColour(newColour))}
             />
             {renderButton()}
             <HelpLink onClick={() => dispatch(setHelpVisible(true))}>How to play</HelpLink>

@@ -1,20 +1,16 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {RootState} from "../../redux/store";
-import {AnyColor} from "../../lib/colour/colourConversions";
-import {generateRandomColour} from "../../lib/colour/colourMath";
-
+import {AnyColor, NamedColor} from "../../lib/colour/colourConversions";
 
 export interface ColourGuesserState {
-    colour: AnyColor;
-    previousGuesses: AnyColor[];
+    currentColour: AnyColor;
     startingColour: AnyColor;
 }
 
-const startingColour = generateRandomColour() // TODO: this should not be done in the initialState, I think
+const startingColour = 'mediumslateblue' as NamedColor
 
 const initialState: ColourGuesserState = {
-    colour: startingColour,
-    previousGuesses: [],
+    currentColour: startingColour,
     startingColour: startingColour
 }
 
@@ -22,18 +18,8 @@ export const colourGuesserSlice = createSlice({
     name: 'colourGuesser',
     initialState,
     reducers: {
-        guessColour: (state, action: PayloadAction<AnyColor>) => {
-            state.colour = action.payload
-            state.previousGuesses.push(action.payload)
-        },
-        guessCurrentColour: (state) => {
-            state.previousGuesses.push(state.colour)
-        },
-        selectColour: (state, action: PayloadAction<AnyColor>) => {
-            state.colour = action.payload
-        },
-        clearGuesses: (state) => {
-            state.previousGuesses = []
+        setCurrentColour: (state, action: PayloadAction<AnyColor>) => {
+            state.currentColour = action.payload
         },
         setStartingColour: (state, action: PayloadAction<AnyColor>) => {
             state.startingColour = action.payload
@@ -41,6 +27,6 @@ export const colourGuesserSlice = createSlice({
     }
 })
 
-export const { guessColour, guessCurrentColour, selectColour, clearGuesses, setStartingColour  } = colourGuesserSlice.actions
+export const { setCurrentColour, setStartingColour  } = colourGuesserSlice.actions
 export const selectColourGuesserState = (state: RootState) => state.colourGuesser
 export default colourGuesserSlice.reducer

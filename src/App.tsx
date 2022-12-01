@@ -1,12 +1,15 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import styled from "styled-components";
 import {ColourGuesser} from "./features/colour-guesser/ColourGuesser";
-import {GuessDisplay} from "./features/guess-display/GuessDisplay";
-import {DebugDisplay} from "./features/debug-display/DebugDisplay";
+import {HintDisplay} from "./features/hint-display/HintDisplay";
+import {Debug} from "./features/debug/Debug";
 import logoFile from './logo.jpg'
 import {Rules} from "./features/rules/Rules";
-import {useAppSelector} from "./redux/hooks";
+import {useAppDispatch, useAppSelector} from "./redux/hooks";
 import {selectAppState} from "./modules/app/appSlice";
+import {generateRandomColour} from "./lib/colour/colourMath";
+import {toNamed} from "./lib/colour/colourConversions";
+import {setCurrentColour, setStartingColour} from "./features/colour-guesser/colourGuesserSlice";
 
 const Header = styled.h1`
   text-align: center;
@@ -35,6 +38,14 @@ const SectionHeader = styled.h4`
 
 export function App() {
     const { showHelp } = useAppSelector(selectAppState)
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        const startingColour = toNamed(generateRandomColour())
+        dispatch(setStartingColour(startingColour))
+        dispatch(setCurrentColour(startingColour))
+    },[dispatch]);
+
     return (
         <>
             <Header><img alt='logo' src={logoFile} width='24px'/> Prismatic</Header>
@@ -46,11 +57,11 @@ export function App() {
                 </Section>
                 <Section>
                     <SectionHeader>Response View</SectionHeader>
-                    <GuessDisplay/>
+                    <HintDisplay/>
                 </Section>
                 <Section>
                     <SectionHeader>Debug Info</SectionHeader>
-                    <DebugDisplay/>
+                    <Debug/>
                 </Section>
             </Main>
         </>
