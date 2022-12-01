@@ -1,30 +1,24 @@
 {
-  "name": "prismatic",
-  "description": "A colour-guessing puzzle game",
-  "version": "0.2.1",
-  "private": true,
-  "homepage": "https://juniperab.github.io/prismatic",
-  "bugs": {
-    "url": "https://github.com/juniperab/prismatic/issues",
-    "email": "prismatic@juniper.stormchasers.ca"
-  },
-  "license": "AGPL-3.0-or-later",
   "author": {
+    "email": "juniper@stormchasers.ca",
     "name": "Juniper Alanna Berry",
-    "url": "https://github.com/juniperab",
-    "email": "juniper@stormchasers.ca"
+    "url": "https://github.com/juniperab"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/juniperab/prismatic.git"
+  "browserslist": {
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ]
   },
-  "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+  "bugs": {
+    "email": "prismatic@juniper.stormchasers.ca",
+    "url": "https://github.com/juniperab/prismatic/issues"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.0",
@@ -50,33 +44,62 @@
     "react-scripts": "5.0.1",
     "save-dev": "^0.0.1-security",
     "styled-components": "^5.3.6",
-    "typescript": "^4.9.3",
     "utf8": "^3.0.0",
     "web-vitals": "^2.1.4"
   },
+  "description": "A colour-guessing puzzle game",
   "devDependencies": {
     "@types/color-convert": "^2.0.0",
     "@types/lodash": "^4.14.190",
     "@types/utf8": "^3.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "eslint": "^8.28.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-standard-with-typescript": "^23.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.5.1",
+    "eslint-plugin-promise": "^6.1.1",
     "gh-pages": "^4.0.0",
-    "sass": "^1.56.1"
+    "prettier": "^2.8.0",
+    "sass": "^1.56.1",
+    "typescript": "^4.9.3"
   },
   "eslintConfig": {
     "extends": [
+      "eslint-config-prettier",
+      "eslint-config-standard-with-typescript",
       "react-app",
       "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
     ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+    "rules": {
+      "@typescript-eslint/no-misused-promises": [
+        "error",
+        {
+          "checksVoidReturn": false
+        }
+      ]
+    },
+    "parserOptions": {
+      "project": [
+        "tsconfig.json"
+      ]
+    }
+  },
+  "homepage": "https://juniperab.github.io/prismatic",
+  "license": "AGPL-3.0-or-later",
+  "name": "prismatic",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/juniperab/prismatic.git"
+  },
+  "scripts": {
+    "build": "react-scripts build",
+    "deploy": "gh-pages -d build",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "npm run lint -- --fix",
+    "start": "react-scripts start",
+    "test": "react-scripts test"
+  },
+  "version": "0.2.1"
 }

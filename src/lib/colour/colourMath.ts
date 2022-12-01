@@ -1,5 +1,13 @@
-import {AnyColor, HexColor, HSBColor, isHex, isHSB, isHSL, isRGB, toHSB, toHSL, toRGB} from "./colourConversions";
-import {HSLColor, RGBColor} from "react-color";
+import {
+  AnyColor,
+  isHex,
+  isHSB,
+  isHSL,
+  isRGB,
+  toHSB,
+  toHSL,
+  toRGB,
+} from './colourConversions'
 
 /**
  * Rotate a hue around the colour wheel by some number of degrees. The result will be in [0, 360).
@@ -8,9 +16,9 @@ import {HSLColor, RGBColor} from "react-color";
  * @param degrees       the number of degrees to rotate (which may be positive or negative)
  */
 export function rotateHue(hue: number, degrees: number): number {
-    let newHue = (hue + degrees) % 360
-    while (newHue < 0) newHue += 360
-    return newHue
+  let newHue = (hue + degrees) % 360
+  while (newHue < 0) newHue += 360
+  return newHue
 }
 
 /**
@@ -21,11 +29,11 @@ export function rotateHue(hue: number, degrees: number): number {
  * @param from    the starting-point hues
  */
 export function hueDiff(to: number, from: number): number {
-    // normalize the given hues onto [0, 360), just in case
-    let diff = rotateHue(to, 0) - rotateHue(from, 0)
-    while (diff > 180) diff -= 360
-    while (diff < -180) diff += 360
-    return diff
+  // normalize the given hues onto [0, 360), just in case
+  let diff = rotateHue(to, 0) - rotateHue(from, 0)
+  while (diff > 180) diff -= 360
+  while (diff < -180) diff += 360
+  return diff
 }
 
 /**
@@ -36,30 +44,38 @@ export function hueDiff(to: number, from: number): number {
  * @param b             the second colour to compare
  * @param precision     the maximum amount by which any component of the colours may differ yet be considered a match
  */
-export function isSameColour(a: AnyColor, b: AnyColor, precision: number): boolean {
-    let diffs = [0, 0, 0]
-    if (isRGB(a)) {
-        const b2 = toRGB(b);
-        diffs = [b2.r - a.r, b2.g - a.g, b2.b - a.b]
-    } else if (isHSL(a)) {
-        const b2 = toHSL(b)
-        diffs = [hueDiff(b2.h, a.h), b2.s - a.s, b2.l - a.l]
-    } else if (isHSB(a)) {
-        const b2 = toHSB(b)
-        diffs = [hueDiff(b2.h, a.h), b2.s - a.s, b2.b - a.b]
-    } else if (isHex(a)) {
-        const a2 = toRGB(a)
-        const b2 = toRGB(b)
-        diffs = [b2.r - a2.r, b2.g - a2.g, b2.b - a2.b]
-    } else {
-        throw new Error("invalid colour type")
-    }
-    return diffs.every(diff => Math.abs(diff) <= precision)
+export function isSameColour(
+  a: AnyColor,
+  b: AnyColor,
+  precision: number
+): boolean {
+  let diffs = [0, 0, 0]
+  if (isRGB(a)) {
+    const b2 = toRGB(b)
+    diffs = [b2.r - a.r, b2.g - a.g, b2.b - a.b]
+  } else if (isHSL(a)) {
+    const b2 = toHSL(b)
+    diffs = [hueDiff(b2.h, a.h), b2.s - a.s, b2.l - a.l]
+  } else if (isHSB(a)) {
+    const b2 = toHSB(b)
+    diffs = [hueDiff(b2.h, a.h), b2.s - a.s, b2.b - a.b]
+  } else if (isHex(a)) {
+    const a2 = toRGB(a)
+    const b2 = toRGB(b)
+    diffs = [b2.r - a2.r, b2.g - a2.g, b2.b - a2.b]
+  } else {
+    throw new Error('invalid colour type')
+  }
+  return diffs.every((diff) => Math.abs(diff) <= precision)
 }
 
 /**
  * Generate a random colour.
  */
 export function generateRandomColour(): AnyColor {
-    return {r: Math.random() * 256, g: Math.random() * 256, b: Math.random() * 256}
+  return {
+    r: Math.random() * 256,
+    g: Math.random() * 256,
+    b: Math.random() * 256,
+  }
 }

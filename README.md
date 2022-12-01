@@ -31,7 +31,6 @@ The first box from the left shows you the colour that you guessed.
 
 ###### Hue hint
 
-
 The second box (marked with an 'H') gives you a hint about the correct hue of the
 secret colour.
 The 'hue' of a colour is basically where it lies on the rainbow, from red to purple.
@@ -95,11 +94,11 @@ to the secret colour.
 With this second guess, we get three new pieces of information:
 
 1. The hue is still a little bit further in the yellow direction on the spectrum,
-but we're getting closer (the hue hint is paler).
+   but we're getting closer (the hue hint is paler).
 2. We got the saturation bang on! A white box with a thick black dashed border means that this
-component of the guess matches the secret colour. Nicely done.
+   component of the guess matches the secret colour. Nicely done.
 3. But oh no! The colour we guessed is too dark. We'll need to guess a brighter colour
-but we don't get any new information about how bright it should be.
+   but we don't get any new information about how bright it should be.
 
 Let's guess again.
 
@@ -115,16 +114,9 @@ Instead of a hint, you'll see a box that tells you what the secret colour way.
 
 Congratulations!
 
-
-
-
-
-
-
-## How to run and develop locally 
+## How to run and develop locally
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) TS template.
-
 
 In the project directory, you can run:
 
@@ -140,4 +132,3 @@ Launches the test runner in the interactive watch mode.
 ### `npm run build`
 
 Builds the app for production to the `build` folder.
-

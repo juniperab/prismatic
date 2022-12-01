@@ -1,15 +1,18 @@
-import React, {useEffect} from 'react';
-import styled from "styled-components";
-import {ColourGuesser} from "../colour-guesser/ColourGuesser";
-import {HintDisplay} from "../hint-display/HintDisplay";
-import {Debug} from "../debug/Debug";
+import React, { ReactElement, useEffect } from 'react'
+import styled from 'styled-components'
+import { ColourGuesser } from '../colour-guesser/ColourGuesser'
+import { HintDisplay } from '../hint-display/HintDisplay'
+import { Debug } from '../debug/Debug'
 import logoFile from '../../../logo.jpg'
-import {Rules} from "../rules/Rules";
-import {useAppDispatch, useAppSelector} from "../../../redux/hooks";
-import {selectAppState} from "../../../redux/app/appSlice";
-import {generateRandomColour} from "../../../lib/colour/colourMath";
-import {toNamed} from "../../../lib/colour/colourConversions";
-import {setCurrentColour, setStartingColour} from "../../../redux/puzzle/puzzleSlice";
+import { Rules } from '../rules/Rules'
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
+import { selectAppState } from '../../../redux/app/appSlice'
+import { generateRandomColour } from '../../../lib/colour/colourMath'
+import { toNamed } from '../../../lib/colour/colourConversions'
+import {
+  setCurrentColour,
+  setStartingColour,
+} from '../../../redux/puzzle/puzzleSlice'
 
 const Header = styled.h1`
   text-align: center;
@@ -33,37 +36,39 @@ const Section = styled.div`
 `
 
 const SectionHeader = styled.h4`
-    margin: 10px 0;
+  margin: 10px 0;
 `
 
-export function App() {
-    const { showHelp } = useAppSelector(selectAppState)
-    const dispatch = useAppDispatch()
+export function App(): ReactElement {
+  const { showHelp } = useAppSelector(selectAppState)
+  const dispatch = useAppDispatch()
 
-    useEffect(() => {
-        const startingColour = toNamed(generateRandomColour())
-        dispatch(setStartingColour(startingColour))
-        dispatch(setCurrentColour(startingColour))
-    },[dispatch]);
+  useEffect(() => {
+    const startingColour = toNamed(generateRandomColour())
+    dispatch(setStartingColour(startingColour))
+    dispatch(setCurrentColour(startingColour))
+  }, [dispatch])
 
-    return (
-        <>
-            <Header><img alt='logo' src={logoFile} width='24px'/> Prismatic</Header>
-            {showHelp && <Rules/>}
-            <Main>
-                <Section>
-                    <SectionHeader>Colour Picker</SectionHeader>
-                    <ColourGuesser/>
-                </Section>
-                <Section>
-                    <SectionHeader>Response View</SectionHeader>
-                    <HintDisplay/>
-                </Section>
-                <Section>
-                    <SectionHeader>Debug Info</SectionHeader>
-                    <Debug/>
-                </Section>
-            </Main>
-        </>
-    );
+  return (
+    <>
+      <Header>
+        <img alt="logo" src={logoFile} width="24px" /> Prismatic
+      </Header>
+      {showHelp && <Rules />}
+      <Main>
+        <Section>
+          <SectionHeader>Colour Picker</SectionHeader>
+          <ColourGuesser />
+        </Section>
+        <Section>
+          <SectionHeader>Response View</SectionHeader>
+          <HintDisplay />
+        </Section>
+        <Section>
+          <SectionHeader>Debug Info</SectionHeader>
+          <Debug />
+        </Section>
+      </Main>
+    </>
+  )
 }

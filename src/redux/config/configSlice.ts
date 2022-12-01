@@ -1,24 +1,24 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {RootState} from "../store";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { RootState } from '../store'
 
-export interface Config {
-    foo: string // placeholder for when I need application-level configuration again
+export interface ConfigState {
+  foo: string // placeholder for when I need application-level configuration again
 }
 
-const initialState: Config = {
-    foo: 'bar',
+const initialState: ConfigState = {
+  foo: 'bar',
 }
 
 export const configSlice = createSlice({
-    name: 'config',
-    initialState,
-    reducers: {
-        setFoo: (state, action: PayloadAction<string>) => {
-            state.foo = action.payload
-        },
+  name: 'config',
+  initialState,
+  reducers: {
+    setFoo: (state, action: PayloadAction<string>) => {
+      state.foo = action.payload
     },
+  },
 })
 
 export const { setFoo } = configSlice.actions
-export const selectConfigState = (state: RootState) => state.config
+export const selectConfigState = (state: RootState): ConfigState => state.config
 export default configSlice.reducer
