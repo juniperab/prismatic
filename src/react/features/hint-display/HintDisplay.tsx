@@ -62,9 +62,8 @@ function renderHintItem(hintItem: HintItem | undefined, name: string) {
     const style: CSSProperties = {
         backgroundColor: toHex(hintItem.colour),
         color: toHSL(hintItem.colour).l >= 50 ? '#000000' : '#FFFFFF',
-        border: hintItem.match ? '2x dashed black' : undefined,
+        border: hintItem.match ? '2px dashed black' : undefined,
     }
-    // TODO: matches are not displaying properly
     return <HintItemBox key={name} style={style}><span>{name}</span></HintItemBox>
 }
 
