@@ -1,7 +1,7 @@
 {
   "name": "prismatic",
   "description": "A colour-guessing puzzle game",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "homepage": "https://juniperab.github.io/prismatic",
   "bugs": {
