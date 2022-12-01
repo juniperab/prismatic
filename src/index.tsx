@@ -1,13 +1,14 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { Provider } from 'react-redux';
-import { store } from './redux/store';
-import { App } from './react/features/app/App';
-import reportWebVitals from './reportWebVitals';
-import './index.css';
+import React from 'react'
+import { createRoot } from 'react-dom/client'
+import { Provider } from 'react-redux'
+import { store } from './redux/store'
+import { App } from './react/features/app/App'
+import reportWebVitals from './reportWebVitals'
+import './index.css'
 
-const container = document.getElementById('root')!;
-const root = createRoot(container);
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const container = document.getElementById('root')!
+const root = createRoot(container)
 
 root.render(
   <React.StrictMode>
@@ -15,6 +16,6 @@ root.render(
       <App />
     </Provider>
   </React.StrictMode>
-);
+)
 
-reportWebVitals();
+reportWebVitals()

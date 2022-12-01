@@ -1,10 +1,11 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 import colorPickerImageFile from './colour-picker.png'
 import guess1ImageFile from './guess1.png'
 import guess2ImageFile from './guess2.png'
 import solutionImageFile from './solution.png'
-import {useAppDispatch} from "../../../redux/hooks";
-import {setHelpVisible} from "../../../redux/app/appSlice";
+import { useAppDispatch } from '../../../redux/hooks'
+import { setHelpVisible } from '../../../redux/app/appSlice'
+import { ReactElement } from 'react'
 
 const RulesWrapper = styled.div`
   position: fixed;
@@ -64,8 +65,8 @@ const RulesContents = styled.div`
   margin: 10px;
 `
 
-function renderRules() {
-    return (
+function renderRules (): ReactElement {
+  return (
         <RulesContents>
             <h2>How to play</h2>
             <p>
@@ -199,17 +200,17 @@ function renderRules() {
                 Congratulations!
             </p>
         </RulesContents>
-    )
+  )
 }
 
-export function Rules() {
-    const dispatch = useAppDispatch()
-    return (
+export function Rules (): ReactElement {
+  const dispatch = useAppDispatch()
+  return (
         <RulesWrapper>
             <RulesModal>
                 <ExitButton onClick={() => dispatch(setHelpVisible(false))}>X</ExitButton>
                 {renderRules()}
             </RulesModal>
         </RulesWrapper>
-    )
+  )
 }

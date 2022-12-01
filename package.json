@@ -68,6 +68,14 @@
       "react-app",
       "react-app/jest"
     ],
+    "rules": {
+      "@typescript-eslint/no-misused-promises": [
+        "error",
+        {
+          "checksVoidReturn": false
+        }
+      ]
+    },
     "parserOptions": {
       "project": ["tsconfig.json"]
     }
@@ -83,7 +91,7 @@
   "scripts": {
     "build": "react-scripts build",
     "deploy": "gh-pages -d build",
-    "lint": "eslint src --ext .ts",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "npm run lint -- --fix",
     "start": "react-scripts start",
     "test": "react-scripts test"

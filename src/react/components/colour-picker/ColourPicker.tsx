@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from 'react';
-import {RGBColor, SketchPicker} from 'react-color'
-import styled from "styled-components";
-import {AnyColor, toRGB} from "../../../lib/colour/colourConversions";
+import React, { ReactElement, useEffect, useState } from 'react'
+import { RGBColor, SketchPicker } from 'react-color'
+import styled from 'styled-components'
+import { AnyColor, toRGB } from '../../../lib/colour/colourConversions'
 
 export interface ColourPickerProps {
-    currentColour: AnyColor,
-    onSelect: (colour: AnyColor) => void;
+  currentColour: AnyColor
+  onSelect: (colour: AnyColor) => void
 }
 
 const Container = styled.div`
@@ -16,15 +16,14 @@ const Container = styled.div`
   }
 `
 
-export function ColourPicker(props: ColourPickerProps) {
-    const [ activeColour, setActiveColour ] = useState(props.currentColour as RGBColor)
+export function ColourPicker (props: ColourPickerProps): ReactElement {
+  const [activeColour, setActiveColour] = useState(props.currentColour as RGBColor)
 
-    useEffect(() => {
-        setActiveColour(toRGB(props.currentColour))
-    }, [props])
+  useEffect(() => {
+    setActiveColour(toRGB(props.currentColour))
+  }, [props])
 
-
-    return (
+  return (
         <Container>
             <SketchPicker
                 disableAlpha={true}
@@ -35,5 +34,5 @@ export function ColourPicker(props: ColourPickerProps) {
                 presetColors={[]}
             />
         </Container>
-    )
+  )
 }
