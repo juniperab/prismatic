@@ -1,35 +1,44 @@
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {AppThunk, RootState} from "../../redux/store";
-import {isNamed, NamedColor} from "../../lib/colour/colourConversions";
-import {setStartingColour} from "../../features/colour-guesser/colourGuesserSlice";
-import {Hint} from "../../lib/puzzle/api/hint";
-import {PuzzleId, PuzzleMode} from "../../lib/puzzle/api/puzzle";
+import {AppThunk, RootState} from "../store";
+import {AnyColor, isNamed, NamedColor, toHSB, toNamed} from "../../lib/colour/colourConversions";
+import {Hint} from "../../lib/puzzle/hint/hint";
+import {getPuzzleId, Puzzle, PuzzleId, PuzzleMode} from "../../lib/puzzle/puzzle";
 import {getPuzzleAnswerFromServer, submitGuessToServer} from "./puzzleClient";
-import {ClientPuzzleSpec, getInitialPuzzle, getNewPuzzle} from "../../lib/puzzle/api/client";
-import {stat} from "fs";
+import {ClientPuzzleSpec, getNewPuzzle} from "../../lib/puzzle/puzzleServer";
 
 export interface PuzzleState {
-    puzzleId: PuzzleId
-    mode: PuzzleMode;
-    precision: number,
-    hints: Hint[],
-    answerName?: NamedColor,
+    answerName?: NamedColor
+    currentColour: AnyColor
     gaveUp: boolean
+    hints: Hint[]
+    mode: PuzzleMode
+    precision: number
+    puzzleId: PuzzleId
+    startingColour: AnyColor
 }
 
+const initialPuzzle: Puzzle = {
+    answer: toHSB('mediumseagreen'),
+    answerName: toNamed('mediumseagreen'),
+    mode: 'hsb',
+    precision: 3,
+}
+const startingColour: AnyColor = 'slateblue'
 const initialState: PuzzleState = {
-    puzzleId: getInitialPuzzle().puzzleId,
-    mode: getInitialPuzzle().mode,
-    precision: getInitialPuzzle().precision,
-    hints: [],
+    currentColour: startingColour,
     gaveUp: false,
+    hints: [],
+    mode: initialPuzzle.mode,
+    precision: initialPuzzle.precision,
+    puzzleId: getPuzzleId(initialPuzzle),
+    startingColour: startingColour,
 }
 
 export const getNextHint = createAsyncThunk(
     "puzzle/getNextHint",
     async (_, api) => {
         const state: RootState = api.getState() as RootState
-        return await submitGuessToServer(state.colourGuesser.currentColour, state.puzzle.puzzleId)
+        return await submitGuessToServer(state.puzzle.currentColour, state.puzzle.puzzleId)
     }
 )
 
@@ -52,6 +61,12 @@ export const puzzleSlice = createSlice({
             state.hints = []
             state.gaveUp = false
         },
+        setCurrentColour: (state, action: PayloadAction<AnyColor>) => {
+            state.currentColour = action.payload
+        },
+        setStartingColour: (state, action: PayloadAction<AnyColor>) => {
+            state.startingColour = action.payload
+        }
     },
     extraReducers: (builder) => {
       builder
@@ -69,13 +84,14 @@ export const puzzleSlice = createSlice({
     },
 })
 
-export const { resetPuzzleState } = puzzleSlice.actions
+export const { resetPuzzleState, setCurrentColour, setStartingColour } = puzzleSlice.actions
 export const selectPuzzleState = (state: RootState) => state.puzzle
 export default puzzleSlice.reducer
 
 export const startNewGame =
     (): AppThunk =>
         (dispatch, getState) => {
-            dispatch(setStartingColour(getState().colourGuesser.currentColour))
+            const state: RootState = getState() as RootState
+            dispatch(setStartingColour(state.puzzle.currentColour))
             dispatch(resetPuzzleState(getNewPuzzle()));
         };

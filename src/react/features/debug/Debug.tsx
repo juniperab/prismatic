@@ -1,13 +1,12 @@
-import {useAppDispatch, useAppSelector} from "../../redux/hooks";
-import {selectColourGuesserState} from "../colour-guesser/colourGuesserSlice";
+import {useAppDispatch, useAppSelector} from "../../../redux/hooks";
 import styled from "styled-components";
-import {AnyColor, toHex, toHSL, toHSB, toRGB} from "../../lib/colour/colourConversions";
-import {selectPuzzleState} from "../../modules/puzzle/puzzleSlice";
+import {AnyColor, toHex, toHSL, toHSB, toRGB} from "../../../lib/colour/colourConversions";
+import {selectPuzzleState} from "../../../redux/puzzle/puzzleSlice";
 import {useState} from "react";
-import {hueDiff} from "../../lib/colour/colourMath";
-import {selectDebugState, setDisplayMode} from "./debugSlice";
-import {loadPuzzleById} from "../../lib/puzzle/api/puzzle";
-import {Hint} from "../../lib/puzzle/api/hint";
+import {hueDiff} from "../../../lib/colour/colourMath";
+import {selectDebugState, setDisplayMode} from "../../../redux/debug/debugSlice";
+import {loadPuzzleById} from "../../../lib/puzzle/puzzle";
+import {Hint} from "../../../lib/puzzle/hint/hint";
 
 const DataView = styled.div`
   text-align: left;
@@ -34,9 +33,8 @@ const Toggle = styled.span`
 `
 
 export function Debug() {
-    const { currentColour } = useAppSelector(selectColourGuesserState)
     const { displayMode } = useAppSelector(selectDebugState)
-    const { mode, precision, puzzleId, hints } = useAppSelector(selectPuzzleState)
+    const { currentColour, hints, mode, precision, puzzleId } = useAppSelector(selectPuzzleState)
     const puzzle = loadPuzzleById(puzzleId)
     const [ visible, setVisible ] = useState(false)
     const dispatch = useAppDispatch()

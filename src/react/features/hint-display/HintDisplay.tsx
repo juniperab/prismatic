@@ -1,14 +1,14 @@
 import styled from "styled-components";
-import {useAppSelector} from "../../redux/hooks";
-import {NamedColor, toHex, toHSL} from "../../lib/colour/colourConversions";
+import {useAppSelector} from "../../../redux/hooks";
+import {NamedColor, toHex, toHSL} from "../../../lib/colour/colourConversions";
 import {CSSProperties} from "react";
-import {selectPuzzleState} from "../../modules/puzzle/puzzleSlice";
+import {selectPuzzleState} from "../../../redux/puzzle/puzzleSlice";
 import {
     Hint,
     HintItem,
     HintVisitor,
     visitHint,
-} from "../../lib/puzzle/api/hint";
+} from "../../../lib/puzzle/hint/hint";
 
 const HintList = styled.div`
   //height: 390px;

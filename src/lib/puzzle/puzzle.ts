@@ -1,8 +1,8 @@
-import {AnyColor, HSBColor} from "../../colour/colourConversions";
+import {AnyColor, HSBColor} from "../colour/colourConversions";
 import {HSLColor, RGBColor} from "react-color";
 import base64 from "base-64";
 import utf8 from "utf8";
-import {HintConfig} from "../hint/hintConfig";
+import {HintConfig} from "./hint/hintConfig";
 
 export type PuzzleId = string;
 

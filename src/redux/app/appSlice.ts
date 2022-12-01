@@ -1,11 +1,11 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {RootState} from "../../redux/store";
+import {RootState} from "../store";
 
 export interface AppState {
     showHelp: boolean;
 }
 
-export const initialState: AppState = {
+const initialState: AppState = {
     showHelp: false,
 }
 

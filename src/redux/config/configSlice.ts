@@ -1,11 +1,11 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {RootState} from "../../redux/store";
+import {RootState} from "../store";
 
 export interface Config {
     foo: string // placeholder for when I need application-level configuration again
 }
 
-export const initialState: Config = {
+const initialState: Config = {
     foo: 'bar',
 }
 

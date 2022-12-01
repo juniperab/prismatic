@@ -1,11 +1,11 @@
-import {AnyColor, NamedColor, toHSB, toHSL, toNamed, toRGB} from "../../colour/colourConversions";
-import {generateRandomColour} from "../../colour/colourMath";
-import {getPuzzleId, loadPuzzleById, PuzzleId, PuzzleMode} from "./puzzle";
-import {Hint, visitHintItems} from "./hint";
-import {puzzleConfig} from "../puzzleConfig";
-import {generateHintRGB} from "../hint/hintGeneratorRGB";
-import {generateHintHSL} from "../hint/hintGeneratorHSL";
-import {generateHintHSB} from "../hint/hintGeneratorHSB";
+import {AnyColor, NamedColor, toHSB, toHSL, toNamed, toRGB} from "../colour/colourConversions";
+import {generateRandomColour} from "../colour/colourMath";
+import {getPuzzleId, loadPuzzleById, Puzzle, PuzzleId, PuzzleMode} from "./puzzle";
+import {Hint, visitHintItems} from "./hint/hint";
+import {puzzleConfig} from "./puzzleConfig";
+import {generateHintRGB} from "./hint/hintGeneratorRGB";
+import {generateHintHSL} from "./hint/hintGeneratorHSL";
+import {generateHintHSB} from "./hint/hintGeneratorHSB";
 
 export interface ClientPuzzleSpec {
     puzzleId: PuzzleId,
@@ -13,29 +13,13 @@ export interface ClientPuzzleSpec {
     precision: number,
 }
 
-const initialAnswer = 'mediumseagreen' as NamedColor
-const initialPuzzle = {
-    answer: toHSB(initialAnswer),
-    answerName: toNamed(initialAnswer),
-    mode: 'hsb' as 'hsb',
-    precision: 3,
-}
-
-export function getInitialPuzzle(): ClientPuzzleSpec {
-    return {
-        puzzleId: getPuzzleId(initialPuzzle),
-        mode: initialPuzzle.mode,
-        precision: initialPuzzle.precision
-    }
-}
-
 export function getNewPuzzle(): ClientPuzzleSpec {
     const answer = toNamed(generateRandomColour())
-    const newPuzzleSpec = {
+    const newPuzzleSpec: Puzzle = {
         answer: toHSB(answer),
         answerName: toNamed(answer),
-        mode: initialPuzzle.mode,
-        precision: initialPuzzle.precision,
+        mode: 'hsb',
+        precision: 3,
     }
     return {
         puzzleId: getPuzzleId(newPuzzleSpec),

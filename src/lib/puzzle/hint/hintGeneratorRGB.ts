@@ -1,9 +1,9 @@
-import {HintItem, RGBHint} from "../api/hint";
+import {HintItem, RGBHint} from "./hint";
 import {RGBColor} from "react-color";
-import {PuzzleRGB} from "../api/puzzle";
+import {PuzzleRGB} from "../puzzle";
 import {HintConfigRGB} from "./hintConfig";
 import {hueDiff} from "../../colour/colourMath";
-import {bounded} from "../../math";
+import {bounded} from "../../math/math";
 import {toRGB} from "../../colour/colourConversions";
 
 export function generateHintRGB(guess: RGBColor, puzzle: PuzzleRGB, config: HintConfigRGB): RGBHint {

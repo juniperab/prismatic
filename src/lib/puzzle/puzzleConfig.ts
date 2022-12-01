@@ -1,5 +1,5 @@
 import {HintConfig} from "./hint/hintConfig";
-import {PuzzleConfig} from "./api/puzzle";
+import {PuzzleConfig} from "./puzzle";
 
 const hintConfig: HintConfig = {
     rgb: {

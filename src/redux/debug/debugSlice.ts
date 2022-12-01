@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {RootState} from "../../redux/store";
-import {PuzzleMode} from "../../lib/puzzle/api/puzzle";
+import {RootState} from "../store";
+import {PuzzleMode} from "../../lib/puzzle/puzzle";
 
 
 export interface DebugState {

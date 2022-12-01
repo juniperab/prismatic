@@ -1,15 +1,15 @@
 import React, {useEffect} from 'react';
 import styled from "styled-components";
-import {ColourGuesser} from "./features/colour-guesser/ColourGuesser";
-import {HintDisplay} from "./features/hint-display/HintDisplay";
-import {Debug} from "./features/debug/Debug";
-import logoFile from './logo.jpg'
-import {Rules} from "./features/rules/Rules";
-import {useAppDispatch, useAppSelector} from "./redux/hooks";
-import {selectAppState} from "./modules/app/appSlice";
-import {generateRandomColour} from "./lib/colour/colourMath";
-import {toNamed} from "./lib/colour/colourConversions";
-import {setCurrentColour, setStartingColour} from "./features/colour-guesser/colourGuesserSlice";
+import {ColourGuesser} from "../colour-guesser/ColourGuesser";
+import {HintDisplay} from "../hint-display/HintDisplay";
+import {Debug} from "../debug/Debug";
+import logoFile from '../../../logo.jpg'
+import {Rules} from "../rules/Rules";
+import {useAppDispatch, useAppSelector} from "../../../redux/hooks";
+import {selectAppState} from "../../../redux/app/appSlice";
+import {generateRandomColour} from "../../../lib/colour/colourMath";
+import {toNamed} from "../../../lib/colour/colourConversions";
+import {setCurrentColour, setStartingColour} from "../../../redux/puzzle/puzzleSlice";
 
 const Header = styled.h1`
   text-align: center;

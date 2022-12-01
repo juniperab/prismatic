@@ -1,11 +1,10 @@
 import styled from "styled-components";
 import {ColourPicker} from "../../components/colour-picker/ColourPicker";
 import React, {CSSProperties, useState} from "react";
-import {useAppDispatch, useAppSelector} from "../../redux/hooks";
-import {selectColourGuesserState, setCurrentColour} from "./colourGuesserSlice";
-import {AnyColor, toHex, toHSL, toRGB} from "../../lib/colour/colourConversions";
-import {getNextHint, giveUp, selectPuzzleState, startNewGame} from "../../modules/puzzle/puzzleSlice";
-import {setHelpVisible} from "../../modules/app/appSlice";
+import {useAppDispatch, useAppSelector} from "../../../redux/hooks";
+import {AnyColor, toHex, toHSL, toRGB} from "../../../lib/colour/colourConversions";
+import {getNextHint, giveUp, selectPuzzleState, setCurrentColour, startNewGame} from "../../../redux/puzzle/puzzleSlice";
+import {setHelpVisible} from "../../../redux/app/appSlice";
 
 const WHITE = '#FFFFFF'
 const BLACK = '#000000'
@@ -45,8 +44,7 @@ export function ColourGuesser() {
     const [ clicking, setClicking ] = useState(false)
     const [ hoveringGU, setHoveringGU ] = useState(false)
     const [ clickingGU, setClickingGU ] = useState(false)
-    const { currentColour } = useAppSelector(selectColourGuesserState)
-    const { answerName } = useAppSelector(selectPuzzleState)
+    const { answerName, currentColour } = useAppSelector(selectPuzzleState)
     const dispatch = useAppDispatch()
 
     const lowLuminance = toHSL(currentColour).l < 50
