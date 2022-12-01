@@ -55,11 +55,13 @@ export const puzzleSlice = createSlice({
     initialState,
     reducers: {
         resetPuzzleState: (state, action: PayloadAction<ClientPuzzleSpec>) => {
-            state.puzzleId = action.payload.puzzleId
+            state.answerName = undefined
+            state.gaveUp = false
+            state.hints = []
             state.mode = action.payload.mode
             state.precision = action.payload.precision
-            state.hints = []
-            state.gaveUp = false
+            state.puzzleId = action.payload.puzzleId
+            state.startingColour = state.currentColour
         },
         setCurrentColour: (state, action: PayloadAction<AnyColor>) => {
             state.currentColour = action.payload
@@ -90,8 +92,6 @@ export default puzzleSlice.reducer
 
 export const startNewGame =
     (): AppThunk =>
-        (dispatch, getState) => {
-            const state: RootState = getState() as RootState
-            dispatch(setStartingColour(state.puzzle.currentColour))
+        (dispatch) => {
             dispatch(resetPuzzleState(getNewPuzzle()));
         };
