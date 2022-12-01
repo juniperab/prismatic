@@ -84,6 +84,7 @@
     "build": "react-scripts build",
     "deploy": "gh-pages -d build",
     "lint": "eslint src --ext .ts",
+    "lint:fix": "npm run lint -- --fix",
     "start": "react-scripts start",
     "test": "react-scripts test"
   },
