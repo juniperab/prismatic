@@ -58,6 +58,7 @@
     "eslint-config-standard-with-typescript": "^23.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-n": "^15.5.1",
+    "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-promise": "^6.1.1",
     "gh-pages": "^4.0.0",
     "prettier": "^2.8.0",
@@ -66,10 +67,10 @@
   },
   "eslintConfig": {
     "extends": [
-      "eslint-config-prettier",
       "eslint-config-standard-with-typescript",
       "react-app",
-      "react-app/jest"
+      "react-app/jest",
+      "eslint-config-prettier"
     ],
     "rules": {
       "@typescript-eslint/no-misused-promises": [
@@ -77,13 +78,17 @@
         {
           "checksVoidReturn": false
         }
-      ]
+      ],
+      "curly": "off"
     },
     "parserOptions": {
       "project": [
         "tsconfig.json"
       ]
-    }
+    },
+    "plugins": [
+      "prettier"
+    ]
   },
   "homepage": "https://juniperab.github.io/prismatic",
   "license": "AGPL-3.0-or-later",
