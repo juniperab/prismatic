@@ -68,4 +68,5 @@ function getLuminanceHint(
   config: HintConfigHSL
 ): HintItem | undefined {
   // TODO: figure out how to make a hint for luminance
+  return undefined
 }
