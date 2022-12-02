@@ -5,7 +5,7 @@ export function handleKeyDown(
   event: KeyboardEvent,
   dispatch: AppDispatch,
 ): void {
-  if (event.key === 't' && event.ctrlKey) {
+  if (event.key === 't') {
     dispatch(toggleTheme())
   }
 }

@@ -3,7 +3,6 @@ import styled, { ThemeProvider } from 'styled-components'
 import { ColourGuesser } from '../colour-guesser/ColourGuesser'
 import { HintDisplay } from '../hint-display/HintDisplay'
 import { Debug } from '../debug/Debug'
-import logoFile from '../../../logo.jpg'
 import { Rules } from '../rules/Rules'
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
 import { selectAppState } from '../../../redux/app/appSlice'
@@ -15,6 +14,8 @@ import {
 } from '../../../redux/puzzle/puzzleSlice'
 import { handleKeyDown, handleKeyUp } from "./keyPressHandlers";
 import { getTheme } from "../../components/theme/themeRegistry";
+import { AppWindow } from "../../components/page/AppWindow";
+import { TopBar } from "../../components/page/TopBar";
 
 const Header = styled.h1`
   text-align: center;
@@ -41,11 +42,6 @@ const SectionHeader = styled.h4`
   margin: 10px 0;
 `
 
-const AppContainer = styled.div`
-  background-color: ${props => props.theme.backgroundColour};
-  color: ${props => props.theme.textColour};
-`
-
 export function App(): ReactElement {
   const { showHelp, theme } = useAppSelector(selectAppState)
   const dispatch = useAppDispatch()
@@ -69,7 +65,9 @@ export function App(): ReactElement {
     }
   })
   return <ThemeProvider theme={getTheme(theme)}>
-    <AppContainer>Hello World</AppContainer>
+    <AppWindow>
+      <TopBar/>
+    </AppWindow>
   </ThemeProvider>
 
   // return (
