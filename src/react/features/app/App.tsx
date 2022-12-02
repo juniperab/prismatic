@@ -1,5 +1,5 @@
-import React, { ReactElement, useEffect } from 'react'
-import styled from 'styled-components'
+import React, { ReactElement, useEffect, useRef } from 'react'
+import styled, { ThemeProvider } from 'styled-components'
 import { ColourGuesser } from '../colour-guesser/ColourGuesser'
 import { HintDisplay } from '../hint-display/HintDisplay'
 import { Debug } from '../debug/Debug'
@@ -13,6 +13,8 @@ import {
   setCurrentColour,
   setStartingColour,
 } from '../../../redux/puzzle/puzzleSlice'
+import { handleKeyDown, handleKeyUp } from "./keyPressHandlers";
+import { getTheme } from "../../components/theme/themeRegistry";
 
 const Header = styled.h1`
   text-align: center;
@@ -39,36 +41,57 @@ const SectionHeader = styled.h4`
   margin: 10px 0;
 `
 
+const AppContainer = styled.div`
+  background-color: ${props => props.theme.backgroundColour};
+  color: ${props => props.theme.textColour};
+`
+
 export function App(): ReactElement {
-  const { showHelp } = useAppSelector(selectAppState)
+  const { showHelp, theme } = useAppSelector(selectAppState)
   const dispatch = useAppDispatch()
 
+  // initialize the colour picker with a random starting colour
   useEffect(() => {
     const startingColour = toNamed(generateRandomColour())
     dispatch(setStartingColour(startingColour))
     dispatch(setCurrentColour(startingColour))
   }, [dispatch])
 
-  return (
-    <>
-      <Header>
-        <img alt="logo" src={logoFile} width="24px" /> Prismatic
-      </Header>
-      {showHelp && <Rules />}
-      <Main>
-        <Section>
-          <SectionHeader>Colour Picker</SectionHeader>
-          <ColourGuesser />
-        </Section>
-        <Section>
-          <SectionHeader>Response View</SectionHeader>
-          <HintDisplay />
-        </Section>
-        <Section>
-          <SectionHeader>Debug Info</SectionHeader>
-          <Debug />
-        </Section>
-      </Main>
-    </>
-  )
+  // listen for keyboard events
+  const receiveKeyDown = (event: KeyboardEvent): void => { handleKeyDown(event, dispatch) }
+  const receiveKeyUp = (event: KeyboardEvent): void => { handleKeyUp(event, dispatch) }
+  useEffect(() => {
+    document.addEventListener('keydown', receiveKeyDown)
+    document.addEventListener('keyup', receiveKeyUp)
+    return function cleanup() {
+      document.removeEventListener('keydown', receiveKeyDown)
+      document.removeEventListener('keyup', receiveKeyUp)
+    }
+  })
+  return <ThemeProvider theme={getTheme(theme)}>
+    <AppContainer>Hello World</AppContainer>
+  </ThemeProvider>
+
+  // return (
+  //   <>
+  //     <Header>
+  //       <img alt="logo" src={logoFile} width="24px" /> Prismatic
+  //     </Header>
+  //     {showHelp && <Rules />}
+  //     <Main>
+  //       <Section>
+  //         <SectionHeader>Colour Picker</SectionHeader>
+  //         <ColourGuesser />
+  //       </Section>
+  //       <Section>
+  //         <SectionHeader>Response View</SectionHeader>
+  //         <HintDisplay />
+  //       </Section>
+  //       <Section>
+  //         <SectionHeader>Debug Info</SectionHeader>
+  //         <Debug />
+  //       </Section>
+  //     </Main>
+  //   </>
+  // )
 }
