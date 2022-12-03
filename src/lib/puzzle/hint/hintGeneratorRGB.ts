@@ -6,11 +6,7 @@ import { hueDiff } from '../../colour/colourMath'
 import { bounded } from '../../math/math'
 import { toRGB } from '../../colour/colourConversions'
 
-export function generateHintRGB(
-  guess: RGBColor,
-  puzzle: PuzzleRGB,
-  config: HintConfigRGB
-): RGBHint {
+export function generateHintRGB(guess: RGBColor, puzzle: PuzzleRGB, config: HintConfigRGB): RGBHint {
   const { answer, precision } = puzzle
   return {
     type: 'rgb',
@@ -21,12 +17,7 @@ export function generateHintRGB(
   }
 }
 
-function getRedHint(
-  guess: RGBColor,
-  target: RGBColor,
-  precision: number,
-  config: HintConfigRGB
-): HintItem | undefined {
+function getRedHint(guess: RGBColor, target: RGBColor, precision: number, config: HintConfigRGB): HintItem | undefined {
   const diff = hueDiff(target.r, guess.r)
   if (Math.abs(diff) <= precision) {
     return { match: true, colour: { r: 255, g: 255, b: 255 }, value: 0 }

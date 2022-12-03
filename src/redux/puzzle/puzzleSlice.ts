@@ -1,19 +1,8 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { AppThunk, RootState } from '../store'
-import {
-  AnyColor,
-  isNamed,
-  NamedColor,
-  toHSB,
-  toNamed,
-} from '../../lib/colour/colourConversions'
+import { AnyColor, isNamed, NamedColor, toHSB, toNamed } from '../../lib/colour/colourConversions'
 import { Hint } from '../../lib/puzzle/hint/hint'
-import {
-  getPuzzleId,
-  Puzzle,
-  PuzzleId,
-  PuzzleMode,
-} from '../../lib/puzzle/puzzle'
+import { getPuzzleId, Puzzle, PuzzleId, PuzzleMode } from '../../lib/puzzle/puzzle'
 import { getPuzzleAnswerFromServer, submitGuessToServer } from './puzzleClient'
 import { ClientPuzzleSpec, getNewPuzzle } from '../../lib/puzzle/puzzleServer'
 
@@ -45,16 +34,10 @@ const initialState: PuzzleState = {
   startingColour,
 }
 
-export const getNextHint = createAsyncThunk(
-  'puzzle/getNextHint',
-  async (_, api) => {
-    const state: RootState = api.getState() as RootState
-    return await submitGuessToServer(
-      state.puzzle.currentColour,
-      state.puzzle.puzzleId
-    )
-  }
-)
+export const getNextHint = createAsyncThunk('puzzle/getNextHint', async (_, api) => {
+  const state: RootState = api.getState() as RootState
+  return await submitGuessToServer(state.puzzle.currentColour, state.puzzle.puzzleId)
+})
 
 export const giveUp = createAsyncThunk('puzzle/giveUp', async (__, api) => {
   const state: RootState = api.getState() as RootState
@@ -83,16 +66,13 @@ export const puzzleSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(
-        getNextHint.fulfilled,
-        (state, action: PayloadAction<Hint | NamedColor>) => {
-          if (isNamed(action.payload)) {
-            state.answerName = action.payload
-          } else {
-            state.hints.push(action.payload)
-          }
+      .addCase(getNextHint.fulfilled, (state, action: PayloadAction<Hint | NamedColor>) => {
+        if (isNamed(action.payload)) {
+          state.answerName = action.payload
+        } else {
+          state.hints.push(action.payload)
         }
-      )
+      })
       .addCase(giveUp.fulfilled, (state, action: PayloadAction<NamedColor>) => {
         state.answerName = action.payload
         state.gaveUp = true
@@ -100,8 +80,7 @@ export const puzzleSlice = createSlice({
   },
 })
 
-export const { resetPuzzleState, setCurrentColour, setStartingColour } =
-  puzzleSlice.actions
+export const { resetPuzzleState, setCurrentColour, setStartingColour } = puzzleSlice.actions
 export const selectPuzzleState = (state: RootState): PuzzleState => state.puzzle
 export default puzzleSlice.reducer
 

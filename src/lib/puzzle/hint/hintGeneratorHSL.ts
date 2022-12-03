@@ -5,11 +5,7 @@ import { hueDiff, rotateHue } from '../../colour/colourMath'
 import { bounded } from '../../math/math'
 import { PuzzleHSL } from '../puzzle'
 
-export function generateHintHSL(
-  guess: HSLColor,
-  puzzle: PuzzleHSL,
-  config: HintConfigHSL
-): HSLHint {
+export function generateHintHSL(guess: HSLColor, puzzle: PuzzleHSL, config: HintConfigHSL): HSLHint {
   const { answer, precision } = puzzle
   return {
     type: 'hsl',
@@ -20,12 +16,7 @@ export function generateHintHSL(
   }
 }
 
-function getHueHint(
-  guess: HSLColor,
-  target: HSLColor,
-  precision: number,
-  config: HintConfigHSL
-): HintItem | undefined {
+function getHueHint(guess: HSLColor, target: HSLColor, precision: number, config: HintConfigHSL): HintItem | undefined {
   const diff = hueDiff(target.h, guess.h)
   if (Math.abs(diff) <= precision) {
     return { match: true, colour: { h: guess.h, s: 0, b: 100 }, value: 0 }

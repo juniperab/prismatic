@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 export const windowLayout = {
   padding: {
@@ -8,17 +8,17 @@ export const windowLayout = {
   width: {
     max: 800,
     min: 100,
-  }
+  },
 }
 
 export const WindowOuter = styled.div.attrs({
   className: 'window-outer',
 })`
   box-sizing: border-box;
-  background-color: ${props => props.theme.colours.background};
+  background-color: ${(props) => props.theme.colours.background};
   border: solid transparent;
   border-width: ${windowLayout.padding.topBottom}px ${windowLayout.padding.side}px;
-  color: ${props => props.theme.colours.text};
+  color: ${(props) => props.theme.colours.text};
   height: 100%;
   left: 50%;
   position: fixed;

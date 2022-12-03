@@ -8,7 +8,10 @@ export interface AppState {
 }
 
 export enum ScreenView {
-  main = 'main', help = 'help', user = 'user', settings = 'settings'
+  main = 'main',
+  help = 'help',
+  user = 'user',
+  settings = 'settings',
 }
 
 const initialState: AppState = {
@@ -29,7 +32,7 @@ export const appSlice = createSlice({
     toggleTheme: (state) => {
       if (state.theme === ThemeName.light) state.theme = ThemeName.dark
       else state.theme = ThemeName.light
-    }
+    },
   },
 })
 

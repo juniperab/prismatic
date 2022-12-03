@@ -3,12 +3,7 @@ import { useAppSelector } from '../../../redux/hooks'
 import { NamedColor, toHex, toHSL } from '../../../lib/colour/colourConversions'
 import { CSSProperties, ReactElement } from 'react'
 import { selectPuzzleState } from '../../../redux/puzzle/puzzleSlice'
-import {
-  Hint,
-  HintItem,
-  HintVisitor,
-  visitHint,
-} from '../../../lib/puzzle/hint/hint'
+import { Hint, HintItem, HintVisitor, visitHint } from '../../../lib/puzzle/hint/hint'
 
 const HintList = styled.div`
   //height: 390px;
@@ -57,10 +52,7 @@ const MatchingHintItemBox = styled(HintItemBox)`
   margin: 0;
 `
 
-function renderHintItem(
-  hintItem: HintItem | undefined,
-  name: string
-): ReactElement {
+function renderHintItem(hintItem: HintItem | undefined, name: string): ReactElement {
   if (hintItem == null)
     return (
       <NoHintItemBox key={name}>
@@ -109,10 +101,7 @@ function renderHint(hint: Hint, idx: number): ReactElement {
   )
 }
 
-function renderAnswer(
-  answerName: NamedColor | undefined,
-  gaveUp: boolean
-): ReactElement | undefined {
+function renderAnswer(answerName: NamedColor | undefined, gaveUp: boolean): ReactElement | undefined {
   if (answerName === undefined) return
   const style: CSSProperties = {
     backgroundColor: toHex(answerName),

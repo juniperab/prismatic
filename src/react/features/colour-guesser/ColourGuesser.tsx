@@ -2,12 +2,7 @@ import styled from 'styled-components'
 import { ColourPicker } from '../../components/colour-picker/ColourPicker'
 import React, { CSSProperties, ReactElement, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
-import {
-  AnyColor,
-  toHex,
-  toHSL,
-  toRGB,
-} from '../../../lib/colour/colourConversions'
+import { AnyColor, toHex, toHSL, toRGB } from '../../../lib/colour/colourConversions'
 import {
   getNextHint,
   giveUp,
@@ -38,16 +33,6 @@ const NewGameButton = styled(GuessButton)`
 `
 
 const GiveUpButton = styled(GuessButton)``
-
-const HelpLink = styled.a`
-  display: block;
-  text-align: center;
-  margin-top: 15px;
-  &:hover {
-    text-decoration: underline;
-    cursor: help;
-  }
-`
 
 export function ColourGuesser(): ReactElement {
   const [hovering, setHovering] = useState(false)
@@ -88,17 +73,13 @@ export function ColourGuesser(): ReactElement {
     backgroundColor: toHex(mainColour),
     borderColor: toHex(accentColour),
     color: toHex(accentColour),
-    boxShadow: addShadow
-      ? 'rgba(0, 0, 0, 0.15) 0 0 0 1px, rgba(0, 0, 0, 0.15) 0 8px 16px'
-      : 'none',
+    boxShadow: addShadow ? 'rgba(0, 0, 0, 0.15) 0 0 0 1px, rgba(0, 0, 0, 0.15) 0 8px 16px' : 'none',
   }
   const giveUpStyle: CSSProperties = {
     backgroundColor: toHex(giveUpMainColor),
     borderColor: toHex(giveUpAccentColour),
     color: toHex(giveUpAccentColour),
-    boxShadow: giveUpAddShadow
-      ? 'rgba(0, 0, 0, 0.15) 0 0 0 1px, rgba(0, 0, 0, 0.15) 0 8px 16px'
-      : 'none',
+    boxShadow: giveUpAddShadow ? 'rgba(0, 0, 0, 0.15) 0 0 0 1px, rgba(0, 0, 0, 0.15) 0 8px 16px' : 'none',
   }
 
   function renderButton(): ReactElement {

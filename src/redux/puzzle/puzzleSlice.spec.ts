@@ -1,8 +1,4 @@
-import reducer, {
-  setCurrentColour,
-  setStartingColour,
-  PuzzleState,
-} from './puzzleSlice'
+import reducer, { setCurrentColour, setStartingColour, PuzzleState } from './puzzleSlice'
 import { AnyColor, toHSB, toNamed } from '../../lib/colour/colourConversions'
 import { getPuzzleId, Puzzle } from '../../lib/puzzle/puzzle'
 
@@ -44,18 +40,12 @@ describe('puzzle reducer', () => {
     expect(reducer(undefined, { type: 'unknown' })).toEqual(realInitialState)
   })
   it('should handle setCurrentColour', () => {
-    const actual = reducer(
-      testInitialState,
-      setCurrentColour({ r: 41, g: 201, b: 101 })
-    )
+    const actual = reducer(testInitialState, setCurrentColour({ r: 41, g: 201, b: 101 }))
     expect(actual.currentColour).toEqual({ r: 41, g: 201, b: 101 })
     expect(actual.startingColour).toEqual(testInitialState.startingColour)
   })
   it('should handle setStartingColour', () => {
-    const actual = reducer(
-      testInitialState,
-      setStartingColour({ r: 41, g: 201, b: 101 })
-    )
+    const actual = reducer(testInitialState, setStartingColour({ r: 41, g: 201, b: 101 }))
     expect(actual.startingColour).toEqual({ r: 41, g: 201, b: 101 })
     expect(actual.currentColour).toEqual(testInitialState.currentColour)
   })

@@ -17,9 +17,7 @@ const Container = styled.div`
 `
 
 export function ColourPicker(props: ColourPickerProps): ReactElement {
-  const [activeColour, setActiveColour] = useState(
-    props.currentColour as RGBColor
-  )
+  const [activeColour, setActiveColour] = useState(props.currentColour as RGBColor)
 
   useEffect(() => {
     setActiveColour(toRGB(props.currentColour))

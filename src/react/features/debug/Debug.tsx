@@ -1,19 +1,10 @@
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
 import styled from 'styled-components'
-import {
-  AnyColor,
-  toHex,
-  toHSL,
-  toHSB,
-  toRGB,
-} from '../../../lib/colour/colourConversions'
+import { AnyColor, toHex, toHSL, toHSB, toRGB } from '../../../lib/colour/colourConversions'
 import { selectPuzzleState } from '../../../redux/puzzle/puzzleSlice'
 import { ReactElement, useState } from 'react'
 import { hueDiff } from '../../../lib/colour/colourMath'
-import {
-  selectDebugState,
-  setDisplayMode,
-} from '../../../redux/debug/debugSlice'
+import { selectDebugState, setDisplayMode } from '../../../redux/debug/debugSlice'
 import { loadPuzzleById } from '../../../lib/puzzle/puzzle'
 import { Hint } from '../../../lib/puzzle/hint/hint'
 
@@ -43,8 +34,7 @@ const Toggle = styled.span`
 
 export function Debug(): ReactElement {
   const { displayMode } = useAppSelector(selectDebugState)
-  const { currentColour, hints, mode, precision, puzzleId } =
-    useAppSelector(selectPuzzleState)
+  const { currentColour, hints, mode, precision, puzzleId } = useAppSelector(selectPuzzleState)
   const puzzle = loadPuzzleById(puzzleId)
   const [visible, setVisible] = useState(false)
   const dispatch = useAppDispatch()
@@ -54,10 +44,7 @@ export function Debug(): ReactElement {
     const hex = toHex(colour)
     const swatchTextColour = hsl.l < 50 ? 'white' : 'black'
     return (
-      <span
-        className="swatch"
-        style={{ backgroundColor: hex, color: swatchTextColour }}
-      >
+      <span className="swatch" style={{ backgroundColor: hex, color: swatchTextColour }}>
         &nbsp;{hex}&nbsp;
       </span>
     )
@@ -126,19 +113,9 @@ export function Debug(): ReactElement {
             const rgbG = toRGB(hint.guessedColour)
             const hslG = toHSL(hint.guessedColour)
             const hsbG = toHSB(hint.guessedColour)
-            const rgbDiffString =
-              'ΔRGB: ' +
-              `${rgbT.r - rgbG.r}, ${rgbT.g - rgbG.g}, ${rgbT.b - rgbG.b}`
-            const hslDiffString =
-              'ΔHSL: ' +
-              `${hueDiff(hslT.h, hslG.h)} ${hslT.s - hslG.s}% ${
-                hslT.l - hslG.l
-              }%`
-            const hsbDiffString =
-              'HSB: ' +
-              `${hueDiff(hsbT.h, hsbG.h)} ${hsbT.s - hsbG.s}% ${
-                hsbT.b - hsbG.b
-              }%`
+            const rgbDiffString = 'ΔRGB: ' + `${rgbT.r - rgbG.r}, ${rgbT.g - rgbG.g}, ${rgbT.b - rgbG.b}`
+            const hslDiffString = 'ΔHSL: ' + `${hueDiff(hslT.h, hslG.h)} ${hslT.s - hslG.s}% ${hslT.l - hslG.l}%`
+            const hsbDiffString = 'HSB: ' + `${hueDiff(hsbT.h, hsbG.h)} ${hsbT.s - hsbG.s}% ${hsbT.b - hsbG.b}%`
             let diffString = ''
             switch (displayMode) {
               case 'rgb':

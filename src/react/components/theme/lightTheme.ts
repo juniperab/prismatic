@@ -1,15 +1,15 @@
 import { Theme, ThemeName } from './theme'
-import { ReactComponent as iconHelp} from './icons/icon-help.svg'
-import { ReactComponent as iconHint} from './icons/icon-hint.svg'
-import { ReactComponent as iconKey} from './icons/icon-key.svg'
-import { ReactComponent as iconMenu} from './icons/icon-menu.svg'
-import { ReactComponent as iconPerson} from './icons/icon-person.svg'
-import { ReactComponent as iconPuzzle} from './icons/icon-puzzle.svg'
-import { ReactComponent as iconSearch} from './icons/icon-search.svg'
-import { ReactComponent as iconSettings} from './icons/icon-settings.svg'
+import { ReactComponent as iconHelp } from './icons/icon-help.svg'
+import { ReactComponent as iconHint } from './icons/icon-hint.svg'
+import { ReactComponent as iconKey } from './icons/icon-key.svg'
+import { ReactComponent as iconMenu } from './icons/icon-menu.svg'
+import { ReactComponent as iconPerson } from './icons/icon-person.svg'
+import { ReactComponent as iconPuzzle } from './icons/icon-puzzle.svg'
+import { ReactComponent as iconSearch } from './icons/icon-search.svg'
+import { ReactComponent as iconSettings } from './icons/icon-settings.svg'
 import logo from './images/logo.png'
 
-export const lightTheme: Theme ={
+export const lightTheme: Theme = {
   colours: {
     background: 'white',
     text: 'black',

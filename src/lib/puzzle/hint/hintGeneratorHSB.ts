@@ -5,11 +5,7 @@ import { PuzzleHSB } from '../puzzle'
 import { HintConfigHSB } from './hintConfig'
 import { bounded } from '../../math/math'
 
-export function generateHintHSB(
-  guess: HSBColor,
-  puzzle: PuzzleHSB,
-  config: HintConfigHSB
-): HSBHint {
+export function generateHintHSB(guess: HSBColor, puzzle: PuzzleHSB, config: HintConfigHSB): HSBHint {
   const { answer, precision } = puzzle
   return {
     type: 'hsb',
@@ -20,12 +16,7 @@ export function generateHintHSB(
   }
 }
 
-function getHueHint(
-  guess: HSBColor,
-  target: HSBColor,
-  precision: number,
-  config: HintConfigHSB
-): HintItem | undefined {
+function getHueHint(guess: HSBColor, target: HSBColor, precision: number, config: HintConfigHSB): HintItem | undefined {
   const diff = hueDiff(target.h, guess.h)
   if (Math.abs(diff) <= precision) {
     return { match: true, colour: { h: guess.h, s: 0, b: 100 }, value: 0 }

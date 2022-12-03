@@ -1,19 +1,6 @@
-import {
-  AnyColor,
-  NamedColor,
-  toHSB,
-  toHSL,
-  toNamed,
-  toRGB,
-} from '../colour/colourConversions'
+import { AnyColor, NamedColor, toHSB, toHSL, toNamed, toRGB } from '../colour/colourConversions'
 import { generateRandomColour } from '../colour/colourMath'
-import {
-  getPuzzleId,
-  loadPuzzleById,
-  Puzzle,
-  PuzzleId,
-  PuzzleMode,
-} from './puzzle'
+import { getPuzzleId, loadPuzzleById, Puzzle, PuzzleId, PuzzleMode } from './puzzle'
 import { Hint, visitHintItems } from './hint/hint'
 import { puzzleConfig } from './puzzleConfig'
 import { generateHintRGB } from './hint/hintGeneratorRGB'
@@ -41,10 +28,7 @@ export function getNewPuzzle(): ClientPuzzleSpec {
   }
 }
 
-export function makeGuess(
-  guess: AnyColor,
-  puzzleId: PuzzleId
-): Hint | NamedColor {
+export function makeGuess(guess: AnyColor, puzzleId: PuzzleId): Hint | NamedColor {
   const puzzle = loadPuzzleById(puzzleId)
   const hintConfig = puzzleConfig.hint
   let hint

@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react'
 
 export type SVG = React.FunctionComponent<React.SVGProps<SVGSVGElement>>
 
@@ -10,7 +10,8 @@ export interface Theme {
 }
 
 export enum ThemeName {
-  light = 'light', dark = 'dark'
+  light = 'light',
+  dark = 'dark',
 }
 
 export interface ThemeColours {

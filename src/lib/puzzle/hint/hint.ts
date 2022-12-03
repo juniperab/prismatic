@@ -72,10 +72,7 @@ const getHintItemsAsArrayVisitor: HintVisitor<Array<HintItem | undefined>> = {
   hsb: (hint) => [hint.hue, hint.saturation, hint.brightness],
 }
 
-export function visitHintItems<T>(
-  hint: Hint,
-  visitor: (hintItem: HintItem) => T
-): Array<T | undefined> {
+export function visitHintItems<T>(hint: Hint, visitor: (hintItem: HintItem) => T): Array<T | undefined> {
   const items = visitHint(hint, getHintItemsAsArrayVisitor)
   return items.map((item) => (item != null ? visitor(item) : undefined))
 }
