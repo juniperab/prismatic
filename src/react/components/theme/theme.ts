@@ -18,6 +18,9 @@ export interface ThemeColours {
   background: string
   text: string
   border: string
+  modalBackground: string
+  modalBorder: string
+  modalBoxShadow: string
 }
 
 export interface SVGIcon {
@@ -26,6 +29,7 @@ export interface SVGIcon {
 }
 
 export interface ThemeIcons {
+  close: SVGIcon
   help: SVGIcon
   hint: SVGIcon
   key: SVGIcon

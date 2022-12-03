@@ -3,19 +3,17 @@ import { RootState } from '../store'
 import { ThemeName } from '../../react/components/theme/theme'
 
 export interface AppState {
-  activeScreenView: ScreenView
+  activeModal?: ModalType
   theme: ThemeName
 }
 
-export enum ScreenView {
-  main = 'main',
+export enum ModalType {
   help = 'help',
   user = 'user',
   settings = 'settings',
 }
 
 const initialState: AppState = {
-  activeScreenView: ScreenView.main,
   theme: ThemeName.light,
 }
 
@@ -23,8 +21,8 @@ export const appSlice = createSlice({
   name: 'app',
   initialState,
   reducers: {
-    setActiveScreenView: (state, action: PayloadAction<ScreenView>) => {
-      state.activeScreenView = action.payload
+    setActiveModal: (state, action: PayloadAction<ModalType | undefined>) => {
+      state.activeModal = action.payload
     },
     setTheme: (state, action: PayloadAction<ThemeName>) => {
       state.theme = action.payload
@@ -36,6 +34,6 @@ export const appSlice = createSlice({
   },
 })
 
-export const { setActiveScreenView, setTheme, toggleTheme } = appSlice.actions
+export const { setActiveModal, setTheme, toggleTheme } = appSlice.actions
 export const selectAppState = (state: RootState): AppState => state.app
 export default appSlice.reducer

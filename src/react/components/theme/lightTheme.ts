@@ -1,4 +1,5 @@
 import { Theme, ThemeName } from './theme'
+import { ReactComponent as iconClose } from './icons/icon-close.svg'
 import { ReactComponent as iconHelp } from './icons/icon-help.svg'
 import { ReactComponent as iconHint } from './icons/icon-hint.svg'
 import { ReactComponent as iconKey } from './icons/icon-key.svg'
@@ -14,8 +15,12 @@ export const lightTheme: Theme = {
     background: 'white',
     text: 'black',
     border: 'black',
+    modalBackground: 'lightgrey',
+    modalBorder: 'darkgrey',
+    modalBoxShadow: 'rgba(0, 0, 0, 30%)'
   },
   icons: {
+    close: { svg: iconClose, colour: '#783f6b' },
     help: { svg: iconHelp, colour: '#783f6b' },
     hint: { svg: iconHint, colour: '#783f6b' },
     key: { svg: iconKey, colour: '#783f6b' },

@@ -1,6 +1,8 @@
 import styled from 'styled-components'
 import { H1 } from '../theme/elements/H1'
 import { windowLayout } from './windowLayout'
+import { IconClickable } from "../theme/elements/Icon";
+import { ImgClickable } from "../theme/elements/Image";
 
 export const headerLayout = {
   height: 40,
@@ -58,38 +60,16 @@ export const HeaderSectionRight = styled(HeaderSection)`
   text-align: right;
 `
 
-export const HeaderImage = styled.img.attrs({
+export const HeaderImage = styled(ImgClickable).attrs({
   alt: 'logo',
   className: 'header-image',
 })`
-  box-sizing: border-box;
   aspect-ratio: 1;
   height: ${headerLayout.contentHeight}px;
-  padding: 3px;
-  display: inline-block;
 `
 
-export const HeaderIcon = styled.div.attrs({
-  className: 'header-icon',
-})`
-  box-sizing: border-box;
-  aspect-ratio: 1;
+export const HeaderIcon = styled(IconClickable)`
   height: ${headerLayout.contentHeight}px;
-  padding: 3px;
-  display: inline-block;
-  &:hover {
-    cursor: pointer;
-    transform: rotate(15deg) scale(120%);
-  }
-  & svg {
-    box-sizing: border-box;
-    display: inline-block;
-    height: 100%;
-    width: 100%;
-  }
-  & path {
-    fill: ${(props) => props.color};
-  }
 `
 
 export const HeaderTitle = styled(H1).attrs({

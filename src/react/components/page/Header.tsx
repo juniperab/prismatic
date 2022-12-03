@@ -1,5 +1,4 @@
-import { ReactElement } from 'react'
-
+import { ReactElement } from "react";
 import {
   HeaderIcon,
   HeaderImage,
@@ -12,7 +11,7 @@ import { useTheme } from 'styled-components'
 import { Theme } from '../theme/theme'
 
 export interface HeaderProps {
-  onClickLogo: () => void
+  onClickLogo?: () => void
   onClickHelp: () => void
   onClickPerson: () => void
   onClickSettings: () => void

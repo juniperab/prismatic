@@ -4,11 +4,8 @@ import {
   FooterSectionLeft,
   FooterSectionRight, FooterText
 } from "./footerLayout";
-import { useTheme } from "styled-components";
-import { Theme } from "../theme/theme";
 
 export function Footer(): ReactElement {
-  const theme = useTheme() as Theme
   return (
     <FooterOuter>
       <FooterSectionLeft>

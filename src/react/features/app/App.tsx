@@ -1,19 +1,22 @@
-import React, { ReactElement, useEffect } from 'react'
-import { ThemeProvider } from 'styled-components'
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
-import { ScreenView, selectAppState, setActiveScreenView } from '../../../redux/app/appSlice'
-import { generateRandomColour } from '../../../lib/colour/colourMath'
-import { toNamed } from '../../../lib/colour/colourConversions'
-import { setCurrentColour, setStartingColour } from '../../../redux/puzzle/puzzleSlice'
-import { handleKeyDown, handleKeyUp } from './keyPressHandlers'
-import { getTheme } from '../../components/theme/themeRegistry'
-import { Window } from '../../components/page/Window'
-import { Header } from '../../components/page/Header'
-import { Modal } from "../../components/page/Modal";
+import React, { ReactElement, useEffect } from "react";
+import { ThemeProvider } from "styled-components";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { ModalType, selectAppState, setActiveModal } from "../../../redux/app/appSlice";
+import { generateRandomColour } from "../../../lib/colour/colourMath";
+import { toNamed } from "../../../lib/colour/colourConversions";
+import { setCurrentColour, setStartingColour } from "../../../redux/puzzle/puzzleSlice";
+import { handleKeyDown, handleKeyUp } from "./keyPressHandlers";
+import { getTheme } from "../../components/theme/themeRegistry";
+import { Window } from "../../components/page/Window";
+import { Header } from "../../components/page/Header";
 import { Footer } from "../../components/page/Footer";
+import { Body } from "../../components/page/Body";
+import { HelpModal } from "../../components/modal/HelpModal";
+import { UserModal } from "../../components/modal/UserModal";
+import { SettingsModal } from "../../components/modal/SettingsModal";
 
 export function App(): ReactElement {
-  const { activeScreenView, theme } = useAppSelector(selectAppState)
+  const { theme } = useAppSelector(selectAppState)
   const dispatch = useAppDispatch()
 
   // initialize the colour picker with a random starting colour
@@ -40,9 +43,9 @@ export function App(): ReactElement {
   })
 
   // set up callbacks
-  function selectView(view: ScreenView): () => void {
+  function openModal(modal: ModalType | undefined): () => void {
     return function () {
-      dispatch(setActiveScreenView(view))
+      dispatch(setActiveModal(modal))
     }
   }
 
@@ -50,14 +53,18 @@ export function App(): ReactElement {
     <ThemeProvider theme={getTheme(theme)}>
       <Window>
         <Header
-          onClickLogo={selectView(ScreenView.main)}
-          onClickHelp={selectView(ScreenView.help)}
-          onClickPerson={selectView(ScreenView.user)}
-          onClickSettings={selectView(ScreenView.settings)}
+          onClickHelp={openModal(ModalType.help)}
+          onClickPerson={openModal(ModalType.user)}
+          onClickSettings={openModal(ModalType.settings)}
         />
-        <Modal>View: {activeScreenView}</Modal>
+        <Body>
+          Hello World
+        </Body>
         <Footer/>
       </Window>
+      <HelpModal/>
+      <UserModal/>
+      <SettingsModal/>
     </ThemeProvider>
   )
 }
