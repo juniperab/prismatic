@@ -7,8 +7,8 @@ import { toNamed } from "../../../lib/colour/colourConversions";
 import { setCurrentColour, setStartingColour } from "../../../redux/puzzle/puzzleSlice";
 import { handleKeyDown, handleKeyUp } from "./keyPressHandlers";
 import { getTheme } from "../../components/theme/themeRegistry";
-import { AppWindow } from "../../components/page/AppWindow";
-import { TopBar } from "../../components/page/TopBar";
+import { Window } from "../../components/page/Window";
+import { Header } from "../../components/page/Header";
 
 export function App(): ReactElement {
   const { activeScreenView, theme } = useAppSelector(selectAppState)
@@ -34,20 +34,19 @@ export function App(): ReactElement {
   })
 
   // set up callbacks
-  const ignored = (): void => {}
   function selectView(view: ScreenView): () => void {
     return function () { dispatch(setActiveScreenView(view)) }
   }
 
   return <ThemeProvider theme={getTheme(theme)}>
-    <AppWindow>
-      <TopBar
+    <Window>
+      <Header
         onClickLogo={selectView(ScreenView.main)}
         onClickHelp={selectView(ScreenView.help)}
         onClickPerson={selectView(ScreenView.user)}
         onClickSettings={selectView(ScreenView.settings)}
       />
       View: {activeScreenView}
-    </AppWindow>
+    </Window>
   </ThemeProvider>
 }

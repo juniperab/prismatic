@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const appWindowLayout = {
+export const windowLayout = {
   padding: {
     side: 15,
     topBottom: 5,
@@ -11,24 +11,24 @@ export const appWindowLayout = {
   }
 }
 
-export const AppWindowOuter = styled.div.attrs({
-  className: 'app-window-outer',
+export const WindowOuter = styled.div.attrs({
+  className: 'window-outer',
 })`
   box-sizing: border-box;
   background-color: ${props => props.theme.colours.background};
   border: solid transparent;
-  border-width: ${appWindowLayout.padding.topBottom}px ${appWindowLayout.padding.side}px;
+  border-width: ${windowLayout.padding.topBottom}px ${windowLayout.padding.side}px;
   color: ${props => props.theme.colours.text};
   height: 100%;
   left: 50%;
   position: fixed;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: clamp(${appWindowLayout.width.min}px, 100vw, ${appWindowLayout.width.max}px);
+  width: clamp(${windowLayout.width.min}px, 100vw, ${windowLayout.width.max}px);
 `
 
-export const AppWindowInner = styled.div.attrs({
-  className: 'app-window-inner',
+export const WindowInner = styled.div.attrs({
+  className: 'window-inner',
 })`
   bottom: 0;
   left: 0;
