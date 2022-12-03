@@ -1,8 +1,8 @@
-import styled from "styled-components";
-import { headerLayout } from "../page/headerLayout";
-import { windowLayout } from "../page/windowLayout";
-import { footerLayout } from "../page/footerLayout";
-import { Icon } from "../theme/elements/Icon";
+import styled from 'styled-components'
+import { headerLayout } from '../page/headerLayout'
+import { windowLayout } from '../page/windowLayout'
+import { footerLayout } from '../page/footerLayout'
+import { Icon } from '../theme/elements/Icon'
 
 export const modalLayout = {
   margin: {
@@ -60,9 +60,9 @@ export const ModalWindow = styled.div.attrs({
   className: 'modal-window',
 })`
   box-sizing: border-box;
-  background-color: ${props => props.theme.colours.modalBackground};
+  background-color: ${(props) => props.theme.colours.modalBackground};
   border-radius: 15px;
-  border: 2px solid ${props => props.theme.colours.modalBorder};
+  border: 2px solid ${(props) => props.theme.colours.modalBorder};
   height: auto;
   max-height: 100%;
   overflow-y: scroll;
@@ -73,7 +73,7 @@ export const ModalWindow = styled.div.attrs({
   padding-left: ${modalLayout.padding.side}px;
   padding-right: ${modalLayout.padding.side}px;
   padding-top: ${modalLayout.padding.bottom}px;
-  box-shadow: 0 4px 23px 0 ${props => props.theme.colours.modalBoxShadow};
+  box-shadow: 0 4px 23px 0 ${(props) => props.theme.colours.modalBoxShadow};
 `
 
 export const ModalHeaderOuter = styled.div.attrs({
@@ -97,7 +97,7 @@ export const ModalHeaderSectionCentre = styled(ModalHeaderSection)`
 `
 
 export const ModalHeaderSectionEdge = styled(ModalHeaderSection)`
-  text-align: right
+  text-align: right;
 `
 
 export const ModalBody = styled.div.attrs({

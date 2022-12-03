@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { windowLayout } from "./windowLayout";
+import styled from 'styled-components'
+import { windowLayout } from './windowLayout'
 
 export const footerLayout = {
   height: 16,

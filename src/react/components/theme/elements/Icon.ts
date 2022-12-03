@@ -1,6 +1,6 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
-export const Icon = styled.div.attrs(props => ({
+export const Icon = styled.div.attrs((props) => ({
   className: 'icon',
   color: props.color !== undefined ? props.color : 'black',
 }))`
@@ -22,7 +22,9 @@ export const Icon = styled.div.attrs(props => ({
 `
 
 export const IconClickable = styled(Icon)`
-  ${props => props.onClick !== undefined && `
+  ${(props) =>
+    props.onClick !== undefined &&
+    `
     &:hover {
       cursor: pointer;
       transform: rotate(15deg) scale(120%);

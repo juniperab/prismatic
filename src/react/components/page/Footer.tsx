@@ -1,9 +1,5 @@
-import { ReactElement } from "react";
-import {
-  FooterOuter,
-  FooterSectionLeft,
-  FooterSectionRight, FooterText
-} from "./footerLayout";
+import { ReactElement } from 'react'
+import { FooterOuter, FooterSectionLeft, FooterSectionRight, FooterText } from './footerLayout'
 
 export function Footer(): ReactElement {
   return (

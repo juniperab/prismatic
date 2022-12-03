@@ -1,19 +1,19 @@
-import React, { ReactElement, useEffect } from "react";
-import { ThemeProvider } from "styled-components";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { ModalType, selectAppState, setActiveModal } from "../../../redux/app/appSlice";
-import { generateRandomColour } from "../../../lib/colour/colourMath";
-import { toNamed } from "../../../lib/colour/colourConversions";
-import { setCurrentColour, setStartingColour } from "../../../redux/puzzle/puzzleSlice";
-import { handleKeyDown, handleKeyUp } from "./keyPressHandlers";
-import { getTheme } from "../../components/theme/themeRegistry";
-import { Window } from "../../components/page/Window";
-import { Header } from "../../components/page/Header";
-import { Footer } from "../../components/page/Footer";
-import { Body } from "../../components/page/Body";
-import { HelpModal } from "../../components/modal/HelpModal";
-import { UserModal } from "../../components/modal/UserModal";
-import { SettingsModal } from "../../components/modal/SettingsModal";
+import React, { ReactElement, useEffect } from 'react'
+import { ThemeProvider } from 'styled-components'
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
+import { ModalType, selectAppState, setActiveModal } from '../../../redux/app/appSlice'
+import { generateRandomColour } from '../../../lib/colour/colourMath'
+import { toNamed } from '../../../lib/colour/colourConversions'
+import { setCurrentColour, setStartingColour } from '../../../redux/puzzle/puzzleSlice'
+import { handleKeyDown, handleKeyUp } from './keyPressHandlers'
+import { getTheme } from '../../components/theme/themeRegistry'
+import { Window } from '../../components/page/Window'
+import { Header } from '../../components/page/Header'
+import { Footer } from '../../components/page/Footer'
+import { Body } from '../../components/page/Body'
+import { HelpModal } from '../../components/modal/HelpModal'
+import { UserModal } from '../../components/modal/UserModal'
+import { SettingsModal } from '../../components/modal/SettingsModal'
 
 export function App(): ReactElement {
   const { theme } = useAppSelector(selectAppState)
@@ -57,14 +57,12 @@ export function App(): ReactElement {
           onClickPerson={openModal(ModalType.user)}
           onClickSettings={openModal(ModalType.settings)}
         />
-        <Body>
-          Hello World
-        </Body>
-        <Footer/>
+        <Body>Hello World</Body>
+        <Footer />
       </Window>
-      <HelpModal/>
-      <UserModal/>
-      <SettingsModal/>
+      <HelpModal />
+      <UserModal />
+      <SettingsModal />
     </ThemeProvider>
   )
 }

@@ -1,6 +1,6 @@
-import styled from "styled-components";
-import { headerLayout } from "./headerLayout";
-import { footerLayout } from "./footerLayout";
+import styled from 'styled-components'
+import { headerLayout } from './headerLayout'
+import { footerLayout } from './footerLayout'
 
 export const bodyLayout = {
   margin: {
@@ -9,7 +9,7 @@ export const bodyLayout = {
     side: 0,
     fromTopOfWindow: -999,
     fromBottomOfWindow: -999,
-  }
+  },
 }
 
 bodyLayout.margin.fromTopOfWindow = headerLayout.height + bodyLayout.margin.top

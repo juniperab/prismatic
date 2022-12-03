@@ -1,8 +1,8 @@
 import styled from 'styled-components'
 import { H1 } from '../theme/elements/H1'
 import { windowLayout } from './windowLayout'
-import { IconClickable } from "../theme/elements/Icon";
-import { ImgClickable } from "../theme/elements/Image";
+import { IconClickable } from '../theme/elements/Icon'
+import { ImgClickable } from '../theme/elements/Image'
 
 export const headerLayout = {
   height: 40,

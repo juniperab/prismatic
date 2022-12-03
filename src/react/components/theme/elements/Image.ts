@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 export const Img = styled.img`
   box-sizing: border-box;
@@ -7,7 +7,9 @@ export const Img = styled.img`
 `
 
 export const ImgClickable = styled(Img)`
-  ${props => props.onClick !== undefined && `
+  ${(props) =>
+    props.onClick !== undefined &&
+    `
     &:hover {
       cursor: pointer;
       transform: rotate(15deg);
