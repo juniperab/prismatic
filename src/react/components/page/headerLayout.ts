@@ -17,7 +17,7 @@ export const headerLayout = {
 headerLayout.contentHeight = headerLayout.height - headerLayout.border.top - headerLayout.border.bottom
 
 export const HeaderOuter = styled.div.attrs({
-  className: 'top-bar-outer',
+  className: 'header-outer',
 })`
   box-sizing: border-box;
   border-color: ${(props) => props.theme.colours.border};
@@ -25,7 +25,7 @@ export const HeaderOuter = styled.div.attrs({
   border-top: ${headerLayout.border.top}px solid;
   width: calc(100% + ${windowLayout.padding.side * 2}px);
   left: -${windowLayout.padding.side}px;
-  position: relative;
+  position: absolute;
   height: ${headerLayout.height}px;
   padding-left: ${headerLayout.padding.side}px;
   padding-right: ${headerLayout.padding.side}px;
@@ -54,7 +54,7 @@ export const HeaderSectionLeft = styled(HeaderSection)`
   text-align: left;
 `
 
-export const HeaderSectionRight = styled(HeaderSectionLeft)`
+export const HeaderSectionRight = styled(HeaderSection)`
   text-align: right;
 `
 

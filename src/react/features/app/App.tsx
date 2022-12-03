@@ -9,6 +9,8 @@ import { handleKeyDown, handleKeyUp } from './keyPressHandlers'
 import { getTheme } from '../../components/theme/themeRegistry'
 import { Window } from '../../components/page/Window'
 import { Header } from '../../components/page/Header'
+import { Modal } from "../../components/page/Modal";
+import { Footer } from "../../components/page/Footer";
 
 export function App(): ReactElement {
   const { activeScreenView, theme } = useAppSelector(selectAppState)
@@ -53,7 +55,8 @@ export function App(): ReactElement {
           onClickPerson={selectView(ScreenView.user)}
           onClickSettings={selectView(ScreenView.settings)}
         />
-        View: {activeScreenView}
+        <Modal>View: {activeScreenView}</Modal>
+        <Footer/>
       </Window>
     </ThemeProvider>
   )
