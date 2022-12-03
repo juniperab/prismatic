@@ -74,6 +74,10 @@ export const TopBarIcon = styled.div.attrs({
   height: ${topBarLayout.contentHeight}px;
   padding: 3px;
   display: inline-block;
+  &:hover {
+    cursor: pointer;
+    transform: rotate(15deg) scale(120%);
+  }
   & svg {
     box-sizing: border-box;
     display: inline-block;

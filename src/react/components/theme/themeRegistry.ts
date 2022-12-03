@@ -1,5 +1,5 @@
-import { lightTheme } from './lightTheme/lightTheme'
-import { darkTheme } from './darkTheme/darkTheme'
+import { lightTheme } from './lightTheme'
+import { darkTheme } from './darkTheme'
 import { Theme, ThemeName } from './theme'
 
 export function getTheme(name: ThemeName): Theme {

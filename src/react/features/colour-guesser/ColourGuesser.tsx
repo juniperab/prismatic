@@ -15,7 +15,6 @@ import {
   setCurrentColour,
   startNewGame,
 } from '../../../redux/puzzle/puzzleSlice'
-import { setHelpVisible } from '../../../redux/app/appSlice'
 
 const WHITE = '#FFFFFF'
 const BLACK = '#000000'
@@ -147,6 +146,9 @@ export function ColourGuesser(): ReactElement {
     )
   }
 
+  // <HelpLink onClick={() => dispatch(setHelpVisible(true))}>
+  //   How to play
+  // </HelpLink>
   return (
     <>
       <ColourPicker
@@ -154,9 +156,6 @@ export function ColourGuesser(): ReactElement {
         onSelect={(newColour) => dispatch(setCurrentColour(newColour))}
       />
       {renderButton()}
-      <HelpLink onClick={() => dispatch(setHelpVisible(true))}>
-        How to play
-      </HelpLink>
     </>
   )
 }

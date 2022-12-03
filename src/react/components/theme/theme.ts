@@ -19,11 +19,20 @@ export interface ThemeColours {
   border: string
 }
 
+export interface SVGIcon {
+  svg: SVG
+  colour: string
+}
+
 export interface ThemeIcons {
-  help: {
-    svg: SVG,
-    colour: string,
-  }
+  help: SVGIcon
+  hint: SVGIcon
+  key: SVGIcon
+  menu: SVGIcon
+  puzzle: SVGIcon
+  search: SVGIcon
+  settings: SVGIcon
+  person: SVGIcon
 }
 
 export interface ThemeImages {

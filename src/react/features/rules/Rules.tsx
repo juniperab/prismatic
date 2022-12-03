@@ -3,8 +3,6 @@ import colorPickerImageFile from './colour-picker.png'
 import guess1ImageFile from './guess1.png'
 import guess2ImageFile from './guess2.png'
 import solutionImageFile from './solution.png'
-import { useAppDispatch } from '../../../redux/hooks'
-import { setHelpVisible } from '../../../redux/app/appSlice'
 import { ReactElement } from 'react'
 
 const RulesWrapper = styled.div`
@@ -213,11 +211,10 @@ function renderRules(): ReactElement {
 }
 
 export function Rules(): ReactElement {
-  const dispatch = useAppDispatch()
   return (
     <RulesWrapper>
       <RulesModal>
-        <ExitButton onClick={() => dispatch(setHelpVisible(false))}>
+        <ExitButton onClick={() => console.log('hiding help')}>
           X
         </ExitButton>
         {renderRules()}

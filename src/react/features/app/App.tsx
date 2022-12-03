@@ -1,49 +1,17 @@
-import React, { ReactElement, useEffect, useRef } from 'react'
-import styled, { ThemeProvider } from 'styled-components'
-import { ColourGuesser } from '../colour-guesser/ColourGuesser'
-import { HintDisplay } from '../hint-display/HintDisplay'
-import { Debug } from '../debug/Debug'
-import { Rules } from '../rules/Rules'
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
-import { selectAppState } from '../../../redux/app/appSlice'
-import { generateRandomColour } from '../../../lib/colour/colourMath'
-import { toNamed } from '../../../lib/colour/colourConversions'
-import {
-  setCurrentColour,
-  setStartingColour,
-} from '../../../redux/puzzle/puzzleSlice'
+import React, { ReactElement, useEffect } from "react";
+import { ThemeProvider } from "styled-components";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { ScreenView, selectAppState, setActiveScreenView } from "../../../redux/app/appSlice";
+import { generateRandomColour } from "../../../lib/colour/colourMath";
+import { toNamed } from "../../../lib/colour/colourConversions";
+import { setCurrentColour, setStartingColour } from "../../../redux/puzzle/puzzleSlice";
 import { handleKeyDown, handleKeyUp } from "./keyPressHandlers";
 import { getTheme } from "../../components/theme/themeRegistry";
 import { AppWindow } from "../../components/page/AppWindow";
 import { TopBar } from "../../components/page/TopBar";
 
-const Header = styled.h1`
-  text-align: center;
-`
-
-const Main = styled.div`
-  column-gap: 10px;
-  display: grid;
-  grid: 1fr / repeat(3, 1fr);
-  margin: auto auto 30px auto;
-  width: 800px;
-`
-
-const Section = styled.div`
-  border: 2px solid black;
-  display: inline-block;
-  left: 0;
-  padding: 0 10px 15px 10px;
-  right: 0;
-  text-align: center;
-`
-
-const SectionHeader = styled.h4`
-  margin: 10px 0;
-`
-
 export function App(): ReactElement {
-  const { showHelp, theme } = useAppSelector(selectAppState)
+  const { activeScreenView, theme } = useAppSelector(selectAppState)
   const dispatch = useAppDispatch()
 
   // initialize the colour picker with a random starting colour
@@ -64,32 +32,22 @@ export function App(): ReactElement {
       document.removeEventListener('keyup', receiveKeyUp)
     }
   })
+
+  // set up callbacks
+  const ignored = (): void => {}
+  function selectView(view: ScreenView): () => void {
+    return function () { dispatch(setActiveScreenView(view)) }
+  }
+
   return <ThemeProvider theme={getTheme(theme)}>
     <AppWindow>
-      <TopBar/>
+      <TopBar
+        onClickLogo={selectView(ScreenView.main)}
+        onClickHelp={selectView(ScreenView.help)}
+        onClickPerson={selectView(ScreenView.user)}
+        onClickSettings={selectView(ScreenView.settings)}
+      />
+      View: {activeScreenView}
     </AppWindow>
   </ThemeProvider>
-
-  // return (
-  //   <>
-  //     <Header>
-  //       <img alt="logo" src={logoFile} width="24px" /> Prismatic
-  //     </Header>
-  //     {showHelp && <Rules />}
-  //     <Main>
-  //       <Section>
-  //         <SectionHeader>Colour Picker</SectionHeader>
-  //         <ColourGuesser />
-  //       </Section>
-  //       <Section>
-  //         <SectionHeader>Response View</SectionHeader>
-  //         <HintDisplay />
-  //       </Section>
-  //       <Section>
-  //         <SectionHeader>Debug Info</SectionHeader>
-  //         <Debug />
-  //       </Section>
-  //     </Main>
-  //   </>
-  // )
 }
