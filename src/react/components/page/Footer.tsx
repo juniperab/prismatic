@@ -5,7 +5,7 @@ export function Footer(): ReactElement {
   return (
     <FooterOuter>
       <FooterSectionLeft>
-        <FooterText>(C) Juniper Alanna Berry</FooterText>
+        <FooterText>© Juniper Alanna Berry</FooterText>
       </FooterSectionLeft>
       <FooterSectionRight>
         <FooterText>Acknowledgements</FooterText>
