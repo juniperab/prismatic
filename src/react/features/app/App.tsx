@@ -1,4 +1,3 @@
-import * as _ from 'lodash'
 import React, { ReactElement, useEffect } from 'react'
 import { ThemeProvider } from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
@@ -12,7 +11,7 @@ import { Window } from '../../components/page/Window'
 import { Header } from '../../components/page/Header'
 import { Footer } from '../../components/page/Footer'
 import { Body } from '../../components/page/Body'
-import { HelpModal } from '../modals/HelpModal'
+import { HelpModal } from '../modals/help/HelpModal'
 import { UserModal } from '../modals/UserModal'
 import { SettingsModal } from '../modals/SettingsModal'
 import { PlayingView } from "../views/PlayingView"

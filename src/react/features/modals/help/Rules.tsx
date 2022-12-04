@@ -1,71 +1,13 @@
-import styled from 'styled-components'
 import colorPickerImageFile from './colour-picker.png'
 import guess1ImageFile from './guess1.png'
 import guess2ImageFile from './guess2.png'
 import solutionImageFile from './solution.png'
 import { ReactElement } from 'react'
+import { RulesImage, RulesOuter } from "./rulesLayout"
 
-const RulesWrapper = styled.div`
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  text-align: center;
-  z-index: 1;
-`
-
-const RulesModal = styled.div`
-  position: relative;
-  overflow-y: scroll;
-  display: inline-block;
-  width: 90%;
-  max-width: 800px;
-  height: 84%;
-  border: 1px solid black;
-  margin: 5% 5%;
-  top: 0;
-  left: 0;
-  background-color: lightgrey;
-  text-align: left;
-  h2,
-  h3 {
-    text-align: center;
-  }
-  h4 {
-    font-size: larger;
-  }
-  img {
-    margin: auto;
-  }
-`
-
-const ExitButton = styled.div`
-  position: absolute;
-  top: 5px;
-  left: 10px;
-  font-size: xx-large;
-  color: darkgrey;
-  font-stretch: expanded;
-  cursor: pointer;
-`
-
-const Image = styled.div`
-  display: block;
-  text-align: center;
-  img {
-    display: inline-block;
-  }
-  margin: 10px;
-`
-
-const RulesContents = styled.div`
-  margin: 10px;
-`
-
-function renderRules(): ReactElement {
+export function Rules(): ReactElement {
   return (
-    <RulesContents>
+    <RulesOuter>
       <h2>How to play</h2>
       <p>In Prismatic, you guess colours to gather information about a secret colour.</p>
 
@@ -74,18 +16,18 @@ function renderRules(): ReactElement {
         You can select your guesses with the colour picker, either by using the hue slider and the brightness /
         saturation plane, or by directly entering red, green, and blue values between 0 and 255.
       </p>
-      <Image>
+      <RulesImage>
         <img alt="Colour Picker" src={colorPickerImageFile} width="200px" />
-      </Image>
+      </RulesImage>
       <p>
         When you're ready, click the <strong>Make a guess</strong> button. You will then receive a hint that tells you
         how close you came to the secret colour, and some clues as to how you can get closer.
       </p>
 
       <h3>The Hint Display</h3>
-      <Image>
+      <RulesImage>
         <img alt="Guess One" src={guess1ImageFile} width="200px" />
-      </Image>
+      </RulesImage>
       <h4>Your guess</h4>
       <p>The first box from the left shows you the colour that you guessed.</p>
       <h4>Hue hint</h4>
@@ -152,9 +94,9 @@ function renderRules(): ReactElement {
         Given the information we got from that hint, let's guess a new colour that is (hopefully) closer to the secret
         colour.
       </p>
-      <Image>
+      <RulesImage>
         <img alt="Guess Two" src={guess2ImageFile} width="200px" />
-      </Image>
+      </RulesImage>
       <p>With this second guess, we get three new pieces of information:</p>
       <ol>
         <li>
@@ -178,21 +120,10 @@ function renderRules(): ReactElement {
         <strong>exact</strong>, just pretty close), then you have solved the puzzle and won the game.
       </p>
       <p>Instead of a hint, you'll see a box that tells you what the secret colour way.</p>
-      <Image>
+      <RulesImage>
         <img alt="Solution" src={solutionImageFile} width="200px" />
-      </Image>
+      </RulesImage>
       <p>Congratulations!</p>
-    </RulesContents>
-  )
-}
-
-export function Rules(): ReactElement {
-  return (
-    <RulesWrapper>
-      <RulesModal>
-        <ExitButton onClick={() => console.log('hiding help')}>X</ExitButton>
-        {renderRules()}
-      </RulesModal>
-    </RulesWrapper>
+    </RulesOuter>
   )
 }
