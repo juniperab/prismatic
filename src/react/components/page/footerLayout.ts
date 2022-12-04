@@ -2,9 +2,9 @@ import styled from 'styled-components'
 import { windowLayout } from './windowLayout'
 
 export const footerLayout = {
-  height: 16,
+  height: 0,
   border: {
-    top: 1,
+    top: 0,
     bottom: 0,
   },
   padding: {
