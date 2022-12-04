@@ -34,7 +34,6 @@ export const PlayingViewOuter = styled.div.attrs({
 export const PlayingViewUpperSection = styled.div.attrs({
   className: 'playing-view-upper-section',
 })`
-  background-color: lightgrey;
   height: calc(100% - ${playingViewLayout.height.lower}px - ${playingViewLayout.height.divider}px);
 `
 

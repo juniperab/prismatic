@@ -7,7 +7,7 @@ import {
   PlayingViewSectionDivider,
   PlayingViewUpperSection
 } from "./playingViewLayout"
-import { HintGrid } from "../../components/hint/HintGrid"
+import { HintGrid } from "../../components/hint-grid/HintGrid"
 import { selectPuzzleState } from "../../../redux/puzzle/puzzleSlice"
 
 export function PlayingView(): ReactElement | null {

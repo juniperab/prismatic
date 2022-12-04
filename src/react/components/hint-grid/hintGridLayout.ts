@@ -9,7 +9,7 @@ export const hintGridLayout = {
 }
 
 export const HintGridOuter = styled.div.attrs({
-  className: 'hint-grid-outer',
+  className: 'hint-grid-grid-outer',
 })`
   box-sizing: border-box;
   height: 100%;
@@ -18,7 +18,7 @@ export const HintGridOuter = styled.div.attrs({
 `
 
 export const HintGridMiddle1 = styled.div.attrs({
-  className: 'hint-grid-middle1',
+  className: 'hint-grid-grid-middle1',
 })`
   aspect-ratio: ${hintGridLayout.cols / hintGridLayout.rows};
   max-height: 100%;
@@ -26,7 +26,7 @@ export const HintGridMiddle1 = styled.div.attrs({
 `
 
 export const HintGridMiddle2 = styled.div.attrs({
-  className: 'hint-grid-middle2',
+  className: 'hint-grid-grid-middle2',
 })`
   aspect-ratio: ${hintGridLayout.cols / hintGridLayout.rows};
   box-sizing: border-box;
@@ -39,7 +39,7 @@ export const HintGridMiddle2 = styled.div.attrs({
 `
 
 export const HintGridInner = styled.div.attrs({
-  className: 'hint-grid-inner',
+  className: 'hint-grid-grid-inner',
 })`
   box-sizing: border-box;
   height: calc(100% - ${hintGridLayout.gap}px);
@@ -54,7 +54,7 @@ export const HintGridInner = styled.div.attrs({
 `
 
 export const HintRowOuter = styled.div.attrs({
-  className: 'hint-row-outer',
+  className: 'hint-grid-row-outer',
 })`
   box-sizing: border-box;
   display: grid;
@@ -63,10 +63,11 @@ export const HintRowOuter = styled.div.attrs({
 `
 
 export const HintRowCell = styled.div.attrs({
-  className: 'hint-row-cell',
+  className: 'hint-grid-row-cell',
 })`
   box-sizing: border-box;
   border-style: solid;
   border-width: 1px;
   border-color: ${props => props.theme.colours.border};
+  border-radius: 50%;
 `

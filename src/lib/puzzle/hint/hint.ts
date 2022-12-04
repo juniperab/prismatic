@@ -67,7 +67,7 @@ export function visitHint<T>(hint: Hint, visitor: HintVisitor<T>): T {
   } else if (isHSBHint(hint)) {
     return visitor.hsb(hint)
   }
-  throw new Error('invalid hint type')
+  throw new Error('invalid hint-grid type')
 }
 
 const getHintItemsAsArrayVisitor: HintVisitor<Array<HintItem | undefined>> = {

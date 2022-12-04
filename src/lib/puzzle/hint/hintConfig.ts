@@ -14,10 +14,10 @@ export interface HintConfigHSL {
 }
 
 export interface HintConfigHSB {
-  hueCutoff: number // further than this away from the target hue, you don't get a hue hint
-  hueStep: number // when you get a hue hint, you'll be shown a colour moved this amount toward the target
-  saturationMaxStep: number // when you get a saturation hint, this is the maximum amount of a hint you'll get
-  brightnessMaxStep: number // when you get a brightness hint, this is the maximum amount of a hint you'll get
+  hueCutoff: number // further than this away from the target hue, you don't get a hue hint-grid
+  hueStep: number // when you get a hue hint-grid, you'll be shown a colour moved this amount toward the target
+  saturationMaxStep: number // when you get a saturation hint-grid, this is the maximum amount of a hint-grid you'll get
+  brightnessMaxStep: number // when you get a brightness hint-grid, this is the maximum amount of a hint-grid you'll get
 }
 export interface HintConfig {
   rgb: HintConfigRGB
