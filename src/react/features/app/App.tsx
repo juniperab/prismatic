@@ -16,7 +16,7 @@ import { HelpModal } from '../modals/HelpModal'
 import { UserModal } from '../modals/UserModal'
 import { SettingsModal } from '../modals/SettingsModal'
 import { PlayingView } from "../views/PlayingView"
-import { handleWindowResize } from "./resizeHandlers"
+import { handleWindowResize, updateExtraVh } from "./resizeHandlers"
 
 export function App(): ReactElement {
   const { theme } = useAppSelector(selectAppState)
@@ -48,10 +48,12 @@ export function App(): ReactElement {
   // listen for window resize
   const receiveResize = (): void => handleWindowResize()
   useEffect(() => {
-    receiveResize()
+    receiveResize() // fire once on app load
     window.addEventListener('resize', receiveResize)
+    window.addEventListener('resize', updateExtraVh)
     return function cleanup() {
       window.removeEventListener('resize', receiveResize)
+      window.removeEventListener('resize', updateExtraVh)
     }
   })
 
