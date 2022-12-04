@@ -1,18 +1,18 @@
 import React, { ReactElement } from 'react'
 import { ModalType, selectAppState, setActiveModal } from '../../../redux/app/appSlice'
-import { Modal } from './Modal'
+import { Modal } from '../../components/modal/Modal'
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
 
-export function HelpModal(): ReactElement | null {
+export function SettingsModal(): ReactElement | null {
   const { activeModal } = useAppSelector(selectAppState)
   const dispatch = useAppDispatch()
 
-  if (activeModal !== ModalType.help) {
+  if (activeModal !== ModalType.settings) {
     return null
   }
 
   return (
-    <Modal title="Help" onClickClose={() => dispatch(setActiveModal(undefined))}>
+    <Modal title="Settings" onClickClose={() => dispatch(setActiveModal(undefined))}>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec rutrum elit ac est semper pretium. Integer
         molestie massa ac massa rutrum scelerisque. Proin vitae magna maximus, porta tortor quis, ultrices orci. Donec

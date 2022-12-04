@@ -2,6 +2,10 @@ import { AnyColor } from '../../colour/colourConversions'
 
 export type Hint = HSBHint | HSLHint | RGBHint
 
+export enum HintType {
+  RGB = 'rgb', HSL = 'hsl', HSB = 'hsb'
+}
+
 export interface HintItem {
   match: boolean
   colour: AnyColor
@@ -10,25 +14,25 @@ export interface HintItem {
 
 export interface BaseHint {
   guessedColour: AnyColor
-  type: string
+  type: HintType
 }
 
 export interface RGBHint extends BaseHint {
-  type: 'rgb'
+  type: HintType.RGB
   red?: HintItem
   green?: HintItem
   blue?: HintItem
 }
 
 export interface HSLHint extends BaseHint {
-  type: 'hsl'
+  type: HintType.HSL
   hue?: HintItem
   saturation?: HintItem
   luminance?: HintItem
 }
 
 export interface HSBHint extends BaseHint {
-  type: 'hsb'
+  type: HintType.HSB
   hue?: HintItem
   saturation?: HintItem
   brightness?: HintItem
@@ -36,17 +40,17 @@ export interface HSBHint extends BaseHint {
 
 export function isRGBHint(hint: Hint): hint is RGBHint {
   const rgbHint = hint as RGBHint
-  return rgbHint.type === 'rgb'
+  return rgbHint.type === HintType.RGB
 }
 
 export function isHSLHint(hint: Hint): hint is HSLHint {
   const hslHint = hint as HSLHint
-  return hslHint.type === 'hsl'
+  return hslHint.type === HintType.HSL
 }
 
 export function isHSBHint(hint: Hint): hint is HSLHint {
   const hsbHint = hint as HSBHint
-  return hsbHint.type === 'hsb'
+  return hsbHint.type === HintType.HSB
 }
 
 export interface HintVisitor<T> {

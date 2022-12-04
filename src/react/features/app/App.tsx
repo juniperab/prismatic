@@ -1,3 +1,4 @@
+import * as _ from 'lodash'
 import React, { ReactElement, useEffect } from 'react'
 import { ThemeProvider } from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
@@ -11,9 +12,11 @@ import { Window } from '../../components/page/Window'
 import { Header } from '../../components/page/Header'
 import { Footer } from '../../components/page/Footer'
 import { Body } from '../../components/page/Body'
-import { HelpModal } from '../../components/modal/HelpModal'
-import { UserModal } from '../../components/modal/UserModal'
-import { SettingsModal } from '../../components/modal/SettingsModal'
+import { HelpModal } from '../modals/HelpModal'
+import { UserModal } from '../modals/UserModal'
+import { SettingsModal } from '../modals/SettingsModal'
+import { PlayingView } from "../views/PlayingView"
+import { handleWindowResize } from "./resizeHandlers"
 
 export function App(): ReactElement {
   const { theme } = useAppSelector(selectAppState)
@@ -42,6 +45,16 @@ export function App(): ReactElement {
     }
   })
 
+  // listen for window resize
+  const receiveResize = (): void => handleWindowResize()
+  useEffect(() => {
+    receiveResize()
+    window.addEventListener('resize', receiveResize)
+    return function cleanup() {
+      window.removeEventListener('resize', receiveResize)
+    }
+  })
+
   // set up callbacks
   function openModal(modal: ModalType | undefined): () => void {
     return function () {
@@ -57,7 +70,9 @@ export function App(): ReactElement {
           onClickPerson={openModal(ModalType.user)}
           onClickSettings={openModal(ModalType.settings)}
         />
-        <Body>Hello World</Body>
+        <Body>
+          <PlayingView/>
+        </Body>
         <Footer />
       </Window>
       <HelpModal />
