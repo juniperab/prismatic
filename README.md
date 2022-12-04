@@ -21,7 +21,7 @@ You will then receive a hint that tells you how close
 you came to the secret colour, and some clues as to how
 you can get closer.
 
-### The Hint Display
+### The HintGridRow Display
 
 ![Guess One](public/images/docs/guess1.png)
 

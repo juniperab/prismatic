@@ -3,9 +3,9 @@ import { playingViewLayout } from "../../features/views/playingViewLayout"
 
 export const hintGridLayout = {
   aspectRatio: -999,
-  cols: 6,
+  cols: 4,
   gap: 20,
-  rows: 7,
+  rows: 6,
 }
 
 export const HintGridOuter = styled.div.attrs({
@@ -49,10 +49,24 @@ export const HintGridInner = styled.div.attrs({
   transform: translate(-50%, -50%);
   width: calc(100% - ${hintGridLayout.gap}px);
   display: grid;
+  grid-template-rows: repeat(${hintGridLayout.rows}, 1fr);
+  row-gap: ${hintGridLayout.gap}px;
 `
 
-export const HintGridRow = styled.div.attrs({
-  className: 'hint-grid-row',
+export const HintRowOuter = styled.div.attrs({
+  className: 'hint-row-outer',
 })`
-  
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(${hintGridLayout.cols}, 1fr);
+  column-gap: ${hintGridLayout.gap}px;
+`
+
+export const HintRowCell = styled.div.attrs({
+  className: 'hint-row-cell',
+})`
+  box-sizing: border-box;
+  border-style: solid;
+  border-width: 1px;
+  border-color: ${props => props.theme.colours.border};
 `
