@@ -6,8 +6,12 @@ import { windowLayout } from "../../components/page/windowLayout"
 
 export const playingViewLayout = {
   height: {
-    lower: 350,
+    lower: 550,
+    lowerContents: -999,
     divider: 10,
+  },
+  padding: {
+    lower: 20,
   },
   windowHeightMinusUpper: -999
 }
@@ -22,6 +26,9 @@ playingViewLayout.windowHeightMinusUpper =
   bodyLayout.margin.bottom +
   footerLayout.height +
   windowLayout.padding.topBottom
+playingViewLayout.height.lowerContents =
+  playingViewLayout.height.lower -
+  (playingViewLayout.padding.lower * 2)
 
 
 export const PlayingViewOuter = styled.div.attrs({
@@ -50,6 +57,6 @@ export const PlayingViewLowerSection = styled.div.attrs({
   background-color: lightgrey;
   height: ${playingViewLayout.height.lower}px;
   text-align: center;
-  padding: 20px;
+  padding: ${playingViewLayout.padding.lower}px;
   box-sizing: border-box;
 `

@@ -1,34 +1,28 @@
 import { ReactElement, useState } from "react"
 import { ColourChooserCover, ColourChooserOuter } from "./colourChooserLayout"
 import { HsvColorPicker } from "react-colorful"
-import { Gestures } from "../gestures/Gestures"
+import { HammerComponent } from "../hammer/HammerComponent"
 
 export function ColourChooser(): ReactElement {
-  const [eventType, setEventType] = useState<string>("");
-  const handleGesture = (event: HammerInput): void => setEventType(event.type);
+  const [deltaX, setDeltaX] = useState(0)
+  const [deltaY, setDeltaY] = useState(0)
+  const [scale, setScale] = useState(1)
 
-  return <ColourChooserOuter>
+  function handleManipulate(x: number, y: number, r: number, s: number): void {
+    setDeltaX(x)
+    setDeltaY(y)
+    setScale(s)
+  }
 
-    <Gestures
-      recognizers={{
-        Pan: {
-          events: {
-            panleft: handleGesture,
-            panright: handleGesture,
-            panup: handleGesture,
-            pandown: handleGesture
-          }
-        }
-      }}
-    >
-      <div>
-        <h1>Gesture Section {eventType !== undefined && ` - This is ${eventType}`}</h1>
-      </div>
-    </Gestures>
-
-    {/* <HsvColorPicker */}
-    {/*   color={{h: 120, s: 50, v: 50}} */}
-    {/* /> */}
-    {/* <ColourChooserCover/> */}
-  </ColourChooserOuter>
+  return <HammerComponent onManipulate={handleManipulate} minScale={1}>
+      <ColourChooserOuter>
+       <HsvColorPicker
+         style={{transform: `scale(${scale})`}}
+         color={{h: 120, s: 50, v: 50}}
+       />
+       <ColourChooserCover>
+         {Math.round(deltaX)}, {Math.round(deltaY)} | {Math.round(scale * 100)}%
+       </ColourChooserCover>
+      </ColourChooserOuter>
+    </HammerComponent>
 }

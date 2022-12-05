@@ -1,4 +1,5 @@
 import styled from "styled-components"
+import { playingViewLayout } from "../../features/views/playingViewLayout"
 
 export const colourChooserLayout = {
 
@@ -10,11 +11,11 @@ export const ColourChooserOuter = styled.div.attrs({
   height: 100%;
   width: 100%;
   position: relative;
-
-  touch-action: none;
   
   .react-colorful {
+    box-sizing: border-box;
     width: 100%;
+    height: ${playingViewLayout.height.lowerContents}px;
   }
   .react-colorful__saturation {
     margin: 0;
