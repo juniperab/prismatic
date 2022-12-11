@@ -5,7 +5,7 @@ import {
   InfiniteTile,
 } from "./infiniteLayout"
 import { useResizeDetector } from "react-resize-detector"
-import { HammerComponent } from "../hammer/HammerComponent"
+import { HammerArea } from "../hammer/HammerArea"
 
 export interface InfiniteProps {
   children: ReactElement,
@@ -75,8 +75,9 @@ export function Infinite(props: InfiniteProps): ReactElement {
       <InfiniteInner style={innerStyle}>
         {tiles}
       </InfiniteInner>
-      <HammerComponent
+      <HammerArea
         clampScale={[1, 10]}
+        lockScale={true}
         onChange={handleManipulate}
         style={hammerStyle}
       />
