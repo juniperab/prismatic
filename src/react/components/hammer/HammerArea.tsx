@@ -1,8 +1,19 @@
-import * as _ from "lodash"
+import { debounce, defaultTo } from "lodash"
 import { Component, createRef, CSSProperties, ReactElement, ReactNode, RefObject } from "react"
 import Hammer from 'hammerjs'
 
 export type HammerAreaClamp = [number | undefined, number | undefined] // [min, max]
+
+export interface HammerAreaValues {
+  displayOffsetX: number,
+  displayOffsetY: number,
+  displayRotation: number,
+  displayScale: number,
+  rotation: number,
+  scale: number,
+  x: number,
+  y: number,
+}
 
 enum HammerAction {
   None = 'none', Pan = 'pan', ScaleRotate = 'scale/rotate'
@@ -19,6 +30,10 @@ export interface HammerAreaProps {
   clampX?: HammerAreaClamp
   // bounds on which to clamp to Y offset
   clampY?: HammerAreaClamp
+  initialX?: number,
+  initialY?: number,
+  initialRotation?: number,
+  initialScale?: number,
   // whether to take the scale into account when updating the other dimensions;
   // this would apply if the scale were not used to update the visual display
   // of the children
@@ -36,16 +51,27 @@ export interface HammerAreaProps {
   // of the children
   lockY?: boolean
   // callback function triggered when any of the coordinates changes
-  onChange: (offsetX: number, offsetY: number, scale: number, rotation: number) => void
+  onChange?: (newValues: HammerAreaValues) => void
   // style to apply to the container div that wraps the HammerArea's children
   style?: CSSProperties
 }
 
 interface HammerAreaState {
-  offsetX: number,
-  offsetY: number,
+  displayOffsetX: number,
+  displayOffsetY: number,
+  displayRotation: number,
+  displayScale: number,
   rotation: number,
   scale: number,
+  x: number,
+  y: number,
+}
+
+interface HammerEventStartValues {
+  rotation: number,
+  scale: number,
+  x: number,
+  y: number,
 }
 
 /**
@@ -73,27 +99,53 @@ function clampValue (value: number, clamp: HammerAreaClamp | undefined): number 
  * so the deltaX and deltaY of the input are considered,
  * while scale and rotation are ignored.
  *
- * @param ev              a Hammer event
+ * @param event           a Hammer event
  * @param currentState    the current component state
  * @param currentProps    the current component props
- * @param initialValues   basis value derived from the initial state of the event
+ * @param eventStart      basis value derived from the initial state of the event
  * @private               the adjusted component state
  */
 function newStateForPan(
-  ev: HammerInput,
+  event: HammerInput,
   currentState: HammerAreaState,
   currentProps: HammerAreaProps,
-  initialValues: HammerAreaState,
+  eventStart: HammerEventStartValues,
 ): HammerAreaState {
-  let newOffsetX = currentState.offsetX + (ev.deltaX - initialValues.offsetX)
-  let newOffsetY = currentState.offsetY + (ev.deltaY - initialValues.offsetY)
-  newOffsetX = clampValue(newOffsetX, currentProps.clampX)
-  newOffsetY = clampValue(newOffsetY, currentProps.clampY)
+  let newX = currentState.x + (event.deltaX - eventStart.x)
+  let newY = currentState.y + (event.deltaY - eventStart.y)
+  const clampedX = clampValue(newX, currentProps.clampX)
+  const clampedY = clampValue(newY, currentProps.clampY)
+
+  // if X or Y is getting clamped, reset the initial so that panning the
+  // other way will immediately produce a change.
+  if (Math.abs(clampedX - newX) > 0.0001) {
+    eventStart.x = currentState.x + event.deltaX - clampedX
+  }
+  if (Math.abs(clampedY - newY) > 0.0001) {
+    eventStart.y = currentState.y + event.deltaY - clampedY
+  }
+  newX = clampedX
+  newY = clampedY
+
+  // if X or Y is unlocked, calculate a new display value for them
+  const actualDeltaX = newX - currentState.x
+  const actualDeltaY = newY - currentState.y
+  const newDisplayOffsetX = currentProps.lockX !== true
+    ? currentState.displayOffsetX + actualDeltaX
+    : currentState.displayOffsetX
+  const newDisplayOffsetY = currentProps.lockY !== true
+    ? currentState.displayOffsetY + actualDeltaY
+    : currentState.displayOffsetY
+
   return {
+    displayOffsetX: newDisplayOffsetX,
+    displayOffsetY: newDisplayOffsetY,
+    displayRotation: currentState.displayRotation,
+    displayScale: currentState.displayScale,
     rotation: currentState.rotation,
     scale: currentState.scale,
-    offsetX: newOffsetX,
-    offsetY: newOffsetY,
+    x: newX,
+    y: newY,
   }
 }
 
@@ -105,26 +157,26 @@ function newStateForPan(
  * so the scale and rotation of the input are considered,
  * while deltaX and deltaY are ignored.
  *
- * @param ev              a Hammer event
+ * @param event           a Hammer event
  * @param currentState    the current component state
  * @param currentProps    the current  component props
- * @param initialValues   basis value derived from the initial state of the event
+ * @param eventStart      basis value derived from the initial state of the event
  * @private               the adjusted component state
  */
 function newStateForScaleRotate(
-  ev: HammerInput,
+  event: HammerInput,
   currentState: HammerAreaState,
   currentProps: HammerAreaProps,
-  initialValues: HammerAreaState,
+  eventStart: HammerEventStartValues,
 ): HammerAreaState {
-  let newRotation = currentState.rotation + ev.rotation - initialValues.rotation
-  let newScale = currentState.scale * ev.scale / initialValues.scale
+  let newRotation = currentState.rotation + event.rotation - eventStart.rotation
+  let newScale = currentState.scale * event.scale / eventStart.scale
 
   // if rotation is getting clamped, reset the initial so that turning the
   // other way will immediately produce a rotation change.
   const clampedRotation = clampValue(newRotation, currentProps.clampRotation)
   if (Math.abs(clampedRotation - newRotation) > 0.0001) {
-    initialValues.rotation = currentState.rotation + ev.rotation - clampedRotation
+    eventStart.rotation = currentState.rotation + event.rotation - clampedRotation
   }
   newRotation = clampedRotation
 
@@ -132,45 +184,60 @@ function newStateForScaleRotate(
   // other way will immediately produce a scale change.
   const clampedScale = clampValue(newScale, currentProps.clampScale)
   if (Math.abs(clampedScale - newScale) > 0.1) {
-    initialValues.scale = currentState.scale * ev.scale / clampedScale
+    eventStart.scale = currentState.scale * event.scale / clampedScale
   }
   newScale = clampedScale
 
-  // if the rotation is unlocked, update the x and y offsets when the rotation changes,
-  // so that the contents will rotate smoothly around the current centre point
-  const actualDeltaRotation = currentProps.lockRotation !== true
-    ? newRotation - currentState.rotation
-    : 0
-  const hypotenuse = Math.sqrt(
-    Math.pow(currentState.offsetX, 2) + Math.pow(currentState.offsetY, 2))
-  let currentOffsetAngleX = 0
-  let currentOffsetAngleY = 0
-  if (hypotenuse !== 0) {
-    currentOffsetAngleX = -1 * Math.acos(currentState.offsetX / hypotenuse) * Math.sign(currentState.offsetY)
-    currentOffsetAngleY = -1 * Math.asin(currentState.offsetY / hypotenuse)
-    if (currentState.offsetX < 0) currentOffsetAngleY = Math.PI - currentOffsetAngleY
-  }
-  const newOffsetAngleX = -1 * ((actualDeltaRotation * Math.PI / 180) - currentOffsetAngleX)
-  const newOffsetAngleY = -1 * ((actualDeltaRotation * Math.PI / 180) - currentOffsetAngleY)
-  let newOffsetX = hypotenuse * Math.cos(newOffsetAngleX)
-  let newOffsetY = -1 * hypotenuse * Math.sin(newOffsetAngleY)
+  // if the rotation is unlocked, calculate a new display value
+  const actualDeltaRotation = newRotation - currentState.rotation
+  const newDisplayRotation = currentProps.lockRotation !== true
+    ? currentState.displayRotation + actualDeltaRotation
+    : currentState.displayRotation
 
-  console.log(`X angles: ${currentOffsetAngleX * 180 / Math.PI} -> ${newOffsetAngleX * 180 / Math.PI}`)
-  console.log(`Y angles: ${currentOffsetAngleY * 180 / Math.PI} -> ${newOffsetAngleY * 180 / Math.PI}`)
+  // if the scale is unlocked, calculate a new display value
+  const actualDeltaScale = newScale / currentState.scale
+  const newDisplayScale = currentProps.lockScale !== true
+    ? currentState.displayScale * actualDeltaScale
+    : currentState.displayScale
+
+  // if the rotation is unlocked, update the display offsets for x and y when the rotation changes,
+  // so that the contents will rotate smoothly around the current centre point
+  let newDisplayOffsetX = currentState.displayOffsetX
+  let newDisplayOffsetY = currentState.displayOffsetY
+  if (currentProps.lockRotation !== true) {
+    const hypotenuse = Math.sqrt(
+      Math.pow(currentState.displayOffsetX, 2) + Math.pow(currentState.displayOffsetY, 2))
+    let currentDisplayOffsetAngleX = 0
+    let currentDisplayOffsetAngleY = 0
+    if (hypotenuse !== 0) {
+      currentDisplayOffsetAngleX = -1 * Math.acos(currentState.displayOffsetX / hypotenuse)
+      currentDisplayOffsetAngleY = -1 * Math.asin(currentState.displayOffsetY / hypotenuse)
+      if (currentState.displayOffsetY < 0) currentDisplayOffsetAngleX *= -1
+      if (currentState.displayOffsetX < 0) currentDisplayOffsetAngleY = Math.PI - currentDisplayOffsetAngleY
+    }
+    const newDisplayOffsetAngleX = -1 * ((actualDeltaRotation * Math.PI / 180) - currentDisplayOffsetAngleX)
+    const newDisplayOffsetAngleY = -1 * ((actualDeltaRotation * Math.PI / 180) - currentDisplayOffsetAngleY)
+    newDisplayOffsetX = hypotenuse * Math.cos(newDisplayOffsetAngleX)
+    newDisplayOffsetY = -1 * hypotenuse * Math.sin(newDisplayOffsetAngleY)
+  }
 
   // if the scale is unlocked, update the x and y offsets when the scale changes,
   // so that the contents will zoom smoothly around the current centre point
-  const actualDeltaScale = currentProps.lockScale !== true
-    ? newScale / currentState.scale
-    : 1
-  newOffsetX *= actualDeltaScale
-  newOffsetY *= actualDeltaScale
+  if (currentProps.lockScale !== true) {
+    newDisplayOffsetX *= actualDeltaScale
+    newDisplayOffsetY *= actualDeltaScale
+  }
+
 
   return {
+    displayOffsetX: newDisplayOffsetX,
+    displayOffsetY: newDisplayOffsetY,
+    displayRotation: newDisplayRotation,
+    displayScale: newDisplayScale,
     rotation: newRotation,
     scale: newScale,
-    offsetX: newOffsetX,
-    offsetY: newOffsetY,
+    x: currentState.x,
+    y: currentState.y,
   }
 }
 
@@ -190,27 +257,31 @@ function newStateForScaleRotate(
 export class HammerArea extends Component<HammerAreaProps, HammerAreaState> {
   private readonly containerRef: RefObject<HTMLDivElement> = createRef<HTMLDivElement>()
   private _hammer: HammerManager | null = null
-  private initialValues: HammerAreaState
+  private eventStartValues: HammerEventStartValues
   private currentAction: HammerAction
 
   constructor(props: HammerAreaProps) {
     super(props)
     this.state = {
-      offsetX: 0,
-      offsetY: 0,
-      rotation: 0,
-      scale: 1,
+      displayOffsetX: defaultTo(props.initialX, 0),
+      displayOffsetY: defaultTo(props.initialY, 0),
+      displayRotation: defaultTo(props.initialRotation, 0),
+      displayScale: defaultTo(props.initialScale, 1),
+      x: defaultTo(props.initialX, 0),
+      y: defaultTo(props.initialY, 0),
+      rotation: defaultTo(props.initialRotation, 0),
+      scale: defaultTo(props.initialScale, 1),
     }
-    this.initialValues = this.state
+    this.eventStartValues = this.state
     this.currentAction = HammerAction.None
   }
 
   private readonly handleHammerStartPan: (ev: HammerInput) => void = ev => {
     if (this.currentAction !== HammerAction.None) return
     this.currentAction = HammerAction.Pan
-    this.initialValues = {
-      offsetX: ev.deltaX,
-      offsetY: ev.deltaY,
+    this.eventStartValues = {
+      x: ev.deltaX,
+      y: ev.deltaY,
       rotation: 0,
       scale: 1,
     }
@@ -219,9 +290,9 @@ export class HammerArea extends Component<HammerAreaProps, HammerAreaState> {
   private readonly handleHammerStartScaleRotate: (ev: HammerInput) => void = ev => {
     if (this.currentAction !== HammerAction.None) return
     this.currentAction = HammerAction.ScaleRotate
-    this.initialValues = {
-      offsetX: 0,
-      offsetY: 0,
+    this.eventStartValues = {
+      x: 0,
+      y: 0,
       rotation: ev.rotation,
       scale: ev.scale,
     }
@@ -234,10 +305,8 @@ export class HammerArea extends Component<HammerAreaProps, HammerAreaState> {
    */
   private readonly handleHammerProgressivePan: (ev: HammerInput) => void = ev => {
     if (this.currentAction !== HammerAction.Pan) return
-    if (this.props.onChange !== undefined) {
-      const newState = newStateForPan(ev, this.state, this.props, this.initialValues)
-      this.props.onChange(newState.offsetX, newState.offsetY, newState.rotation, newState.scale)
-    }
+    if (this.props.onChange !== undefined)
+      this.props.onChange(newStateForPan(ev, this.state, this.props, this.eventStartValues))
   }
 
   /**
@@ -247,10 +316,8 @@ export class HammerArea extends Component<HammerAreaProps, HammerAreaState> {
    */
   private readonly handleHammerProgressiveScaleRotate: (ev: HammerInput) => void = ev => {
     if (this.currentAction !== HammerAction.ScaleRotate) return
-    if (this.props.onChange !== undefined) {
-      const newState = newStateForScaleRotate(ev, this.state, this.props, this.initialValues)
-      this.props.onChange(newState.offsetX, newState.offsetY, newState.rotation, newState.scale)
-    }
+    if (this.props.onChange !== undefined)
+      this.props.onChange(newStateForScaleRotate(ev, this.state, this.props, this.eventStartValues))
   }
 
   /**
@@ -263,12 +330,10 @@ export class HammerArea extends Component<HammerAreaProps, HammerAreaState> {
   private readonly _handleHammerEndPanNotDebounced: (ev: HammerInput) => void = ev => {
     if (this.currentAction !== HammerAction.Pan) return
     this.currentAction = HammerAction.None
-    const initialValues = Object.assign({}, this.initialValues)
+    const initialValues = Object.assign({}, this.eventStartValues)
     this.setState((state, props) => {
       const newState = newStateForPan(ev, state, props, initialValues)
-      if (this.props.onChange !== undefined) {
-        this.props.onChange(newState.offsetX, newState.offsetY, newState.rotation, newState.scale)
-      }
+      if (this.props.onChange !== undefined) this.props.onChange(newState)
       return newState
     })
   }
@@ -278,7 +343,7 @@ export class HammerArea extends Component<HammerAreaProps, HammerAreaState> {
    * Updates the base values to reflect the final result of the event.
    * @param ev  the Hammer event
    */
-  private readonly handleHammerEndPan = _.debounce(this._handleHammerEndPanNotDebounced, 10)
+  private readonly handleHammerEndPan = debounce(this._handleHammerEndPanNotDebounced, 10)
 
   /**
    * Handle the end of a Hammer 'scale' and/or 'rotate' event
@@ -290,12 +355,10 @@ export class HammerArea extends Component<HammerAreaProps, HammerAreaState> {
   private readonly _handleHammerEndScaleRotateNotDebounced: (ev: HammerInput) => void = ev => {
     if (this.currentAction !== HammerAction.ScaleRotate) return
     this.currentAction = HammerAction.None
-    const initialValues = Object.assign({}, this.initialValues)
+    const initialValues = Object.assign({}, this.eventStartValues)
     this.setState((state, props) => {
       const newState = newStateForScaleRotate(ev, state, props, initialValues)
-      if (this.props.onChange !== undefined) {
-        this.props.onChange(newState.offsetX, newState.offsetY, newState.rotation, newState.scale)
-      }
+      if (this.props.onChange !== undefined) this.props.onChange(newState)
       return newState
     })
   }
@@ -305,21 +368,14 @@ export class HammerArea extends Component<HammerAreaProps, HammerAreaState> {
    * Updates the base values to reflect the final result of the event.
    * @param ev  the Hammer event
    */
-  private readonly handleHammerEndScaleRotate = _.debounce(this._handleHammerEndScaleRotateNotDebounced, 10)
+  private readonly handleHammerEndScaleRotate = debounce(this._handleHammerEndScaleRotateNotDebounced, 10)
 
   /**
    * Handle the cancellation of a Hammer event. Base values are not changes.
    */
-  private readonly handleHammerCancelEvent: (ev: HammerInput) => void = ev => {
+  private readonly handleHammerCancelEvent: (ev: HammerInput) => void = _ => {
     this.currentAction = HammerAction.None
-    if (this.props.onChange !== undefined) {
-      this.props.onChange(
-        this.state.offsetX,
-        this.state.offsetY,
-        this.state.rotation,
-        this.state.scale,
-      )
-    }
+    if (this.props.onChange !== undefined) this.props.onChange(this.state)
   }
 
   /**
