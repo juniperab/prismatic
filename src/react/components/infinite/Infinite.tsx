@@ -20,10 +20,8 @@ export function Infinite(props: InfiniteProps): ReactElement {
 
   const actualWidth = Math.max(width !== undefined ? width : 1, 1)
   const actualHeight = Math.max(height !== undefined ? height : 1, 1)
-  const actualDeltaX = delta.x % (actualWidth * delta.s)
-  const actualDeltaY = delta.y % (actualHeight * delta.s)
-
-  console.log(`[${actualWidth}, ${actualHeight}]${delta.x} % ${actualWidth * delta.s} -> ${actualDeltaX}`)
+  const actualDeltaX = delta.x // % (actualWidth * delta.s)
+  const actualDeltaY = delta.y // % (actualHeight * delta.s)
 
   const contents = <div>
     {children}
@@ -61,7 +59,7 @@ export function Infinite(props: InfiniteProps): ReactElement {
   }
 
   const innerStyle: CSSProperties = {
-    transform: `translateX(${actualDeltaX}px) translateY(${actualDeltaY}px) scale(${delta.s * 100}%)`,
+    transform: `translateX(${actualDeltaX}px) translateY(${actualDeltaY}px) scale(${delta.s * 100}%) rotate(${delta.r}deg)`,
   }
 
   const hammerStyle: CSSProperties = {
@@ -77,7 +75,6 @@ export function Infinite(props: InfiniteProps): ReactElement {
       </InfiniteInner>
       <HammerArea
         clampScale={[1, 10]}
-        lockScale={true}
         onChange={handleManipulate}
         style={hammerStyle}
       />

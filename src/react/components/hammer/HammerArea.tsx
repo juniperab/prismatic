@@ -136,18 +136,41 @@ function newStateForScaleRotate(
   }
   newScale = clampedScale
 
-  // if the scale is unlocked, update the x and y offsets when the scale changes
+  // if the rotation is unlocked, update the x and y offsets when the rotation changes,
+  // so that the contents will rotate smoothly around the current centre point
+  const actualDeltaRotation = currentProps.lockRotation !== true
+    ? newRotation - currentState.rotation
+    : 0
+  const hypotenuse = Math.sqrt(
+    Math.pow(currentState.offsetX, 2) + Math.pow(currentState.offsetY, 2))
+  let currentOffsetAngleX = 0
+  let currentOffsetAngleY = 0
+  if (hypotenuse !== 0) {
+    currentOffsetAngleX = -1 * Math.acos(currentState.offsetX / hypotenuse) * Math.sign(currentState.offsetY)
+    currentOffsetAngleY = -1 * Math.asin(currentState.offsetY / hypotenuse)
+    if (currentState.offsetX < 0) currentOffsetAngleY = Math.PI - currentOffsetAngleY
+  }
+  const newOffsetAngleX = -1 * ((actualDeltaRotation * Math.PI / 180) - currentOffsetAngleX)
+  const newOffsetAngleY = -1 * ((actualDeltaRotation * Math.PI / 180) - currentOffsetAngleY)
+  let newOffsetX = hypotenuse * Math.cos(newOffsetAngleX)
+  let newOffsetY = -1 * hypotenuse * Math.sin(newOffsetAngleY)
+
+  console.log(`X angles: ${currentOffsetAngleX * 180 / Math.PI} -> ${newOffsetAngleX * 180 / Math.PI}`)
+  console.log(`Y angles: ${currentOffsetAngleY * 180 / Math.PI} -> ${newOffsetAngleY * 180 / Math.PI}`)
+
+  // if the scale is unlocked, update the x and y offsets when the scale changes,
   // so that the contents will zoom smoothly around the current centre point
   const actualDeltaScale = currentProps.lockScale !== true
     ? newScale / currentState.scale
     : 1
-  // TODO: make it rotate around the current centre point vs the origin
+  newOffsetX *= actualDeltaScale
+  newOffsetY *= actualDeltaScale
 
   return {
     rotation: newRotation,
     scale: newScale,
-    offsetX: currentState.offsetX * actualDeltaScale,
-    offsetY: currentState.offsetY * actualDeltaScale,
+    offsetX: newOffsetX,
+    offsetY: newOffsetY,
   }
 }
 
