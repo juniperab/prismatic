@@ -1,10 +1,6 @@
 import styled from "styled-components"
 import { playingViewLayout } from "../../features/views/playingViewLayout"
 
-export const colourChooserLayout = {
-
-}
-
 export const ColourChooserOuter = styled.div.attrs({
   className: 'colour-chooser-outer',
 })`
@@ -32,15 +28,4 @@ export const ColourChooserOuter = styled.div.attrs({
     width: inherit;
     border-radius: 0;
   }
-`
-
-export const ColourChooserCover = styled.div.attrs({
-  className: 'colour-chooser-cover',
-})`
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  z-index: 999;
 `

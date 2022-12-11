@@ -10,7 +10,6 @@ import {
 import { HintGrid } from "../../components/hint-grid/HintGrid"
 import { selectPuzzleState } from "../../../redux/puzzle/puzzleSlice"
 import { ColourChooser } from "../../components/colour-chooser/ColourChooser"
-import { ColourChooserCover } from "../../components/colour-chooser/colourChooserLayout"
 
 export function PlayingView(): ReactElement | null {
   const { activeView } = useAppSelector(selectAppState)

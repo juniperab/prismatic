@@ -6,10 +6,13 @@ import {
   InfiniteHammerAreaTile,
 } from "./infiniteHammerAreaLayout"
 import { useResizeDetector } from "react-resize-detector"
-import { HammerArea, HammerAreaProps, HammerAreaValues } from "../hammer/HammerArea"
+import { HammerArea, HammerAreaProps, HammerAreaValues } from "./HammerArea"
 
-export function InfiniteHammerArea(props: HammerAreaProps): ReactElement {
-  const { children } = props
+export interface InfiniteHammerAreaProps extends HammerAreaProps {
+  mirrorTiles?: boolean
+}
+
+export function InfiniteHammerArea(props: InfiniteHammerAreaProps): ReactElement {
   const { width, height, ref } = useResizeDetector();
   const [values, setValues] = useState({
     r: defaultTo(props.initialRotation, 0),
@@ -48,37 +51,18 @@ export function InfiniteHammerArea(props: HammerAreaProps): ReactElement {
   const shiftsX = -1 * Math.floor(Math.abs(unrotatedDeltaX / (actualWidth * values.s))) * Math.sign(unrotatedDeltaX)
   const shiftsY = -1 * Math.floor(Math.abs(unrotatedDeltaY / (actualHeight * values.s))) * Math.sign(unrotatedDeltaY)
 
-  const contents = <div>
-    {children}
-    <div>width: {width}, height: {height}</div>
-    <div>
-      x: {Math.round(values.x * 10000) / 10000},
-      y: {Math.round(values.y * 10000) / 10000}<br/>
-      r: {Math.round(values.r * 10000) / 10000},
-      s: {Math.round(values.s * 10000) / 10000}
-    </div>
-    {children}
-    ...
-    {children}
-    ...
-    {children}
-    <div className='my-dot-centre' style={{
-      position: 'absolute',
-      width: '10px',
-      height: '10px',
-      backgroundColor: 'darkviolet',
-      top: 'calc((100% - 10px) / 2)',
-      left: 'calc((100% - 10px) / 2)',
-    }}></div>
-  </div>
-
   const tiles = []
   for (let i = Math.round(-2 / values.s) + shiftsX; i <= Math.round(2 / values.s) + shiftsX; i++) {
     for (let j = Math.round(-2 / values.s) + shiftsY; j <= Math.round(2 / values.s) + shiftsY; j++) {
       const styleIJ: CSSProperties = {
-        transform: `translateX(${i * 100}%) translateY(${j * 100}%)`,
+        transform: [
+          `translateX(${i * 100}%)`,
+          `translateY(${j * 100}%)`,
+          `scaleX(${i % 2 ===0 ? 100 : -100}%)`,
+          `scaleY(${j % 2 === 0 ? 100 : -100}%)`
+        ].join(' '),
       }
-      const tileIJ = <InfiniteHammerAreaTile style={styleIJ} key={`${i},${j}`}>{contents}</InfiniteHammerAreaTile>
+      const tileIJ = <InfiniteHammerAreaTile style={styleIJ} key={`${i},${j}`}>{props.children}</InfiniteHammerAreaTile>
       tiles.push(tileIJ)
     }
   }
