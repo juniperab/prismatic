@@ -21,7 +21,6 @@ export function ColourChooser(): ReactElement {
     setHue(rotateHue(values.rotation, 0))
     setSaturation(-1 * pctX * 100 + 50)
     setBrightness(pctY * 100 + 50)
-    console.log(`S: ${saturation}%   Y: ${brightness}%`)
   }
 
   return (
