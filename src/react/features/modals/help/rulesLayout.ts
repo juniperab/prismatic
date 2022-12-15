@@ -1,8 +1,6 @@
-import styled from "styled-components"
+import styled from 'styled-components'
 
-export const rulesLayout = {
-
-}
+export const rulesLayout = {}
 
 export const RulesOuter = styled.div.attrs({
   className: 'rules-outer',

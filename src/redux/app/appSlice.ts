@@ -15,7 +15,7 @@ export enum ModalType {
 }
 
 export enum ViewType {
-  playing = 'playing'
+  playing = 'playing',
 }
 
 const initialState: AppState = {

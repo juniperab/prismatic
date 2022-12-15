@@ -1,8 +1,8 @@
-import styled from "styled-components"
-import { headerLayout } from "../../components/page/headerLayout"
-import { footerLayout } from "../../components/page/footerLayout"
-import { bodyLayout } from "../../components/page/bodyLayout"
-import { windowLayout } from "../../components/page/windowLayout"
+import styled from 'styled-components'
+import { headerLayout } from '../../components/page/headerLayout'
+import { footerLayout } from '../../components/page/footerLayout'
+import { bodyLayout } from '../../components/page/bodyLayout'
+import { windowLayout } from '../../components/page/windowLayout'
 
 export const playingViewLayout = {
   height: {
@@ -13,7 +13,7 @@ export const playingViewLayout = {
   padding: {
     lower: 20,
   },
-  windowHeightMinusUpper: -999
+  windowHeightMinusUpper: -999,
 }
 playingViewLayout.windowHeightMinusUpper =
   windowLayout.padding.topBottom +
@@ -26,10 +26,7 @@ playingViewLayout.windowHeightMinusUpper =
   bodyLayout.margin.bottom +
   footerLayout.height +
   windowLayout.padding.topBottom
-playingViewLayout.height.lowerContents =
-  playingViewLayout.height.lower -
-  (playingViewLayout.padding.lower * 2)
-
+playingViewLayout.height.lowerContents = playingViewLayout.height.lower - playingViewLayout.padding.lower * 2
 
 export const PlayingViewOuter = styled.div.attrs({
   className: 'playing-view-outer',
@@ -47,7 +44,7 @@ export const PlayingViewUpperSection = styled.div.attrs({
 export const PlayingViewSectionDivider = styled.div.attrs({
   className: 'playing-view-section-divider',
 })`
-  background-color: ${props => props.theme.colours.background};
+  background-color: ${(props) => props.theme.colours.background};
   height: ${playingViewLayout.height.divider}px;
 `
 

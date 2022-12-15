@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled from 'styled-components'
 
 export const InfiniteHammerAreaInner = styled.div.attrs({
   className: 'infinite-hammer-area-inner',

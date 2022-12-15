@@ -13,7 +13,7 @@ export const bodyLayout = {
   padding: {
     sides: 0,
     topBottom: 10,
-  }
+  },
 }
 
 bodyLayout.margin.fromTopOfWindow = headerLayout.height + bodyLayout.margin.top

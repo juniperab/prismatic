@@ -1,10 +1,7 @@
-import { defaultTo } from "lodash"
-import { CSSProperties, ReactElement, useState } from "react"
-import {
-  InfiniteHammerAreaInner,
-  InfiniteHammerAreaTile
-} from "./infiniteHammerAreaLayout"
-import { HammerArea, HammerAreaProps, HammerAreaValues } from "./HammerArea"
+import { defaultTo } from 'lodash'
+import { CSSProperties, ReactElement, useState } from 'react'
+import { InfiniteHammerAreaInner, InfiniteHammerAreaTile } from './infiniteHammerAreaLayout'
+import { HammerArea, HammerAreaProps, HammerAreaValues } from './HammerArea'
 
 export interface InfiniteHammerAreaProps extends HammerAreaProps {
   mirrorTiles?: boolean
@@ -42,8 +39,8 @@ export function InfiniteHammerArea(props: InfiniteHammerAreaProps): ReactElement
     if (values.y < 0) currentAngleX *= -1
     if (values.x < 0) currentAngleY = Math.PI - currentAngleY
   }
-  const newAngleX = -1 * ((values.r * Math.PI / 180) - currentAngleX)
-  const newAngleY = -1 * ((values.r * Math.PI / 180) - currentAngleY)
+  const newAngleX = -1 * ((values.r * Math.PI) / 180 - currentAngleX)
+  const newAngleY = -1 * ((values.r * Math.PI) / 180 - currentAngleY)
   const unrotatedDeltaX = hypotenuse * Math.cos(newAngleX)
   const unrotatedDeltaY = hypotenuse * Math.sin(newAngleY)
   const shiftsX = -1 * Math.floor(Math.abs(unrotatedDeltaX / (values.w * values.s))) * Math.sign(unrotatedDeltaX)
@@ -52,30 +49,32 @@ export function InfiniteHammerArea(props: InfiniteHammerAreaProps): ReactElement
   const tiles = []
   for (let i = Math.round(-2 / values.s) + shiftsX; i <= Math.round(2 / values.s) + shiftsX; i++) {
     for (let j = Math.round(-2 / values.s) + shiftsY; j <= Math.round(2 / values.s) + shiftsY; j++) {
-      const scaleX = props.mirrorTiles === true ? i % 2 === 0 ? 1 : -1 : 1
-      const scaleY = props.mirrorTiles === true ? j % 2 === 0 ? 1 : -1 : 1
+      const scaleX = props.mirrorTiles === true ? (i % 2 === 0 ? 1 : -1) : 1
+      const scaleY = props.mirrorTiles === true ? (j % 2 === 0 ? 1 : -1) : 1
       const styleIJ: CSSProperties = {
         transform: [
           `translateX(${i * 100}%)`,
           `translateY(${j * 100}%)`,
           `scaleX(${scaleX * 100}%)`,
-          `scaleY(${scaleY * 100}%)`
+          `scaleY(${scaleY * 100}%)`,
         ].join(' '),
       }
-      const tileIJ = <InfiniteHammerAreaTile style={styleIJ} key={`${i},${j}`}>{props.children}</InfiniteHammerAreaTile>
+      const tileIJ = (
+        <InfiniteHammerAreaTile style={styleIJ} key={`${i},${j}`}>
+          {props.children}
+        </InfiniteHammerAreaTile>
+      )
       tiles.push(tileIJ)
     }
   }
 
   const innerStyle: CSSProperties = {
-    transform: `translateX(${values.x}px) translateY(${values.y}px) rotate(${values.r}deg) scale(${values.s * 100}%)`
+    transform: `translateX(${values.x}px) translateY(${values.y}px) rotate(${values.r}deg) scale(${values.s * 100}%)`,
   }
 
   return (
-    <HammerArea {... props} onChange={handleHammerAreaChange}>
-      <InfiniteHammerAreaInner style={innerStyle}>
-        {tiles}
-      </InfiniteHammerAreaInner>
+    <HammerArea {...props} onChange={handleHammerAreaChange}>
+      <InfiniteHammerAreaInner style={innerStyle}>{tiles}</InfiniteHammerAreaInner>
     </HammerArea>
   )
 }

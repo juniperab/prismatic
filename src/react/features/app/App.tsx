@@ -14,8 +14,8 @@ import { Body } from '../../components/page/Body'
 import { HelpModal } from '../modals/help/HelpModal'
 import { UserModal } from '../modals/UserModal'
 import { SettingsModal } from '../modals/SettingsModal'
-import { PlayingView } from "../views/PlayingView"
-import { handleWindowResize, updateExtraVh } from "./resizeHandlers"
+import { PlayingView } from '../views/PlayingView'
+import { handleWindowResize, updateExtraVh } from './resizeHandlers'
 
 export function App(): ReactElement {
   const { theme } = useAppSelector(selectAppState)
@@ -74,7 +74,7 @@ export function App(): ReactElement {
           onClickSettings={openModal(ModalType.settings)}
         />
         <Body>
-          <PlayingView/>
+          <PlayingView />
         </Body>
         <Footer />
       </Window>

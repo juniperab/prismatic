@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled from 'styled-components'
 
 export const HammerAreaOuter = styled.div.attrs({
   className: 'hammer-area-outer',

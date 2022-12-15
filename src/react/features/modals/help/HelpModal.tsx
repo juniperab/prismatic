@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import { ModalType, selectAppState, setActiveModal } from '../../../../redux/app/appSlice'
 import { Modal } from '../../../components/modal/Modal'
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks'
-import { Rules } from "./Rules"
+import { Rules } from './Rules'
 
 export function HelpModal(): ReactElement | null {
   const { activeModal } = useAppSelector(selectAppState)
@@ -14,7 +14,7 @@ export function HelpModal(): ReactElement | null {
 
   return (
     <Modal title="Help" onClickClose={() => dispatch(setActiveModal(undefined))}>
-      <Rules/>
+      <Rules />
     </Modal>
   )
 }

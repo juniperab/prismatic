@@ -1,9 +1,9 @@
-import { HSBColor } from "../../colour/colourConversions"
-import { HintItem, HintType, HSBHint } from "./hint"
-import { hueDiff, rotateHue } from "../../colour/colourMath"
-import { PuzzleHSB } from "../puzzle"
-import { HintConfigHSB } from "./hintConfig"
-import { bounded } from "../../math/math"
+import { HSBColor } from '../../colour/colourConversions'
+import { HintItem, HintType, HSBHint } from './hint'
+import { hueDiff, rotateHue } from '../../colour/colourMath'
+import { PuzzleHSB } from '../puzzle'
+import { HintConfigHSB } from './hintConfig'
+import { bounded } from '../../math/math'
 
 export function generateHintHSB(guess: HSBColor, puzzle: PuzzleHSB, config: HintConfigHSB): HSBHint {
   const { answer, precision } = puzzle

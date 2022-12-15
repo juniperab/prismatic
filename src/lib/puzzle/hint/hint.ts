@@ -3,7 +3,9 @@ import { AnyColor } from '../../colour/colourConversions'
 export type Hint = HSBHint | HSLHint | RGBHint
 
 export enum HintType {
-  RGB = 'rgb', HSL = 'hsl', HSB = 'hsb'
+  RGB = 'rgb',
+  HSL = 'hsl',
+  HSB = 'hsb',
 }
 
 export interface HintItem {

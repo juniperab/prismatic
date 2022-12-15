@@ -1,5 +1,5 @@
-import styled from "styled-components"
-import { playingViewLayout } from "../../features/views/playingViewLayout"
+import styled from 'styled-components'
+import { playingViewLayout } from '../../features/views/playingViewLayout'
 
 export const hintGridLayout = {
   aspectRatio: -999,
@@ -31,7 +31,9 @@ export const HintGridMiddle2 = styled.div.attrs({
   aspect-ratio: ${hintGridLayout.cols / hintGridLayout.rows};
   box-sizing: border-box;
   left: 50%;
-  max-height: calc(100vh - var(--extra-vh, 0px) - ${playingViewLayout.windowHeightMinusUpper}px + ${hintGridLayout.gap}px);
+  max-height: calc(
+    100vh - var(--extra-vh, 0px) - ${playingViewLayout.windowHeightMinusUpper}px + ${hintGridLayout.gap}px
+  );
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -68,6 +70,6 @@ export const HintRowCell = styled.div.attrs({
   box-sizing: border-box;
   border-style: solid;
   border-width: 1px;
-  border-color: ${props => props.theme.colours.border};
+  border-color: ${(props) => props.theme.colours.border};
   border-radius: 50%;
 `

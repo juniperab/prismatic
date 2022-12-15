@@ -1,9 +1,9 @@
-import { HintItem, HintType, HSLHint } from "./hint"
-import { HSLColor } from "react-color"
-import { HintConfigHSL } from "./hintConfig"
-import { hueDiff, rotateHue } from "../../colour/colourMath"
-import { bounded } from "../../math/math"
-import { PuzzleHSL } from "../puzzle"
+import { HintItem, HintType, HSLHint } from './hint'
+import { HSLColor } from 'react-color'
+import { HintConfigHSL } from './hintConfig'
+import { hueDiff, rotateHue } from '../../colour/colourMath'
+import { bounded } from '../../math/math'
+import { PuzzleHSL } from '../puzzle'
 
 export function generateHintHSL(guess: HSLColor, puzzle: PuzzleHSL, config: HintConfigHSL): HSLHint {
   const { answer, precision } = puzzle

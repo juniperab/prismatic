@@ -1,15 +1,15 @@
-import { ReactElement } from "react"
-import { useAppSelector } from "../../../redux/hooks"
-import { selectAppState, ViewType } from "../../../redux/app/appSlice"
+import { ReactElement } from 'react'
+import { useAppSelector } from '../../../redux/hooks'
+import { selectAppState, ViewType } from '../../../redux/app/appSlice'
 import {
   PlayingViewLowerSection,
   PlayingViewOuter,
   PlayingViewSectionDivider,
-  PlayingViewUpperSection
-} from "./playingViewLayout"
-import { HintGrid } from "../../components/hint-grid/HintGrid"
-import { selectPuzzleState } from "../../../redux/puzzle/puzzleSlice"
-import { ColourChooser } from "../../components/colour-chooser/ColourChooser"
+  PlayingViewUpperSection,
+} from './playingViewLayout'
+import { HintGrid } from '../../components/hint-grid/HintGrid'
+import { selectPuzzleState } from '../../../redux/puzzle/puzzleSlice'
+import { ColourChooser } from '../../components/colour-chooser/ColourChooser'
 
 export function PlayingView(): ReactElement | null {
   const { activeView } = useAppSelector(selectAppState)
@@ -19,13 +19,15 @@ export function PlayingView(): ReactElement | null {
     return null
   }
 
-  return <PlayingViewOuter>
-    <PlayingViewUpperSection>
-      <HintGrid hints={hints}/>
-    </PlayingViewUpperSection>
-    <PlayingViewSectionDivider/>
-    <PlayingViewLowerSection>
-      <ColourChooser/>
-    </PlayingViewLowerSection>
-  </PlayingViewOuter>
+  return (
+    <PlayingViewOuter>
+      <PlayingViewUpperSection>
+        <HintGrid hints={hints} />
+      </PlayingViewUpperSection>
+      <PlayingViewSectionDivider />
+      <PlayingViewLowerSection>
+        <ColourChooser />
+      </PlayingViewLowerSection>
+    </PlayingViewOuter>
+  )
 }

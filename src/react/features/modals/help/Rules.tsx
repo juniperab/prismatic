@@ -3,7 +3,7 @@ import guess1ImageFile from './guess1.png'
 import guess2ImageFile from './guess2.png'
 import solutionImageFile from './solution.png'
 import { ReactElement } from 'react'
-import { RulesImage, RulesOuter } from "./rulesLayout"
+import { RulesImage, RulesOuter } from './rulesLayout'
 
 export function Rules(): ReactElement {
   return (
