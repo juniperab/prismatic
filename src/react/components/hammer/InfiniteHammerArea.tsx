@@ -2,10 +2,8 @@ import { defaultTo } from "lodash"
 import { CSSProperties, ReactElement, useState } from "react"
 import {
   InfiniteHammerAreaInner,
-  InfiniteHammerAreaOuter,
-  InfiniteHammerAreaTile,
+  InfiniteHammerAreaTile
 } from "./infiniteHammerAreaLayout"
-import { useResizeDetector } from "react-resize-detector"
 import { HammerArea, HammerAreaProps, HammerAreaValues } from "./HammerArea"
 
 export interface InfiniteHammerAreaProps extends HammerAreaProps {
@@ -13,26 +11,26 @@ export interface InfiniteHammerAreaProps extends HammerAreaProps {
 }
 
 export function InfiniteHammerArea(props: InfiniteHammerAreaProps): ReactElement {
-  const { width, height, ref } = useResizeDetector();
   const [values, setValues] = useState({
+    h: 1,
     r: defaultTo(props.initialRotation, 0),
     s: defaultTo(props.initialScale, 1),
+    w: 1,
     x: defaultTo(props.initialX, 0),
     y: defaultTo(props.initialY, 0),
   })
 
   const handleHammerAreaChange = (values: HammerAreaValues): void => {
     setValues({
+      h: values.containerHeight,
       r: values.displayRotation,
       s: values.displayScale,
+      w: values.containerWidth,
       x: values.displayOffsetX,
       y: values.displayOffsetY,
     })
     if (props.onChange !== undefined) props.onChange(values)
   }
-
-  const actualWidth = Math.max(defaultTo(width, 1), 1)
-  const actualHeight = Math.max(defaultTo(height, 1), 1)
 
   // calculate the tile shifts necessary so that the viewable area is always filled
   const hypotenuse = Math.sqrt(Math.pow(values.x, 2) + Math.pow(values.y, 2))
@@ -48,18 +46,20 @@ export function InfiniteHammerArea(props: InfiniteHammerAreaProps): ReactElement
   const newAngleY = -1 * ((values.r * Math.PI / 180) - currentAngleY)
   const unrotatedDeltaX = hypotenuse * Math.cos(newAngleX)
   const unrotatedDeltaY = hypotenuse * Math.sin(newAngleY)
-  const shiftsX = -1 * Math.floor(Math.abs(unrotatedDeltaX / (actualWidth * values.s))) * Math.sign(unrotatedDeltaX)
-  const shiftsY = -1 * Math.floor(Math.abs(unrotatedDeltaY / (actualHeight * values.s))) * Math.sign(unrotatedDeltaY)
+  const shiftsX = -1 * Math.floor(Math.abs(unrotatedDeltaX / (values.w * values.s))) * Math.sign(unrotatedDeltaX)
+  const shiftsY = -1 * Math.floor(Math.abs(unrotatedDeltaY / (values.h * values.s))) * Math.sign(unrotatedDeltaY)
 
   const tiles = []
   for (let i = Math.round(-2 / values.s) + shiftsX; i <= Math.round(2 / values.s) + shiftsX; i++) {
     for (let j = Math.round(-2 / values.s) + shiftsY; j <= Math.round(2 / values.s) + shiftsY; j++) {
+      const scaleX = props.mirrorTiles === true ? i % 2 === 0 ? 1 : -1 : 1
+      const scaleY = props.mirrorTiles === true ? j % 2 === 0 ? 1 : -1 : 1
       const styleIJ: CSSProperties = {
         transform: [
           `translateX(${i * 100}%)`,
           `translateY(${j * 100}%)`,
-          `scaleX(${i % 2 ===0 ? 100 : -100}%)`,
-          `scaleY(${j % 2 === 0 ? 100 : -100}%)`
+          `scaleX(${scaleX * 100}%)`,
+          `scaleY(${scaleY * 100}%)`
         ].join(' '),
       }
       const tileIJ = <InfiniteHammerAreaTile style={styleIJ} key={`${i},${j}`}>{props.children}</InfiniteHammerAreaTile>
@@ -71,25 +71,11 @@ export function InfiniteHammerArea(props: InfiniteHammerAreaProps): ReactElement
     transform: `translateX(${values.x}px) translateY(${values.y}px) rotate(${values.r}deg) scale(${values.s * 100}%)`
   }
 
-  const hammerAreaStyle: CSSProperties = {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-  }
-
-  const hammerAreaProps: HammerAreaProps = Object.assign({}, props)
-  hammerAreaProps.children = undefined
-
   return (
-    <InfiniteHammerAreaOuter ref={ref}>
+    <HammerArea {... props} onChange={handleHammerAreaChange}>
       <InfiniteHammerAreaInner style={innerStyle}>
         {tiles}
       </InfiniteHammerAreaInner>
-      <HammerArea
-        {... hammerAreaProps}
-        onChange={handleHammerAreaChange}
-        style={hammerAreaStyle}
-      />
-    </InfiniteHammerAreaOuter>
+    </HammerArea>
   )
 }

@@ -1,10 +1,14 @@
-import { debounce, defaultTo } from "lodash"
-import { Component, createRef, CSSProperties, ReactElement, ReactNode, RefObject } from "react"
+import { debounce, defaultTo, has } from "lodash"
+import { Component, CSSProperties, ReactElement, ReactNode, RefObject } from "react"
 import Hammer from 'hammerjs'
+import { useResizeDetector } from "react-resize-detector"
+import { HammerAreaInner, HammerAreaOuter } from "./hammerAreaLayout"
 
 export type HammerAreaClamp = [number | undefined, number | undefined] // [min, max]
 
 export interface HammerAreaValues {
+  containerWidth: number,
+  containerHeight: number,
   displayOffsetX: number,
   displayOffsetY: number,
   displayRotation: number,
@@ -54,6 +58,12 @@ export interface HammerAreaProps {
   onChange?: (newValues: HammerAreaValues) => void
   // style to apply to the container div that wraps the HammerArea's children
   style?: CSSProperties
+}
+
+interface InternalHammerAreaProps extends HammerAreaProps {
+  containerRef: RefObject<HTMLDivElement>
+  width: number,
+  height: number,
 }
 
 interface HammerAreaState {
@@ -254,13 +264,12 @@ function newStateForScaleRotate(
  * incremented or decremented that affects the way some aspect of the component
  * is rendered.
  */
-export class HammerArea extends Component<HammerAreaProps, HammerAreaState> {
-  private readonly containerRef: RefObject<HTMLDivElement> = createRef<HTMLDivElement>()
+class InternalHammerArea extends Component<InternalHammerAreaProps, HammerAreaState> {
   private _hammer: HammerManager | null = null
   private eventStartValues: HammerEventStartValues
   private currentAction: HammerAction
 
-  constructor(props: HammerAreaProps) {
+  constructor(props: InternalHammerAreaProps) {
     super(props)
     this.state = {
       displayOffsetX: defaultTo(props.initialX, 0),
@@ -274,6 +283,16 @@ export class HammerArea extends Component<HammerAreaProps, HammerAreaState> {
     }
     this.eventStartValues = this.state
     this.currentAction = HammerAction.None
+  }
+
+  private readonly callOnChange: (state: HammerAreaState) => void = state => {
+    if (this.props.onChange !== undefined) {
+      this.props.onChange({
+        containerHeight: this.props.height,
+        containerWidth: this.props.width,
+        ...state,
+      })
+    }
   }
 
   private readonly handleHammerStartPan: (ev: HammerInput) => void = ev => {
@@ -305,8 +324,8 @@ export class HammerArea extends Component<HammerAreaProps, HammerAreaState> {
    */
   private readonly handleHammerProgressivePan: (ev: HammerInput) => void = ev => {
     if (this.currentAction !== HammerAction.Pan) return
-    if (this.props.onChange !== undefined)
-      this.props.onChange(newStateForPan(ev, this.state, this.props, this.eventStartValues))
+    const newState = newStateForPan(ev, this.state, this.props, this.eventStartValues)
+    this.callOnChange(newState)
   }
 
   /**
@@ -316,8 +335,8 @@ export class HammerArea extends Component<HammerAreaProps, HammerAreaState> {
    */
   private readonly handleHammerProgressiveScaleRotate: (ev: HammerInput) => void = ev => {
     if (this.currentAction !== HammerAction.ScaleRotate) return
-    if (this.props.onChange !== undefined)
-      this.props.onChange(newStateForScaleRotate(ev, this.state, this.props, this.eventStartValues))
+    const newState = newStateForScaleRotate(ev, this.state, this.props, this.eventStartValues)
+    this.callOnChange(newState)
   }
 
   /**
@@ -330,12 +349,10 @@ export class HammerArea extends Component<HammerAreaProps, HammerAreaState> {
   private readonly _handleHammerEndPanNotDebounced: (ev: HammerInput) => void = ev => {
     if (this.currentAction !== HammerAction.Pan) return
     this.currentAction = HammerAction.None
+    const newState = newStateForPan(ev, this.state, this.props, this.eventStartValues)
+    this.callOnChange(newState)
     const initialValues = Object.assign({}, this.eventStartValues)
-    this.setState((state, props) => {
-      const newState = newStateForPan(ev, state, props, initialValues)
-      if (this.props.onChange !== undefined) this.props.onChange(newState)
-      return newState
-    })
+    this.setState((state, props) => newStateForPan(ev, state, props, initialValues))
   }
 
   /**
@@ -355,12 +372,10 @@ export class HammerArea extends Component<HammerAreaProps, HammerAreaState> {
   private readonly _handleHammerEndScaleRotateNotDebounced: (ev: HammerInput) => void = ev => {
     if (this.currentAction !== HammerAction.ScaleRotate) return
     this.currentAction = HammerAction.None
+    const newState = newStateForScaleRotate(ev, this.state, this.props, this.eventStartValues)
+    this.callOnChange(newState)
     const initialValues = Object.assign({}, this.eventStartValues)
-    this.setState((state, props) => {
-      const newState = newStateForScaleRotate(ev, state, props, initialValues)
-      if (this.props.onChange !== undefined) this.props.onChange(newState)
-      return newState
-    })
+    this.setState((state, props) => newStateForScaleRotate(ev, state, props, initialValues))
   }
 
   /**
@@ -375,7 +390,7 @@ export class HammerArea extends Component<HammerAreaProps, HammerAreaState> {
    */
   private readonly handleHammerCancelEvent: (ev: HammerInput) => void = _ => {
     this.currentAction = HammerAction.None
-    if (this.props.onChange !== undefined) this.props.onChange(this.state)
+    this.callOnChange(this.state)
   }
 
   /**
@@ -401,10 +416,11 @@ export class HammerArea extends Component<HammerAreaProps, HammerAreaState> {
 
   componentDidMount(): void {
     // create a HammerManager connected to the container div
-    if (this.containerRef.current === null) {
+    if (this.props.containerRef.current === null) {
       throw new Error("cannot find container element")
     }
-    this._hammer = new Hammer.Manager(this.containerRef.current);
+    // attach a Hammer Manager to the container element
+    this._hammer = new Hammer.Manager(this.props.containerRef.current);
     this.setupHammer(this._hammer)
   }
 
@@ -417,8 +433,27 @@ export class HammerArea extends Component<HammerAreaProps, HammerAreaState> {
   }
 
   render(): ReactElement {
-    // wrap the children in a container div with a HammerManager connected to it.
-    return <div ref={this.containerRef} style={this.props.style}>{this.props.children}</div>
-  }
+    // ensure the container's style has a 'position' property set to something.
+    // it will *probably* not work properly if the effective value is 'position: static'
+    // but that is up to the caller.
+    const style = Object.assign({}, this.props.style)
+    if (!has(style, 'position')) {
+      style.position = 'relative'
+    }
 
+    // wrap the children in a container div with a HammerManager connected to it.
+    return <HammerAreaOuter style={this.props.style}>
+      {this.props.children}
+      <HammerAreaInner ref={this.props.containerRef}/>
+    </HammerAreaOuter>
+  }
+}
+
+export function HammerArea(props: HammerAreaProps): ReactElement {
+  const { width, height, ref } = useResizeDetector();
+  const actualWidth = defaultTo(width, 0)
+  const actualHeight = defaultTo(height, 0)
+  return <InternalHammerArea containerRef={ref} width={actualWidth} height={actualHeight} {... props}>
+    {props.children}
+  </InternalHammerArea>
 }

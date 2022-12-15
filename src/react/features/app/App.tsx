@@ -26,7 +26,8 @@ export function App(): ReactElement {
     const startingColour = toNamed(generateRandomColour())
     dispatch(setStartingColour(startingColour))
     dispatch(setCurrentColour(startingColour))
-  }, [dispatch])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // listen for keyboard events
   const receiveKeyDown = (event: KeyboardEvent): void => {
@@ -42,7 +43,8 @@ export function App(): ReactElement {
       document.removeEventListener('keydown', receiveKeyDown)
       document.removeEventListener('keyup', receiveKeyUp)
     }
-  })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // listen for window resize
   const receiveResize = (): void => handleWindowResize()
@@ -54,7 +56,7 @@ export function App(): ReactElement {
       window.removeEventListener('resize', receiveResize)
       window.removeEventListener('resize', updateExtraVh)
     }
-  })
+  }, [])
 
   // set up callbacks
   function openModal(modal: ModalType | undefined): () => void {
