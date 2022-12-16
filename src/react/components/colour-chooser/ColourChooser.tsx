@@ -12,15 +12,19 @@ export function ColourChooser(): ReactElement {
 
   function currentColourHslCss(): string {
     const hsl = toHSL({ h: hue, s: saturation, b: brightness })
-    return `hsl(${hsl.h}, ${hsl.s}, ${hsl.l})`
+    return `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`
   }
 
   const handleHammerAreaChange: (values: HammerAreaValues) => void = (values) => {
     const pctX = values.x / Math.max(values.containerWidth, 1)
     const pctY = values.y / Math.max(values.containerHeight, 1)
+    let newSaturation = Math.abs(-1 * pctX * 100 + 50) % 200
+    let newBrightness = Math.abs(pctY * 100 + 50) % 200
+    newSaturation = newSaturation > 100 ? 200 - newSaturation : newSaturation
+    newBrightness = newBrightness > 100 ? 200 - newBrightness : newBrightness
     setHue(rotateHue(values.rotation, 0))
-    setSaturation(-1 * pctX * 100 + 50)
-    setBrightness(pctY * 100 + 50)
+    setSaturation(newSaturation)
+    setBrightness(newBrightness)
   }
 
   return (
