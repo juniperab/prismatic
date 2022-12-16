@@ -3,7 +3,7 @@ import { Component, CSSProperties, ReactElement, ReactNode, RefObject } from 're
 import Hammer from 'hammerjs'
 import { useResizeDetector } from 'react-resize-detector'
 import { HammerAreaInner, HammerAreaOuter } from './hammerAreaLayout'
-import { useModifierKeys } from "../../hooks/useModifierKeys"
+import { useModifierKeys } from '../../hooks/useModifierKeys'
 
 export type HammerAreaClamp = [number | undefined, number | undefined] // [min, max]
 
@@ -115,7 +115,7 @@ function newValuesForPan(
   eventValues: HammerEventValues,
   eventStartValues: HammerEventValues,
   currentValues: InternalHammerAreaValues,
-  currentProps: HammerAreaProps,
+  currentProps: HammerAreaProps
 ): InternalHammerAreaValues {
   let newX = currentValues.x + (eventValues.x - eventStartValues.x)
   let newY = currentValues.y + (eventValues.y - eventStartValues.y)
@@ -178,7 +178,7 @@ function newValuesForScaleRotate(
   eventValues: HammerEventValues,
   eventStartValues: HammerEventValues,
   currentValues: InternalHammerAreaValues,
-  currentProps: HammerAreaProps,
+  currentProps: HammerAreaProps
 ): InternalHammerAreaValues {
   let newRotation = currentValues.rotation + eventValues.rotation - eventStartValues.rotation
   let newScale = (currentValues.scale * eventValues.scale) / eventStartValues.scale
@@ -270,14 +270,14 @@ function newValuesForScaleRotateViaPan(
   eventValues: HammerEventValues,
   eventStartValues: HammerEventValues,
   currentValues: InternalHammerAreaValues,
-  currentProps: InternalHammerAreaProps,
+  currentProps: InternalHammerAreaProps
 ): InternalHammerAreaValues {
   const { height, width } = currentProps
   const deltaX = eventStartValues.x - eventValues.x
   const deltaY = eventStartValues.y - eventValues.y
   const modifiedEventValues = {
-    rotation: deltaX / width * 360,
-    scale: Math.pow(2, deltaY / height * -2),
+    rotation: (deltaX / width) * 360,
+    scale: Math.pow(2, (deltaY / height) * -2),
     x: 0,
     y: 0,
   }
@@ -287,12 +287,7 @@ function newValuesForScaleRotateViaPan(
     x: 0,
     y: 0,
   }
-  return newValuesForScaleRotate(
-    modifiedEventValues,
-    modifiedEventStartValues,
-    currentValues,
-    currentProps
-  )
+  return newValuesForScaleRotate(modifiedEventValues, modifiedEventStartValues, currentValues, currentProps)
 }
 
 /**
@@ -333,11 +328,12 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
   }
 
   private readonly callOnChange: (values: InternalHammerAreaValues) => void = (values) => {
-    if (this.props.onChange !== undefined) this.props.onChange({
-      ...values,
-      containerHeight: this.props.height,
-      containerWidth: this.props.width,
-    })
+    if (this.props.onChange !== undefined)
+      this.props.onChange({
+        ...values,
+        containerHeight: this.props.height,
+        containerWidth: this.props.width,
+      })
   }
 
   private readonly handleHammerStartPan: (ev: HammerInput) => void = (ev) => {
@@ -374,8 +370,7 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
     let newValues
     if (this.currentActionIsModified)
       newValues = newValuesForScaleRotateViaPan(eventValues, this.eventStartValues, this.currentValues, this.props)
-    else
-      newValues = newValuesForPan(eventValues, this.eventStartValues, this.currentValues, this.props)
+    else newValues = newValuesForPan(eventValues, this.eventStartValues, this.currentValues, this.props)
     this.callOnChange(newValues)
   }
 
@@ -404,7 +399,12 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
     const eventValues: HammerEventValues = { rotation: ev.rotation, scale: ev.scale, x: ev.deltaX, y: ev.deltaY }
     if (this.currentActionIsModified) {
       console.log('end modified pan')
-      this.currentValues = newValuesForScaleRotateViaPan(eventValues, this.eventStartValues, this.currentValues, this.props)
+      this.currentValues = newValuesForScaleRotateViaPan(
+        eventValues,
+        this.eventStartValues,
+        this.currentValues,
+        this.props
+      )
     } else {
       console.log('end pan')
       this.currentValues = newValuesForPan(eventValues, this.eventStartValues, this.currentValues, this.props)
@@ -505,16 +505,16 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
       style.position = 'relative'
     }
 
-    let cursor = this.props.modifierKey  ? "move" : "grab"
+    let cursor = this.props.modifierKey ? 'move' : 'grab'
     if (this.currentAction !== HammerAction.None) cursor = 'grabbing'
 
     return (
       <HammerAreaOuter style={this.props.style}>
         {this.props.children}
         <HammerAreaInner
-          onMouseDown={event => event.preventDefault()}
+          onMouseDown={(event) => event.preventDefault()}
           ref={this.props.containerRef}
-          style={{cursor}}
+          style={{ cursor }}
         />
       </HammerAreaOuter>
     )

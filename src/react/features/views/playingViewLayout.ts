@@ -30,9 +30,7 @@ playingViewLayout.windowHeightMinusUpper =
   footerLayout.height +
   windowLayout.padding.topBottom
 playingViewLayout.height.lowerContents =
-  playingViewLayout.height.lower -
-  playingViewLayout.border.lower * 2 -
-  playingViewLayout.padding.lower * 2
+  playingViewLayout.height.lower - playingViewLayout.border.lower * 2 - playingViewLayout.padding.lower * 2
 
 export const PlayingViewOuter = styled.div.attrs({
   className: 'playing-view-outer',
@@ -63,5 +61,5 @@ export const PlayingViewLowerSection = styled.div.attrs({
   box-sizing: border-box;
   border-width: ${playingViewLayout.border.lower}px;
   border-style: solid;
-  border-color: ${props => props.theme.colours.border};
+  border-color: ${(props) => props.theme.colours.border};
 `

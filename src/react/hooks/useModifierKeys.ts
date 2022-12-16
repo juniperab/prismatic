@@ -1,7 +1,11 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from 'react'
 
-export function useModifierKeys():
-  { altKeyDown: boolean, ctrlKeyDown: boolean, metaKeyDown: boolean, shiftKeyDown: boolean } {
+export function useModifierKeys(): {
+  altKeyDown: boolean
+  ctrlKeyDown: boolean
+  metaKeyDown: boolean
+  shiftKeyDown: boolean
+} {
   const [altKeyDown, setAltKeyDown] = useState(false)
   const [ctrlKeyDown, setCtrlKeyDown] = useState(false)
   const [metaKeyDown, setMetaKeyDown] = useState(false)
@@ -22,7 +26,7 @@ export function useModifierKeys():
   useEffect(() => {
     document.addEventListener('keydown', receiveKeyDown)
     document.addEventListener('keyup', receiveKeyUp)
-    return function() {
+    return function () {
       document.removeEventListener('keydown', receiveKeyDown)
       document.removeEventListener('keyup', receiveKeyUp)
     }
