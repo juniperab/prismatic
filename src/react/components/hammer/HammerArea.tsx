@@ -3,6 +3,7 @@ import { Component, CSSProperties, ReactElement, ReactNode, RefObject } from 're
 import Hammer from 'hammerjs'
 import { useResizeDetector } from 'react-resize-detector'
 import { HammerAreaInner, HammerAreaOuter } from './hammerAreaLayout'
+import { useModifierKeys } from "../../hooks/useModifierKeys"
 
 export type HammerAreaClamp = [number | undefined, number | undefined] // [min, max]
 
@@ -289,6 +290,8 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
 
   private readonly handleHammerStartPan: (ev: HammerInput) => void = (ev) => {
     if (this.currentAction !== HammerAction.None) return
+    ev.preventDefault()
+    ev.srcEvent.preventDefault()
     this.currentAction = HammerAction.Pan
     this.eventStartValues = {
       x: ev.deltaX,
@@ -316,6 +319,8 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
    */
   private readonly handleHammerProgressivePan: (ev: HammerInput) => void = (ev) => {
     if (this.currentAction !== HammerAction.Pan) return
+    ev.preventDefault()
+    ev.srcEvent.preventDefault()
     const eventValues: HammerEventValues = { rotation: ev.rotation, scale: ev.scale, x: ev.deltaX, y: ev.deltaY }
     const newValues = newValuesForPan(eventValues, this.eventStartValues, this.currentValues, this.props)
     this.callOnChange(newValues)
@@ -438,11 +443,17 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
       style.position = 'relative'
     }
 
-    // wrap the children in a container div with a HammerManager connected to it.
+    let cursor = this.props.modifierKey  ? "move" : "grab"
+    if (this.currentAction !== HammerAction.None) cursor = 'grabbing'
+
     return (
       <HammerAreaOuter style={this.props.style}>
         {this.props.children}
-        <HammerAreaInner ref={this.props.containerRef} />
+        <HammerAreaInner
+          onMouseDown={event => event.preventDefault()}
+          ref={this.props.containerRef}
+          style={{cursor}}
+        />
       </HammerAreaOuter>
     )
   }
@@ -450,6 +461,7 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
 
 export function HammerArea(props: HammerAreaProps): ReactElement {
   const { width, height, ref } = useResizeDetector()
+  const { altKeyDown, ctrlKeyDown, metaKeyDown } = useModifierKeys()
   const actualWidth = defaultTo(width, 0)
   const actualHeight = defaultTo(height, 0)
   return (
@@ -457,7 +469,7 @@ export function HammerArea(props: HammerAreaProps): ReactElement {
       containerRef={ref}
       width={actualWidth}
       height={actualHeight}
-      modifierKey={false}
+      modifierKey={altKeyDown || ctrlKeyDown || metaKeyDown}
       {...props}
     >
       {props.children}
