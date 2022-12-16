@@ -98,8 +98,8 @@ function clampValue(value: number, clamp: HammerAreaClamp | undefined): number {
 }
 
 /**
- * Compute what the new baseline values would be, given the event input,
- * without actually updating the baseline values.
+ * Compute what the new baseline values would be for a pan event,
+ * given the event input, without actually updating the baseline values.
  *
  * The input is assumed to be a 'pan' event,
  * so the deltaX and deltaY of the input are considered,
@@ -155,8 +155,8 @@ function newValuesForPan(
 }
 
 /**
- * Compute what the new baseline would be, given the event input,
- * without actually updating the baseline values.
+ * Compute what the new baseline values would be for a scale/rotate event,
+ * given the event input.
  *
  * The input is assumed to be a 'scale/rotate' event,
  * so the scale and rotation of the input are considered,
@@ -246,6 +246,50 @@ function newValuesForScaleRotate(
 }
 
 /**
+ * Compute what the new baseline values would be as the result
+ * of a 'modified' pan event, where deltaX is taken to be a change in rotation,
+ * and deltaY is taken to be a change in scale.
+ *
+ * The input is assumed to be from a 'pan' event,
+ * so the deltaX and deltaY of the input are considered,
+ * while rotation and scale are ignored.
+ *
+ * @param eventValues           the current values of event
+ * @param eventStartValues      the initial values at the beginning of the event
+ * @param currentValues         the current baseline values
+ * @param currentProps          the current component props
+ * @private                     the adjusted baseline values
+ */
+function newValuesForScaleRotateViaPan(
+  eventValues: HammerEventValues,
+  eventStartValues: HammerEventValues,
+  currentValues: InternalHammerAreaValues,
+  currentProps: InternalHammerAreaProps,
+): InternalHammerAreaValues {
+  const { height, width } = currentProps
+  const deltaX = eventStartValues.x - eventValues.x
+  const deltaY = eventStartValues.y - eventValues.y
+  const modifiedEventValues = {
+    rotation: deltaX / width * 360,
+    scale: Math.pow(2, deltaY / height * -2),
+    x: 0,
+    y: 0,
+  }
+  const modifiedEventStartValues = {
+    rotation: 0,
+    scale: 1,
+    x: 0,
+    y: 0,
+  }
+  return newValuesForScaleRotate(
+    modifiedEventValues,
+    modifiedEventStartValues,
+    currentValues,
+    currentProps
+  )
+}
+
+/**
  * An area of the screen in which one- and two-fingers gestures can be used to
  * pan, zoom, and rotate.
  *
@@ -261,6 +305,7 @@ function newValuesForScaleRotate(
 class InternalHammerArea extends Component<InternalHammerAreaProps> {
   private _hammer: HammerManager | null = null
   private currentAction: HammerAction
+  private currentActionIsModified: boolean
   private currentValues: InternalHammerAreaValues
   private eventStartValues: HammerEventValues
 
@@ -278,6 +323,7 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
     }
     this.eventStartValues = this.currentValues
     this.currentAction = HammerAction.None
+    this.currentActionIsModified = false
   }
 
   private readonly callOnChange: (values: InternalHammerAreaValues) => void = (values) => {
@@ -290,8 +336,7 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
 
   private readonly handleHammerStartPan: (ev: HammerInput) => void = (ev) => {
     if (this.currentAction !== HammerAction.None) return
-    ev.preventDefault()
-    ev.srcEvent.preventDefault()
+    if (this.props.modifierKey) this.currentActionIsModified = true
     this.currentAction = HammerAction.Pan
     this.eventStartValues = {
       x: ev.deltaX,
@@ -319,10 +364,12 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
    */
   private readonly handleHammerProgressivePan: (ev: HammerInput) => void = (ev) => {
     if (this.currentAction !== HammerAction.Pan) return
-    ev.preventDefault()
-    ev.srcEvent.preventDefault()
     const eventValues: HammerEventValues = { rotation: ev.rotation, scale: ev.scale, x: ev.deltaX, y: ev.deltaY }
-    const newValues = newValuesForPan(eventValues, this.eventStartValues, this.currentValues, this.props)
+    let newValues
+    if (this.currentActionIsModified)
+      newValues = newValuesForScaleRotateViaPan(eventValues, this.eventStartValues, this.currentValues, this.props)
+    else
+      newValues = newValuesForPan(eventValues, this.eventStartValues, this.currentValues, this.props)
     this.callOnChange(newValues)
   }
 
@@ -349,7 +396,14 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
     if (this.currentAction !== HammerAction.Pan) return
     this.currentAction = HammerAction.None
     const eventValues: HammerEventValues = { rotation: ev.rotation, scale: ev.scale, x: ev.deltaX, y: ev.deltaY }
-    this.currentValues = newValuesForPan(eventValues, this.eventStartValues, this.currentValues, this.props)
+    if (this.currentActionIsModified) {
+      console.log('end modified pan')
+      this.currentValues = newValuesForScaleRotateViaPan(eventValues, this.eventStartValues, this.currentValues, this.props)
+    } else {
+      console.log('end pan')
+      this.currentValues = newValuesForPan(eventValues, this.eventStartValues, this.currentValues, this.props)
+    }
+    this.currentActionIsModified = false
     this.callOnChange(this.currentValues)
   }
 
@@ -370,6 +424,7 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
   private readonly _handleHammerEndScaleRotateNotDebounced: (ev: HammerInput) => void = (ev) => {
     if (this.currentAction !== HammerAction.ScaleRotate) return
     this.currentAction = HammerAction.None
+    this.currentActionIsModified = false
     const eventValues: HammerEventValues = { rotation: ev.rotation, scale: ev.scale, x: ev.deltaX, y: ev.deltaY }
     this.currentValues = newValuesForScaleRotate(eventValues, this.eventStartValues, this.currentValues, this.props)
     this.callOnChange(this.currentValues)
@@ -387,6 +442,7 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
    */
   private readonly handleHammerCancelEvent: (ev: HammerInput) => void = (_) => {
     this.currentAction = HammerAction.None
+    this.currentActionIsModified = false
     this.callOnChange(this.currentValues)
   }
 
