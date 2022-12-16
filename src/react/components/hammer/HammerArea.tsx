@@ -141,6 +141,12 @@ function newValuesForPan(
   const newDisplayOffsetY =
     currentProps.lockY !== true ? currentValues.displayOffsetY + actualDeltaY : currentValues.displayOffsetY
 
+  // adjust the amount that x or y changes according to the display scale
+  newX = currentValues.x + actualDeltaX / currentValues.displayScale
+  newY = currentValues.y + actualDeltaY / currentValues.displayScale
+
+  // TODO: handle updates to X and Y when the rotation is unlocked
+
   return {
     ...currentValues,
     displayOffsetX: newDisplayOffsetX,
