@@ -45,10 +45,12 @@ export function InfiniteHammerArea(props: InfiniteHammerAreaProps): ReactElement
   const unrotatedDeltaY = hypotenuse * Math.sin(newAngleY)
   const shiftsX = -1 * Math.floor(Math.abs(unrotatedDeltaX / (values.w * values.s))) * Math.sign(unrotatedDeltaX)
   const shiftsY = -1 * Math.floor(Math.abs(unrotatedDeltaY / (values.h * values.s))) * Math.sign(unrotatedDeltaY)
+  const gridStart = Math.floor(-2 / values.s)
+  const gridStop = Math.ceil(2 / values.s)
 
   const tiles = []
-  for (let i = Math.round(-2 / values.s) + shiftsX; i <= Math.round(2 / values.s) + shiftsX; i++) {
-    for (let j = Math.round(-2 / values.s) + shiftsY; j <= Math.round(2 / values.s) + shiftsY; j++) {
+  for (let i = gridStart + shiftsX; i <= gridStop + shiftsX; i++) {
+    for (let j = gridStart + shiftsY; j <= gridStop + shiftsY; j++) {
       const scaleX = props.mirrorTiles === true ? (i % 2 === 0 ? 1 : -1) : 1
       const scaleY = props.mirrorTiles === true ? (j % 2 === 0 ? 1 : -1) : 1
       const styleIJ: CSSProperties = {

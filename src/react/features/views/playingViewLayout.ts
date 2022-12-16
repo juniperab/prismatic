@@ -5,13 +5,16 @@ import { bodyLayout } from '../../components/page/bodyLayout'
 import { windowLayout } from '../../components/page/windowLayout'
 
 export const playingViewLayout = {
+  border: {
+    lower: 1,
+  },
   height: {
-    lower: 350,
+    lower: 200,
     lowerContents: -999,
     divider: 10,
   },
   padding: {
-    lower: 20,
+    lower: 0,
   },
   windowHeightMinusUpper: -999,
 }
@@ -26,7 +29,10 @@ playingViewLayout.windowHeightMinusUpper =
   bodyLayout.margin.bottom +
   footerLayout.height +
   windowLayout.padding.topBottom
-playingViewLayout.height.lowerContents = playingViewLayout.height.lower - playingViewLayout.padding.lower * 2
+playingViewLayout.height.lowerContents =
+  playingViewLayout.height.lower -
+  playingViewLayout.border.lower * 2 -
+  playingViewLayout.padding.lower * 2
 
 export const PlayingViewOuter = styled.div.attrs({
   className: 'playing-view-outer',
@@ -51,9 +57,11 @@ export const PlayingViewSectionDivider = styled.div.attrs({
 export const PlayingViewLowerSection = styled.div.attrs({
   className: 'playing-view-lower-section',
 })`
-  background-color: lightgrey;
   height: ${playingViewLayout.height.lower}px;
   text-align: center;
   padding: ${playingViewLayout.padding.lower}px;
   box-sizing: border-box;
+  border-width: ${playingViewLayout.border.lower}px;
+  border-style: solid;
+  border-color: ${props => props.theme.colours.border};
 `
