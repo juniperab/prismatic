@@ -1,40 +1,56 @@
-import styled from 'styled-components'
+import styled from "styled-components"
 
 export const colourChooserLayout = {
-  selectorDiameter: 50,
+  selector: {
+    diameter: 50,
+  },
+}
+
+export function fadeInOut(show: boolean): string {
+  return show
+    ? `
+          visibility: visible;
+          opacity: 1;
+          transition: opacity 2s linear;
+          `
+    : `
+          visibility: hidden;
+          opacity: 0;
+          transition: visibility 0s 0.5s, opacity 0.5s linear;
+          `
 }
 
 export const ColourChooserOuter = styled.div.attrs({
   className: 'colour-chooser-outer',
 })`
+  height: 100%;
+  overflow: hidden;
   position: relative;
   width: 100%;
-  height: 100%;
   z-index: 1;
-  overflow: hidden;
 `
 
 export const ColourChooserInner = styled.div.attrs({
   className: 'colour-chooser-inner',
 })`
-  height: 100%;
-  width: 100%;
-  position: relative;
-
   background-image: linear-gradient(0deg, #000, transparent), linear-gradient(90deg, #fff, hsla(0, 0%, 100%, 0));
+  height: 100%;
+  position: relative;
+  width: 100%;
 `
 
 export const ColourChooserSelection = styled.div.attrs({
   className: 'colour-chooser-selection',
 })`
-  position: absolute;
-  box-sizing: border-box;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   border-radius: 50%;
-  width: ${colourChooserLayout.selectorDiameter}px;
-  height: ${colourChooserLayout.selectorDiameter}px;
   border: 2px solid white;
-  top: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  height: ${colourChooserLayout.selector.diameter}px;
   left: 50%;
+  position: absolute;
+  top: 50%;
   transform: translate(-50%, -50%);
+  width: ${colourChooserLayout.selector.diameter}px;
+  ${props => fadeInOut((props as any)['data-show'])}
 `

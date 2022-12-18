@@ -26,6 +26,7 @@ export interface HammerAreaValues extends InternalHammerAreaValues {
 export interface HammerAreaProps {
   // contents of the HammerArea
   children?: ReactNode
+  overlay?: ReactNode
   // bounds on which to clamp the scale
   clampScale?: HammerAreaClamp
   // bounds on which to clamp the rotation
@@ -56,6 +57,7 @@ export interface HammerAreaProps {
   lockY?: boolean
   // callback function triggered when any of the coordinates changes
   onChange?: (newValues: HammerAreaValues) => void
+  onTap?: () => void
   // style to apply to the container div that wraps the HammerArea's children
   style?: CSSProperties
 }
@@ -336,6 +338,10 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
       })
   }
 
+  private readonly callOnTap: () => void = () => {
+    if (this.props.onTap !== undefined) this.props.onTap()
+  }
+
   private readonly handleHammerStartPan: (ev: HammerInput) => void = (ev) => {
     if (this.currentAction !== HammerAction.None) return
     if (this.props.modifierKey) this.currentActionIsModified = true
@@ -398,7 +404,6 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
     this.currentAction = HammerAction.None
     const eventValues: HammerEventValues = { rotation: ev.rotation, scale: ev.scale, x: ev.deltaX, y: ev.deltaY }
     if (this.currentActionIsModified) {
-      console.log('end modified pan')
       this.currentValues = newValuesForScaleRotateViaPan(
         eventValues,
         this.eventStartValues,
@@ -406,7 +411,6 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
         this.props
       )
     } else {
-      console.log('end pan')
       this.currentValues = newValuesForPan(eventValues, this.eventStartValues, this.currentValues, this.props)
     }
     this.currentActionIsModified = false
@@ -452,6 +456,10 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
     this.callOnChange(this.currentValues)
   }
 
+  private readonly handleHammerTapEvent: (ev: HammerInput) => void = (_) => {
+    this.callOnTap()
+  }
+
   /**
    * Initialize the HammerManager with the appropriate event handlers.
    * @param mc
@@ -460,8 +468,9 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
     const pan = new Hammer.Pan()
     const pinch = new Hammer.Pinch()
     const rotate = new Hammer.Rotate()
+    const tap = new Hammer.Tap()
     pinch.recognizeWith(rotate)
-    mc.add([pan, pinch, rotate])
+    mc.add([pan, pinch, rotate, tap])
     mc.on('panstart', this.handleHammerStartPan)
     // N.B. using 'pinchstart' as well as 'rotatestart' only produces duplicates; everything starts with rotate
     mc.on('rotatestart', this.handleHammerStartScaleRotate)
@@ -471,6 +480,7 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
     // N.B. using 'pinchend' as well as 'rotateend' only produces duplicates; everything ends with rotate
     mc.on('rotateend', this.handleHammerEndScaleRotate)
     mc.on('pancancel pinchcancel rotatecancel', this.handleHammerCancelEvent)
+    mc.on('tap', this.handleHammerTapEvent)
   }
 
   componentDidMount(): void {
@@ -511,6 +521,7 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
     return (
       <HammerAreaOuter style={this.props.style}>
         {this.props.children}
+        {this.props.overlay !== undefined && <HammerAreaInner>{this.props.overlay}</HammerAreaInner>}
         <HammerAreaInner
           onMouseDown={(event) => event.preventDefault()}
           ref={this.props.containerRef}
