@@ -52,8 +52,8 @@ export function ColourChooser(): ReactElement {
       showOverlay(false)
       return
     }
-    const distanceFromCentre = euclideanDistance([0, 0], [x - width / 2, y - height / 2])
-    if (distanceFromCentre <= colourChooserLayout.selector.diameter) {
+    const distanceFromCentre = euclideanDistance([x - width / 2, y - height / 2])
+    if (distanceFromCentre <= colourChooserLayout.selector.diameter / 2) {
       console.log('make selection')
     }
   }

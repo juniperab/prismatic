@@ -4,6 +4,7 @@ import Hammer from 'hammerjs'
 import { useResizeDetector } from 'react-resize-detector'
 import { HammerAreaInner, HammerAreaOuter } from './hammerAreaLayout'
 import { useModifierKeys } from '../../hooks/useModifierKeys'
+import { euclideanDistance } from "../../../lib/math/math"
 
 export type HammerAreaClamp = [number | undefined, number | undefined] // [min, max]
 
@@ -219,7 +220,7 @@ function newValuesForScaleRotate(
   let newDisplayOffsetX = currentValues.displayOffsetX
   let newDisplayOffsetY = currentValues.displayOffsetY
   if (currentProps.lockRotation !== true) {
-    const hypotenuse = Math.sqrt(Math.pow(currentValues.displayOffsetX, 2) + Math.pow(currentValues.displayOffsetY, 2))
+    const hypotenuse = euclideanDistance([currentValues.displayOffsetX, currentValues.displayOffsetY])
     let currentDisplayOffsetAngleX = 0
     let currentDisplayOffsetAngleY = 0
     if (hypotenuse !== 0) {

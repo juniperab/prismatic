@@ -2,6 +2,7 @@ import { defaultTo } from 'lodash'
 import { CSSProperties, ReactElement, useState } from 'react'
 import { InfiniteHammerAreaInner, InfiniteHammerAreaTile } from './infiniteHammerAreaLayout'
 import { HammerArea, HammerAreaProps, HammerAreaValues } from './HammerArea'
+import { euclideanDistance } from "../../../lib/math/math"
 
 export interface InfiniteHammerAreaProps extends HammerAreaProps {
   mirrorTiles?: boolean
@@ -30,7 +31,7 @@ export function InfiniteHammerArea(props: InfiniteHammerAreaProps): ReactElement
   }
 
   // calculate the tile shifts necessary so that the viewable area is always filled
-  const hypotenuse = Math.sqrt(Math.pow(values.x, 2) + Math.pow(values.y, 2))
+  const hypotenuse = euclideanDistance([values.x, values.y])
   let currentAngleX = 0
   let currentAngleY = 0
   if (hypotenuse !== 0) {

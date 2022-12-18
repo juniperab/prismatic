@@ -1,6 +1,7 @@
 import * as _ from 'lodash'
 
-export function euclideanDistance(a: number[], b: number[]): number {
+export function euclideanDistance(a: number[], b?: number[]): number {
+  if (b === undefined) b = Array(a.length).fill(0)
   return Math.sqrt(
     _.sum(
       _.zip(a, b).map((pair) => {
