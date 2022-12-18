@@ -1,6 +1,6 @@
 import { CSSProperties, ReactElement, useState } from "react"
 import {
-  ColourChooserInner,
+  ColourChooserInner, colourChooserLayout,
   ColourChooserOuter,
   ColourChooserSelection
 } from "./colourChooserLayout"
@@ -12,6 +12,7 @@ import {
   ColourChooserHelpOverlay,
   OverlayState, useOverlayState
 } from "./ColourChooserHelpOverlay"
+import { euclideanDistance } from "../../../lib/math/math"
 
 export const initialOverlayState: OverlayState = {
   show: true,
@@ -19,6 +20,8 @@ export const initialOverlayState: OverlayState = {
 }
 
 export function ColourChooser(): ReactElement {
+  const [height, setHeight] = useState(0)
+  const [width, setWidth] = useState(0)
   const [hue, setHue] = useState(0)
   const [saturation, setSaturation] = useState(50)
   const [brightness, setBrightness] = useState(50)
@@ -39,10 +42,21 @@ export function ColourChooser(): ReactElement {
     setHue(rotateHue(values.rotation, 0))
     setSaturation(newSaturation)
     setBrightness(newBrightness)
+    setHeight(values.containerHeight)
+    setWidth(values.containerWidth)
     tickOverlay(1)
   }
 
-  const handleHammerAreaTap: () => void = () => { showOverlay(!overlay.show) }
+  const handleHammerAreaTap: (x: number, y: number) => void = (x, y) => {
+    if (overlay.show) {
+      showOverlay(false)
+      return
+    }
+    const distanceFromCentre = euclideanDistance([0, 0], [x - width / 2, y - height / 2])
+    if (distanceFromCentre <= colourChooserLayout.selector.diameter) {
+      console.log('make selection')
+    }
+  }
 
   const overlayStyle: CSSProperties = {
     backgroundColor: (() => {

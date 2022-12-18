@@ -57,7 +57,8 @@ export interface HammerAreaProps {
   lockY?: boolean
   // callback function triggered when any of the coordinates changes
   onChange?: (newValues: HammerAreaValues) => void
-  onTap?: () => void
+  // callback function triggered when the area is tapped
+  onTap?: (x: number, y: number) => void
   // style to apply to the container div that wraps the HammerArea's children
   style?: CSSProperties
 }
@@ -338,8 +339,8 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
       })
   }
 
-  private readonly callOnTap: () => void = () => {
-    if (this.props.onTap !== undefined) this.props.onTap()
+  private readonly callOnTap: (x: number, y: number) => void = (x, y) => {
+    if (this.props.onTap !== undefined) this.props.onTap(x, y)
   }
 
   private readonly handleHammerStartPan: (ev: HammerInput) => void = (ev) => {
@@ -456,8 +457,9 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
     this.callOnChange(this.currentValues)
   }
 
-  private readonly handleHammerTapEvent: (ev: HammerInput) => void = (_) => {
-    this.callOnTap()
+  private readonly handleHammerTapEvent: (ev: HammerInput) => void = (ev) => {
+    const pev = ev.srcEvent as PointerEvent
+    this.callOnTap(pev.offsetX, pev.offsetY)
   }
 
   /**
