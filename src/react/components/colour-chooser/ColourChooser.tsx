@@ -1,4 +1,4 @@
-import { CSSProperties, Dispatch, ReactElement, SetStateAction, useEffect, useState } from "react"
+import { CSSProperties, ReactElement, useState } from "react"
 import {
   ColourChooserInner,
   ColourChooserOuter,
@@ -8,53 +8,21 @@ import { InfiniteHammerArea } from '../hammer/InfiniteHammerArea'
 import { HammerAreaValues } from '../hammer/HammerArea'
 import { toHSL } from '../../../lib/colour/colourConversions'
 import { rotateHue } from '../../../lib/colour/colourMath'
-import { ColourChooserHelpOverlay } from "./ColourChooserHelpOverlay"
+import {
+  ColourChooserHelpOverlay,
+  OverlayState, useOverlayState
+} from "./ColourChooserHelpOverlay"
 
-interface OverlayState {
-  show: boolean,
-  ticksBeforeHide: number,
-}
-
-const initialOverlayState: OverlayState = {
+export const initialOverlayState: OverlayState = {
   show: true,
   ticksBeforeHide: 20
-}
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function overlayFunctions(setOverlay: Dispatch<SetStateAction<OverlayState>>) {
-
-  const addOverlayTicks = (ticks: number): void => setOverlay(prev => {
-    const newTicks = prev.ticksBeforeHide - ticks
-    return {
-      ...prev,
-      ticksBeforeHide: newTicks,
-      show: newTicks > 0,
-    }
-  })
-
-  const hideOverlay = (): void => setOverlay(prev => { return { ...prev, show: false } })
-
-  const showOverlay = (): void => setOverlay(prev => { return {
-    ...prev,
-    show: true,
-    ticksBeforeHide: initialOverlayState.ticksBeforeHide }
-  })
-
-  return { addOverlayTicks, hideOverlay, showOverlay }
 }
 
 export function ColourChooser(): ReactElement {
   const [hue, setHue] = useState(0)
   const [saturation, setSaturation] = useState(50)
   const [brightness, setBrightness] = useState(50)
-  const [overlay, setOverlay] = useState(initialOverlayState)
-  const { hideOverlay, showOverlay, addOverlayTicks } = overlayFunctions(setOverlay)
-
-  useEffect(() => {
-    showOverlay()
-    // const t = setTimeout(hideOverlay, 5000)
-    // return () => clearTimeout(t)
-  }, [])
+  const [overlay, showOverlay, tickOverlay] = useOverlayState(initialOverlayState)
 
   const currentColourHslCss =  (() => {
     const hsl = toHSL({ h: hue, s: saturation, b: brightness })
@@ -71,10 +39,10 @@ export function ColourChooser(): ReactElement {
     setHue(rotateHue(values.rotation, 0))
     setSaturation(newSaturation)
     setBrightness(newBrightness)
-    addOverlayTicks(1)
+    tickOverlay(1)
   }
 
-  const handleHammerAreaTap: () => void = () => { overlay.show ? hideOverlay() : showOverlay() }
+  const handleHammerAreaTap: () => void = () => { showOverlay(!overlay.show) }
 
   const overlayStyle: CSSProperties = {
     backgroundColor: (() => {
