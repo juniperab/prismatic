@@ -8,13 +8,12 @@ import {
   PlayingViewUpperSection,
 } from './playingViewLayout'
 import { HintGrid } from '../../components/hint-grid/HintGrid'
-import { makeGuess, selectPuzzleState, setCurrentColour } from "../../../redux/puzzle/puzzleSlice"
+import { makeGuess, selectPuzzleState, setCurrentColour } from '../../../redux/puzzle/puzzleSlice'
 import { ColourChooser } from '../../components/colour-chooser/ColourChooser'
 
 export function PlayingView(): ReactElement | null {
   const { activeView } = useAppSelector(selectAppState)
   const { hints } = useAppSelector(selectPuzzleState)
-
 
   if (activeView !== ViewType.playing) {
     return null
@@ -27,10 +26,7 @@ export function PlayingView(): ReactElement | null {
       </PlayingViewUpperSection>
       <PlayingViewSectionDivider />
       <PlayingViewLowerSection>
-        <ColourChooser
-          onChangeComplete={setCurrentColour}
-          onSelect={makeGuess}
-        />
+        <ColourChooser onChangeComplete={setCurrentColour} onSelect={makeGuess} />
       </PlayingViewLowerSection>
     </PlayingViewOuter>
   )

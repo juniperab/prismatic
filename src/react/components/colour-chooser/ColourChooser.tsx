@@ -1,19 +1,17 @@
-import { CSSProperties, ReactElement, useState } from "react"
+import { CSSProperties, ReactElement, useState } from 'react'
 import {
-  ColourChooserInner, colourChooserLayout,
+  ColourChooserInner,
+  colourChooserLayout,
   ColourChooserOuter,
-  ColourChooserSelection
-} from "./colourChooserLayout"
+  ColourChooserSelection,
+} from './colourChooserLayout'
 import { InfiniteHammerArea } from '../hammer/InfiniteHammerArea'
-import { HammerOnChangeCallback, HammerOnTapCallback } from "../hammer/HammerArea"
-import { HSBColor, toHSL } from "../../../lib/colour/colourConversions"
+import { HammerOnChangeCallback, HammerOnTapCallback } from '../hammer/HammerArea'
+import { HSBColor, toHSL } from '../../../lib/colour/colourConversions'
 import { rotateHue } from '../../../lib/colour/colourMath'
-import {
-  ColourChooserHelpOverlay,
-  OverlayState, useOverlayState
-} from "./ColourChooserHelpOverlay"
-import { euclideanDistance } from "../../../lib/math/math"
-import { defaultTo} from "lodash"
+import { ColourChooserHelpOverlay, OverlayState, useOverlayState } from './ColourChooserHelpOverlay'
+import { euclideanDistance } from '../../../lib/math/math'
+import { defaultTo } from 'lodash'
 
 export type NewColourCallback = (colour: HSBColor) => void
 
@@ -30,7 +28,7 @@ export interface ColourChooserProps {
 
 const initialOverlayState: OverlayState = {
   show: true,
-  ticksBeforeHide: 20
+  ticksBeforeHide: 20,
 }
 
 export function ColourChooser(props: ColourChooserProps): ReactElement {
@@ -58,9 +56,11 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
     setHeight(values.containerHeight)
     setWidth(values.containerWidth)
     tickOverlay(1)
-    defaultTo(
-      gestureComplete ? onChangeComplete : onChange, () => {}
-    )({ h: newHue, s: newSaturation, b: newBrightness })
+    defaultTo(gestureComplete ? onChangeComplete : onChange, () => {})({
+      h: newHue,
+      s: newSaturation,
+      b: newBrightness,
+    })
   }) as HammerOnChangeCallback
 
   const handleHammerAreaTap = ((x, y) => {
@@ -76,15 +76,15 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
 
   const overlayStyle: CSSProperties = {
     backgroundColor: (() => {
-      const c = toHSL({h: hue, s: 50, b: 100})
+      const c = toHSL({ h: hue, s: 50, b: 100 })
       return `hsla(${c.h}, ${c.s}%, ${c.l}%, 50%)`
-    })()
+    })(),
   }
   const selectionStyle: CSSProperties = {
     backgroundColor: (() => {
       const hsl = toHSL(currentColour)
       return `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`
-    })()
+    })(),
   }
 
   return (
@@ -95,16 +95,18 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
         mirrorTiles={true}
         onChange={handleHammerAreaChange}
         onTap={handleHammerAreaTap}
-        overlay={<ColourChooserHelpOverlay style={overlayStyle} visible={overlay.show}/>}
+        overlay={<ColourChooserHelpOverlay style={overlayStyle} visible={overlay.show} />}
         style={{
           height: '100%',
           position: 'relative',
           width: '100%',
         }}
       >
-        <ColourChooserInner style={{
-          backgroundColor: `hsl(${hue}, 100%, 50%)`,
-        }} />
+        <ColourChooserInner
+          style={{
+            backgroundColor: `hsl(${hue}, 100%, 50%)`,
+          }}
+        />
       </InfiniteHammerArea>
       <ColourChooserSelection data-show={!overlay.show} style={selectionStyle} />
     </ColourChooserOuter>

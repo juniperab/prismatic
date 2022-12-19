@@ -4,7 +4,7 @@ import Hammer from 'hammerjs'
 import { useResizeDetector } from 'react-resize-detector'
 import { HammerAreaInner, HammerAreaOuter } from './hammerAreaLayout'
 import { useModifierKeys } from '../../hooks/useModifierKeys'
-import { euclideanDistance } from "../../../lib/math/math"
+import { euclideanDistance } from '../../../lib/math/math'
 
 export type HammerAreaClamp = [number | undefined, number | undefined] // [min, max]
 
@@ -334,14 +334,16 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
     this.currentActionIsModified = false
   }
 
-  private readonly callOnChange: (values: InternalHammerAreaValues, complete: boolean) => void =
-    (values, complete) => {
+  private readonly callOnChange: (values: InternalHammerAreaValues, complete: boolean) => void = (values, complete) => {
     if (this.props.onChange !== undefined)
-      this.props.onChange({
-        ...values,
-        containerHeight: this.props.height,
-        containerWidth: this.props.width,
-      }, complete)
+      this.props.onChange(
+        {
+          ...values,
+          containerHeight: this.props.height,
+          containerWidth: this.props.width,
+        },
+        complete
+      )
   }
 
   private readonly callOnTap: (x: number, y: number) => void = (x, y) => {

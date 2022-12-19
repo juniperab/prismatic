@@ -2,7 +2,7 @@ import { defaultTo } from 'lodash'
 import { CSSProperties, ReactElement, useState } from 'react'
 import { InfiniteHammerAreaInner, InfiniteHammerAreaTile } from './infiniteHammerAreaLayout'
 import { HammerArea, HammerAreaProps, HammerAreaValues } from './HammerArea'
-import { euclideanDistance } from "../../../lib/math/math"
+import { euclideanDistance } from '../../../lib/math/math'
 
 export interface InfiniteHammerAreaProps extends HammerAreaProps {
   mirrorTiles?: boolean

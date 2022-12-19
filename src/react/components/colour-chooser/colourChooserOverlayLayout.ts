@@ -1,5 +1,5 @@
-import styled from "styled-components"
-import { colourChooserLayout, fadeInOut } from "./colourChooserLayout"
+import styled from 'styled-components'
+import { colourChooserLayout, fadeInOut } from './colourChooserLayout'
 
 export const colourChooserOverlayLayout = {
   section: {
@@ -18,11 +18,11 @@ export const ColourChooserOverlay = styled.div.attrs({
   height: 100%;
   justify-content: space-around;
   width: 100%;
-  ${props => fadeInOut((props as any)['data-show'])}
+  ${(props) => fadeInOut((props as any)['data-show'])}
 `
 
 export const ColourChooserOverlaySection = styled.div.attrs({
-  className: 'colour-chooser-overlay-section'
+  className: 'colour-chooser-overlay-section',
 })`
   box-sizing: border-box;
   flex: 1 1 auto;
@@ -31,7 +31,7 @@ export const ColourChooserOverlaySection = styled.div.attrs({
   position: relative;
   vertical-align: top;
   width: calc((100% - ${colourChooserLayout.selector.diameter}px) / 2);
-  
+
   img {
     box-sizing: border-box;
     display: inline-block;
@@ -44,4 +44,3 @@ export const ColourChooserOverlaySection = styled.div.attrs({
     transform: translate(-50%, -50%);
   }
 `
-

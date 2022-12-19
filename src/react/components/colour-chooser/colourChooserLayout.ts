@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled from 'styled-components'
 
 export const colourChooserLayout = {
   selector: {
@@ -52,5 +52,5 @@ export const ColourChooserSelection = styled.div.attrs({
   top: 50%;
   transform: translate(-50%, -50%);
   width: ${colourChooserLayout.selector.diameter}px;
-  ${props => fadeInOut((props as any)['data-show'])}
+  ${(props) => fadeInOut((props as any)['data-show'])}
 `
