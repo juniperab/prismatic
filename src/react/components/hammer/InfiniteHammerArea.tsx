@@ -18,7 +18,7 @@ export function InfiniteHammerArea(props: InfiniteHammerAreaProps): ReactElement
     y: defaultTo(props.initialY, 0),
   })
 
-  const handleHammerAreaChange = (values: HammerAreaValues): void => {
+  const handleHammerAreaChange = (values: HammerAreaValues, gestureComplete: boolean): void => {
     setValues({
       h: values.containerHeight,
       r: values.displayRotation,
@@ -27,7 +27,7 @@ export function InfiniteHammerArea(props: InfiniteHammerAreaProps): ReactElement
       x: values.displayOffsetX,
       y: values.displayOffsetY,
     })
-    if (props.onChange !== undefined) props.onChange(values)
+    if (props.onChange !== undefined) props.onChange(values, gestureComplete)
   }
 
   // calculate the tile shifts necessary so that the viewable area is always filled

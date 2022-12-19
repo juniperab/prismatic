@@ -34,7 +34,7 @@ const initialState: PuzzleState = {
   startingColour,
 }
 
-export const getNextHint = createAsyncThunk('puzzle/getNextHint', async (_, api) => {
+export const makeGuess = createAsyncThunk('puzzle/makeGuess', async (_, api) => {
   const state: RootState = api.getState() as RootState
   return await submitGuessToServer(state.puzzle.currentColour, state.puzzle.puzzleId)
 })
@@ -66,7 +66,7 @@ export const puzzleSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getNextHint.fulfilled, (state, action: PayloadAction<Hint | NamedColor>) => {
+      .addCase(makeGuess.fulfilled, (state, action: PayloadAction<Hint | NamedColor>) => {
         if (isNamed(action.payload)) {
           state.answerName = action.payload
         } else {
