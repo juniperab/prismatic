@@ -46,13 +46,16 @@
     "react-redux": "^8.0.5",
     "react-resize-detector": "^7.1.2",
     "react-scripts": "5.0.1",
+    "redux-saga": "^1.2.2",
     "save-dev": "^0.0.1-security",
     "styled-components": "^5.3.6",
+    "typed-redux-saga": "^1.5.0",
     "utf8": "^3.0.0",
     "web-vitals": "^2.1.4"
   },
   "description": "A colour-guessing puzzle game",
   "devDependencies": {
+    "@jambit/eslint-plugin-typed-redux-saga": "^0.4.0",
     "@types/color-convert": "^2.0.0",
     "@types/hammerjs": "^2.0.41",
     "@types/lodash": "^4.14.190",
@@ -77,6 +80,29 @@
       "react-app/jest",
       "eslint-config-prettier"
     ],
+    "overrides": [
+      {
+        "files": [
+          "./**/*.ts"
+        ],
+        "excludedFiles": [
+          "./**/*.spec.ts"
+        ],
+        "rules": {
+          "@jambit/typed-redux-saga/use-typed-effects": "error",
+          "@jambit/typed-redux-saga/delegate-effects": "error"
+        }
+      }
+    ],
+    "parserOptions": {
+      "project": [
+        "tsconfig.json"
+      ]
+    },
+    "plugins": [
+      "@jambit/typed-redux-saga",
+      "prettier"
+    ],
     "rules": {
       "@typescript-eslint/no-misused-promises": [
         "error",
@@ -86,15 +112,7 @@
       ],
       "curly": "off",
       "max-len": "off"
-    },
-    "parserOptions": {
-      "project": [
-        "tsconfig.json"
-      ]
-    },
-    "plugins": [
-      "prettier"
-    ]
+    }
   },
   "homepage": "https://juniperab.github.io/prismatic",
   "license": "AGPL-3.0-or-later",
