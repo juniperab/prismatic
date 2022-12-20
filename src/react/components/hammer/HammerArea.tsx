@@ -9,7 +9,7 @@ import { euclideanDistance } from '../../../lib/math/math'
 export type HammerAreaClamp = [number | undefined, number | undefined] // [min, max]
 
 export type HammerOnChangeCallback = (newValues: HammerAreaValues, gestureComplete: boolean) => void
-export type HammerOnTapCallback = (x: number, y: number) => void
+export type HammerOnTapCallback = (x: number, y: number, target: HTMLElement) => void
 
 interface InternalHammerAreaValues {
   displayOffsetX: number
@@ -30,6 +30,7 @@ export interface HammerAreaValues extends InternalHammerAreaValues {
 export interface HammerAreaProps {
   // contents of the HammerArea
   children?: ReactNode
+  underlay?: ReactNode
   overlay?: ReactNode
   // bounds on which to clamp the scale
   clampScale?: HammerAreaClamp
@@ -346,8 +347,8 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
       )
   }
 
-  private readonly callOnTap: (x: number, y: number) => void = (x, y) => {
-    if (this.props.onTap !== undefined) this.props.onTap(x, y)
+  private readonly callOnTap: HammerOnTapCallback = (x, y, target) => {
+    if (this.props.onTap !== undefined) this.props.onTap(x, y, target)
   }
 
   private readonly handleHammerStartPan: (ev: HammerInput) => void = (ev) => {
@@ -465,8 +466,15 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
   }
 
   private readonly handleHammerTapEvent: (ev: HammerInput) => void = (ev) => {
-    const pev = ev.srcEvent as PointerEvent
-    this.callOnTap(pev.offsetX, pev.offsetY)
+    if (this.props.containerRef.current === null) throw new Error('null container')
+    // get the position of the tap relative to the HammerArea container
+    // regardless of whether the tap occurred on top of an overlay element or not
+    const containerRect = this.props.containerRef.current.getBoundingClientRect()
+    const containerX = containerRect.left
+    const containerY = containerRect.top
+    const tapRelX = ev.center.x - containerX
+    const tapRelY = ev.center.y - containerY
+    this.callOnTap(tapRelX, tapRelY, ev.target)
   }
 
   /**
@@ -524,18 +532,20 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
       style.position = 'relative'
     }
 
-    let cursor = this.props.modifierKey ? 'move' : 'grab'
+    let cursor = this.props.modifierKey ? 'col-resize' : 'default'
     if (this.currentAction !== HammerAction.None) cursor = 'grabbing'
 
     return (
       <HammerAreaOuter style={this.props.style}>
         {this.props.children}
-        {this.props.overlay !== undefined && <HammerAreaInner>{this.props.overlay}</HammerAreaInner>}
+        {this.props.underlay !== undefined && <HammerAreaInner>{this.props.underlay}</HammerAreaInner>}
         <HammerAreaInner
           onMouseDown={(event) => event.preventDefault()}
           ref={this.props.containerRef}
           style={{ cursor }}
-        />
+        >
+          {this.props.overlay}
+        </HammerAreaInner>
       </HammerAreaOuter>
     )
   }

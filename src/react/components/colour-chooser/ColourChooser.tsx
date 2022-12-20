@@ -1,16 +1,15 @@
-import { CSSProperties, ReactElement, useState } from 'react'
+import { CSSProperties, ReactElement, useRef, useState } from 'react'
 import {
   ColourChooserInner,
-  colourChooserLayout,
   ColourChooserOuter,
   ColourChooserSelection,
+  ColourChooserSelectionPending,
 } from './colourChooserLayout'
 import { InfiniteHammerArea } from '../hammer/InfiniteHammerArea'
 import { HammerOnChangeCallback, HammerOnTapCallback } from '../hammer/HammerArea'
 import { HSBColor, toHSL } from '../../../lib/colour/colourConversions'
 import { rotateHue } from '../../../lib/colour/colourMath'
 import { ColourChooserHelpOverlay, OverlayState, useOverlayState } from './ColourChooserHelpOverlay'
-import { euclideanDistance } from '../../../lib/math/math'
 import { defaultTo } from 'lodash'
 
 export type NewColourCallback = (colour: HSBColor) => void
@@ -33,12 +32,13 @@ const initialOverlayState: OverlayState = {
 
 export function ColourChooser(props: ColourChooserProps): ReactElement {
   const { onChange, onChangeComplete, onSelect } = props
-  const [height, setHeight] = useState(0)
-  const [width, setWidth] = useState(0)
+  const selectorRef = useRef<HTMLDivElement>(null)
   const [hue, setHue] = useState(0)
   const [saturation, setSaturation] = useState(50)
   const [brightness, setBrightness] = useState(50)
   const [overlay, showOverlay, tickOverlay] = useOverlayState(initialOverlayState)
+  const [dragging, setDragging] = useState(false)
+  const [selectionPending, setSelectionPending] = useState(false)
 
   const currentColour: HSBColor = { h: hue, s: saturation, b: brightness }
 
@@ -53,9 +53,9 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
     setHue(newHue)
     setSaturation(newSaturation)
     setBrightness(newBrightness)
-    setHeight(values.containerHeight)
-    setWidth(values.containerWidth)
     tickOverlay(1)
+    setDragging(!gestureComplete)
+    setSelectionPending(false)
     defaultTo(gestureComplete ? onChangeComplete : onChange, () => {})({
       h: newHue,
       s: newSaturation,
@@ -63,14 +63,20 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
     })
   }) as HammerOnChangeCallback
 
-  const handleHammerAreaTap = ((x, y) => {
+  const handleHammerAreaTap = ((x, y, target: HTMLElement) => {
     if (overlay.show) {
       showOverlay(false)
       return
     }
-    const distanceFromCentre = euclideanDistance([x - width / 2, y - height / 2])
-    if (distanceFromCentre <= colourChooserLayout.selector.diameter / 2) {
-      if (onSelect !== undefined) onSelect({ h: hue, s: saturation, b: brightness })
+    if (target === selectorRef.current) {
+      if (selectionPending) {
+        setSelectionPending(false)
+        if (onSelect !== undefined) onSelect({ h: hue, s: saturation, b: brightness })
+      } else {
+        setSelectionPending(true)
+      }
+    } else {
+      setSelectionPending(false)
     }
   }) as HammerOnTapCallback
 
@@ -85,7 +91,15 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
       const hsl = toHSL(currentColour)
       return `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`
     })(),
+    cursor: dragging ? undefined : 'pointer',
   }
+
+  const underlayComponent = <ColourChooserHelpOverlay style={overlayStyle} visible={overlay.show} />
+  const overlayComponent = selectionPending ? (
+    <ColourChooserSelectionPending data-show={!overlay.show} ref={selectorRef} style={selectionStyle} />
+  ) : (
+    <ColourChooserSelection data-show={!overlay.show} ref={selectorRef} style={selectionStyle} />
+  )
 
   return (
     <ColourChooserOuter>
@@ -95,7 +109,8 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
         mirrorTiles={true}
         onChange={handleHammerAreaChange}
         onTap={handleHammerAreaTap}
-        overlay={<ColourChooserHelpOverlay style={overlayStyle} visible={overlay.show} />}
+        underlay={underlayComponent}
+        overlay={overlayComponent}
         style={{
           height: '100%',
           position: 'relative',
@@ -108,7 +123,6 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
           }}
         />
       </InfiniteHammerArea>
-      <ColourChooserSelection data-show={!overlay.show} style={selectionStyle} />
     </ColourChooserOuter>
   )
 }

@@ -54,3 +54,8 @@ export const ColourChooserSelection = styled.div.attrs({
   width: ${colourChooserLayout.selector.diameter}px;
   ${(props) => fadeInOut((props as any)['data-show'])}
 `
+
+export const ColourChooserSelectionPending = styled(ColourChooserSelection)`
+  height: ${colourChooserLayout.selector.diameter * 2}px;
+  width: ${colourChooserLayout.selector.diameter * 2}px;
+`
