@@ -34,9 +34,10 @@ const initialState: PuzzleState = {
   startingColour,
 }
 
-export const submitGuess = createAsyncThunk('puzzle/submitGuess', async (_, api) => {
-  const state: RootState = api.getState() as RootState
+export const submitGuess = createAsyncThunk('puzzle/submitGuess', async (foo: string, api) => {
   console.log('submitGuess')
+  console.log(foo)
+  const state: RootState = api.getState() as RootState
   return await submitGuessToServer(state.puzzle.currentColour, state.puzzle.puzzleId)
 })
 

@@ -27,7 +27,7 @@ export function PlayingView(): ReactElement | null {
 
   const receiveColourSubmit: () => void = () => {
     console.log('receiveColourSubmit')
-    submitGuess()
+    void dispatch(submitGuess('foo'))
   }
 
   return (
