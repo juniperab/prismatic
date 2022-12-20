@@ -22,7 +22,7 @@ export interface ColourChooserProps {
   onChangeComplete?: NewColourCallback
 
   // callback triggered when the selection area is tapped
-  onSelect?: NewColourCallback
+  onSelect?: () => void
 }
 
 const initialOverlayState: OverlayState = {
@@ -71,7 +71,7 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
     if (target === selectorRef.current) {
       if (selectionPending) {
         setSelectionPending(false)
-        if (onSelect !== undefined) onSelect({ h: hue, s: saturation, b: brightness })
+        if (onSelect !== undefined) onSelect()
       } else {
         setSelectionPending(true)
       }

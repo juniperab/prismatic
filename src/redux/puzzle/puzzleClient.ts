@@ -1,13 +1,13 @@
 import { AnyColor, NamedColor } from '../../lib/colour/colourConversions'
 import { Hint } from '../../lib/puzzle/hint/hint'
 import { PuzzleId } from '../../lib/puzzle/puzzle'
-import { makeGuess, revealAnswer } from '../../lib/puzzle/puzzleServer'
+import { evaluateGuess, revealAnswer } from '../../lib/puzzle/puzzleServer'
 
 export async function submitGuessToServer(guess: AnyColor, puzzleId: PuzzleId): Promise<Hint | NamedColor> {
   console.log(`Submitting guess: ${JSON.stringify(guess)} for puzzle: ${puzzleId}`)
   return await new Promise<Hint | NamedColor>((resolve) => {
     // a mock call to a server-side puzzle controller
-    resolve(makeGuess(guess, puzzleId))
+    resolve(evaluateGuess(guess, puzzleId))
   })
 }
 

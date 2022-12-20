@@ -8,6 +8,9 @@ export interface HintGridProps {
 }
 
 export function HintGrid(props: HintGridProps): ReactElement {
+  const { hints } = props
+  console.log(hints)
+
   const rows = Array(hintGridLayout.rows)
     .fill(0)
     .map((_, idx) => <HintGridRow key={idx} />)

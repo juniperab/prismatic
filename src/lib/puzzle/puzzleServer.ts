@@ -28,7 +28,7 @@ export function getNewPuzzle(): ClientPuzzleSpec {
   }
 }
 
-export function makeGuess(guess: AnyColor, puzzleId: PuzzleId): Hint | NamedColor {
+export function evaluateGuess(guess: AnyColor, puzzleId: PuzzleId): Hint | NamedColor {
   const puzzle = loadPuzzleById(puzzleId)
   const hintConfig = puzzleConfig.hint
   let hint
