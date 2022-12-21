@@ -8,13 +8,13 @@ import {
   PlayingViewUpperSection,
 } from './playingViewLayout'
 import { HintGrid } from '../../components/hint-grid/HintGrid'
-import { submitGuess, selectPuzzleState, setCurrentColour } from '../../../redux/puzzle/puzzleSlice'
+import { makeGuess, selectPuzzleState, setCurrentColour } from "../../../redux/puzzle/puzzleSlice";
 import { ColourChooser, NewColourCallback } from "../../components/colour-chooser/ColourChooser"
 import { AnyColor } from "../../../lib/colour/colourConversions"
 
 export function PlayingView(): ReactElement | null {
   const { activeView } = useAppSelector(selectAppState)
-  const { hints } = useAppSelector(selectPuzzleState)
+  const { currentColour, hints } = useAppSelector(selectPuzzleState)
   const dispatch = useAppDispatch()
 
   if (activeView !== ViewType.playing) {
@@ -26,8 +26,7 @@ export function PlayingView(): ReactElement | null {
   }
 
   const receiveColourSubmit: () => void = () => {
-    console.log('receiveColourSubmit')
-    void dispatch(submitGuess('foo'))
+    void dispatch(makeGuess(currentColour))
   }
 
   return (

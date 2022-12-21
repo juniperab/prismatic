@@ -55,6 +55,11 @@ export function isHSBHint(hint: Hint): hint is HSLHint {
   return hsbHint.type === HintType.HSB
 }
 
+export function isHint(hint: any): hint is Hint {
+  const h = hint as Hint
+  return isRGBHint(h) || isHSLHint(h) || isHSBHint(h)
+}
+
 export interface HintVisitor<T> {
   rgb: (hint: RGBHint) => T
   hsl: (hint: HSLHint) => T

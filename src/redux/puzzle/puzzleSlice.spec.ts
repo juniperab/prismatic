@@ -12,6 +12,7 @@ const testStartingColour: AnyColor = 'yellow'
 const testInitialState: PuzzleState = {
   currentColour: testStartingColour,
   gaveUp: false,
+  guesses: [],
   hints: [],
   mode: testInitialPuzzle.mode,
   precision: testInitialPuzzle.precision,
@@ -31,6 +32,7 @@ describe('puzzle reducer', () => {
     const realInitialState: PuzzleState = {
       currentColour: realStartingColour,
       gaveUp: false,
+      guesses: [],
       hints: [],
       mode: realInitialPuzzle.mode,
       precision: realInitialPuzzle.precision,

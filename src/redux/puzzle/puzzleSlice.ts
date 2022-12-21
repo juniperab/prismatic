@@ -10,6 +10,7 @@ export interface PuzzleState {
   answerName?: NamedColor
   currentColour: AnyColor
   gaveUp: boolean
+  guesses: AnyColor[]
   hints: Hint[]
   mode: PuzzleMode
   precision: number
@@ -27,6 +28,7 @@ const startingColour: AnyColor = 'slateblue'
 const initialState: PuzzleState = {
   currentColour: startingColour,
   gaveUp: false,
+  guesses: [],
   hints: [],
   mode: initialPuzzle.mode,
   precision: initialPuzzle.precision,
@@ -34,22 +36,26 @@ const initialState: PuzzleState = {
   startingColour,
 }
 
-export const submitGuess = createAsyncThunk('puzzle/submitGuess', async (foo: string, api) => {
-  console.log('submitGuess')
-  console.log(foo)
-  const state: RootState = api.getState() as RootState
-  return await submitGuessToServer(state.puzzle.currentColour, state.puzzle.puzzleId)
-})
-
-export const giveUp = createAsyncThunk('puzzle/giveUp', async (__, api) => {
-  const state: RootState = api.getState() as RootState
-  return await getPuzzleAnswerFromServer(state.puzzle.puzzleId)
-})
+export type MakeGuessAction = PayloadAction<AnyColor>
+export type ReceiveAnswerAction = PayloadAction<NamedColor>
+export type ReceiveHintAction = PayloadAction<Hint>
 
 export const puzzleSlice = createSlice({
   name: 'puzzle',
   initialState,
   reducers: {
+    giveUp: (state) => {
+      state.gaveUp = true
+    },
+    makeGuess: (state, action: MakeGuessAction) => {
+      state.guesses.push(action.payload)
+    },
+    receiveAnswer: (state, action: ReceiveAnswerAction) => {
+      state.answerName = action.payload
+    },
+    receiveHint: (state, action: ReceiveHintAction) => {
+      state.hints.push(action.payload)
+    },
     resetPuzzleState: (state, action: PayloadAction<ClientPuzzleSpec>) => {
       state.answerName = undefined
       state.gaveUp = false
@@ -66,23 +72,9 @@ export const puzzleSlice = createSlice({
       state.startingColour = action.payload
     },
   },
-  extraReducers: (builder) => {
-    builder
-      .addCase(submitGuess.fulfilled, (state, action: PayloadAction<Hint | NamedColor>) => {
-        if (isNamed(action.payload)) {
-          state.answerName = action.payload
-        } else {
-          state.hints.push(action.payload)
-        }
-      })
-      .addCase(giveUp.fulfilled, (state, action: PayloadAction<NamedColor>) => {
-        state.answerName = action.payload
-        state.gaveUp = true
-      })
-  },
 })
 
-export const { resetPuzzleState, setCurrentColour, setStartingColour } = puzzleSlice.actions
+export const { giveUp, makeGuess, receiveAnswer, receiveHint, resetPuzzleState, setCurrentColour, setStartingColour } = puzzleSlice.actions
 export const selectPuzzleState = (state: RootState): PuzzleState => state.puzzle
 export default puzzleSlice.reducer
 
