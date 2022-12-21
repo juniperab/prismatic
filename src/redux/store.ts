@@ -3,6 +3,15 @@ import app from './app/appSlice'
 import config from './config/configSlice'
 import debug from './debug/debugSlice'
 import puzzle from './puzzle/puzzleSlice'
+import createSagaMiddleware from "@redux-saga/core";
+import { createLogger } from "redux-logger";
+import { puzzleSaga } from "./puzzle/puzzleSaga";
+import { all, call, spawn } from "typed-redux-saga";
+
+const logger = createLogger()
+const saga = createSagaMiddleware({
+  onError: (error: Error) => { throw error },
+})
 
 export const store = configureStore({
   reducer: {
@@ -11,7 +20,34 @@ export const store = configureStore({
     debug,
     puzzle,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(
+      logger,
+      saga,
+    )
 })
+
+function* rootSaga(): Generator<any, void> {
+  const sagas = [
+    puzzleSaga,
+  ]
+  // spawn each saga independently, and restart each after an error.
+  // ref: https://redux-saga.js.org/docs/advanced/RootSaga
+  // and: https://github.com/redux-saga/redux-saga/issues/570
+  yield* all(sagas.map(saga =>
+    spawn(function* () {
+      while (true) {
+        try {
+          yield* call(saga)
+          break
+        } catch (e) {
+          console.log(e)
+        }
+      }
+    }))
+  )
+}
+saga.run(rootSaga)
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
