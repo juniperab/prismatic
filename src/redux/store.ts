@@ -6,7 +6,8 @@ import puzzle from './puzzle/puzzleSlice'
 import createSagaMiddleware from "@redux-saga/core";
 import { createLogger } from "redux-logger";
 import { puzzleSaga } from "./puzzle/puzzleSaga";
-import { all, call, spawn } from "typed-redux-saga";
+import { all, call, FixedTask, SagaGenerator, spawn } from "typed-redux-saga";
+import { AllEffect, ForkEffect } from "@redux-saga/core/effects";
 
 const logger = createLogger()
 const saga = createSagaMiddleware({
@@ -27,7 +28,7 @@ export const store = configureStore({
     )
 })
 
-function* rootSaga(): Generator<any, void> {
+function* rootSaga(): Generator<AllEffect<SagaGenerator<FixedTask<void>, ForkEffect<void>>>, void> {
   const sagas = [
     puzzleSaga,
   ]
