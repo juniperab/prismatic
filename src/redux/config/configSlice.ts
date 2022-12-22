@@ -1,24 +1,30 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { RootState } from '../store'
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "../store";
+import { HintType } from "../../lib/puzzle/hint/hint";
 
 export interface ConfigState {
-  foo: string // placeholder for when I need application-level configuration again
+  maxGuesses: number,
+  hintType: HintType,
 }
 
 const initialState: ConfigState = {
-  foo: 'bar',
+  maxGuesses: 6,
+  hintType: HintType.HSB,
 }
 
 export const configSlice = createSlice({
   name: 'config',
   initialState,
   reducers: {
-    setFoo: (state, action: PayloadAction<string>) => {
-      state.foo = action.payload
+    setHintType: (state, action: PayloadAction<HintType>) => {
+      state.hintType = action.payload
+    },
+    setMaxGuesses: (state, action: PayloadAction<number>) => {
+      state.maxGuesses = action.payload
     },
   },
 })
 
-export const { setFoo } = configSlice.actions
+export const { setHintType, setMaxGuesses } = configSlice.actions
 export const selectConfigState = (state: RootState): ConfigState => state.config
 export default configSlice.reducer

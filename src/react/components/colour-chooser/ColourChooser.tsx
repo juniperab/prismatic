@@ -7,7 +7,7 @@ import {
 } from './colourChooserLayout'
 import { InfiniteHammerArea } from '../hammer/InfiniteHammerArea'
 import { HammerOnChangeCallback, HammerOnTapCallback } from '../hammer/HammerArea'
-import { HSBColor, toHSL } from '../../../lib/colour/colourConversions'
+import { HSBColor, toCssColour } from "../../../lib/colour/colourConversions";
 import { rotateHue } from '../../../lib/colour/colourMath'
 import { ColourChooserHelpOverlay, OverlayState, useOverlayState } from './ColourChooserHelpOverlay'
 import { defaultTo } from 'lodash'
@@ -81,16 +81,10 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
   }) as HammerOnTapCallback
 
   const overlayStyle: CSSProperties = {
-    backgroundColor: (() => {
-      const c = toHSL({ h: hue, s: 50, b: 100 })
-      return `hsla(${c.h}, ${c.s}%, ${c.l}%, 50%)`
-    })(),
+    backgroundColor: toCssColour({ h: hue, s: 50, b: 100, a: 50 }),
   }
   const selectionStyle: CSSProperties = {
-    backgroundColor: (() => {
-      const hsl = toHSL(currentColour)
-      return `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`
-    })(),
+    backgroundColor: toCssColour(currentColour),
     cursor: dragging ? undefined : 'pointer',
   }
 
