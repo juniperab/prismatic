@@ -26,7 +26,7 @@ export interface ColourChooserProps {
 }
 
 const initialOverlayState: OverlayState = {
-  show: true,
+  show: false,  // TODO: either make this 'true' or add a way to manually show it
   ticksBeforeHide: 20,
 }
 
