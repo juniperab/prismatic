@@ -14,7 +14,6 @@ export interface HintGridProps {
 export function HintGrid(props: HintGridProps): ReactElement {
   const { guesses, hints } = props
   const { maxGuesses } = useAppSelector(selectConfigState)
-  console.log(hints)
 
   const numCols = 4 // 5 for CMYK hints if I do them
   const numRows = maxGuesses

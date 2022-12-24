@@ -4,14 +4,16 @@ import Hammer from 'hammerjs'
 import { useResizeDetector } from 'react-resize-detector'
 import { HammerAreaInner, HammerAreaOuter } from './hammerAreaLayout'
 import { useModifierKeys } from '../../hooks/useModifierKeys'
-import { euclideanDistance } from '../../../lib/math/math'
+import { euclideanDistance, floatEquals } from "../../../lib/math/math";
 
 export type HammerAreaClamp = [number | undefined, number | undefined] // [min, max]
 
 export type HammerOnChangeCallback = (newValues: HammerAreaValues, gestureComplete: boolean) => void
+export type HammerOnResizeCallback = (width: number, height: number) => void
 export type HammerOnTapCallback = (x: number, y: number, target: HTMLElement) => void
+export type HammerOnUpdatePropValuesCallback = (changedValues: Partial<HammerAreaValues>) => void
 
-interface InternalHammerAreaValues {
+export interface HammerAreaValues {
   displayOffsetX: number
   displayOffsetY: number
   displayRotation: number
@@ -22,16 +24,9 @@ interface InternalHammerAreaValues {
   y: number
 }
 
-export interface HammerAreaValues extends InternalHammerAreaValues {
-  containerWidth: number
-  containerHeight: number
-}
-
 export interface HammerAreaProps {
   // contents of the HammerArea
   children?: ReactNode
-  underlay?: ReactNode
-  overlay?: ReactNode
   // bounds on which to clamp the scale
   clampScale?: HammerAreaClamp
   // bounds on which to clamp the rotation
@@ -40,10 +35,6 @@ export interface HammerAreaProps {
   clampX?: HammerAreaClamp
   // bounds on which to clamp to Y offset
   clampY?: HammerAreaClamp
-  initialX?: number
-  initialY?: number
-  initialRotation?: number
-  initialScale?: number
   // whether to take the scale into account when updating the other dimensions;
   // this would apply if the scale were not used to update the visual display
   // of the children
@@ -63,16 +54,31 @@ export interface HammerAreaProps {
   // callback function triggered when any of the coordinates changes
   onChange?: HammerOnChangeCallback
   // callback function triggered when the area is tapped
+  onResize?: HammerOnResizeCallback
   onTap?: HammerOnTapCallback
+  onUpdatePropValues?: HammerOnUpdatePropValuesCallback
+  // elements to render inside the div to which Hammer is attached;
+  // these elements may be interacted with, to the extent that such
+  // interaction does not conflict with the user events that Hammer
+  // is listening for. And, Hammer will be aware if, for instance,
+  // one of these elements is tapped on as opposed to the main Hammer div
+  // itself
+  overlay?: ReactNode
   // style to apply to the container div that wraps the HammerArea's children
   style?: CSSProperties
+  // elements to render beneath the div to which Hammer is attached;
+  // these elements will be visible but may not be interacted with
+  // and will receive no events
+  underlay?: ReactNode
+  // overrides for the internal state values of the HammerArea
+  values?: Partial<HammerAreaValues>
 }
 
 interface InternalHammerAreaProps extends HammerAreaProps {
+  containerHeight: number
+  modifierKeyPressed: boolean
   containerRef: RefObject<HTMLDivElement>
-  modifierKey: boolean
-  width: number
-  height: number
+  containerWidth: number
 }
 
 interface HammerEventValues {
@@ -86,6 +92,84 @@ enum HammerAction {
   None = 'none',
   Pan = 'pan',
   ScaleRotate = 'scale/rotate',
+}
+
+const defaultHammerAreaValues: HammerAreaValues = {
+  displayOffsetX: 0,
+  displayOffsetY: 0,
+  displayRotation: 0,
+  displayScale: 1,
+  rotation: 0,
+  scale: 1,
+  x: 0,
+  y: 0,
+}
+
+/**
+ * Fill out a partial specification of HammerAreaValues with default values
+ * for the unspecified properties.
+ *
+ * @param partialValues     a partial specification of HammerAreaValues
+ * @param defaults          the default values to use
+ */
+function withDefaults(
+  partialValues: Partial<HammerAreaValues> = {},
+  defaults: HammerAreaValues = defaultHammerAreaValues,
+): HammerAreaValues {
+  return {
+    displayOffsetX: defaultTo(partialValues.displayOffsetX, defaults.displayOffsetX),
+    displayOffsetY: defaultTo(partialValues.displayOffsetY, defaults.displayOffsetY),
+    displayRotation: defaultTo(partialValues.displayRotation, defaults.displayRotation),
+    displayScale: defaultTo(partialValues.displayScale, defaults.displayScale),
+    rotation: defaultTo(partialValues.rotation, defaults.rotation),
+    scale: defaultTo(partialValues.scale, defaults.scale),
+    x: defaultTo(partialValues.x, defaults.x),
+    y: defaultTo(partialValues.y, defaults.y),
+  }
+}
+
+/**
+ * Determine whether two instances of HammerAreaValues are equal
+ *
+ * @param a   an instance of HammerAreaValues
+ * @param b   another instance of HammerAreaValues
+ */
+function valuesEquals(a: HammerAreaValues, b: HammerAreaValues): boolean {
+  return floatEquals(a.displayOffsetX, b.displayOffsetX)
+    && floatEquals(a.displayOffsetY, b.displayOffsetY)
+    && floatEquals(a.displayRotation, b.displayRotation)
+    && floatEquals(a.displayScale, b.displayScale)
+    && floatEquals(a.rotation, b.rotation)
+    && floatEquals(a.scale, b.scale)
+    && floatEquals(a.x, b.x)
+    && floatEquals(a.y, b.y)
+}
+
+/**
+ * Return only those components of the new values that differ from the old values.
+ *
+ * @param oldValues   the old values to compare
+ * @param newValues   the new values that may have changed
+ */
+function valuesDiffs(oldValues: HammerAreaValues, newValues: HammerAreaValues): HammerAreaValues {
+  return {
+    // displayOffsetX: !floatEquals(oldValues.displayOffsetX, newValues.displayOffsetX) ? newValues.displayOffsetX : undefined,
+    // displayOffsetY: !floatEquals(oldValues.displayOffsetY, newValues.displayOffsetY) ? newValues.displayOffsetY : undefined,
+    // displayRotation: !floatEquals(oldValues.displayRotation, newValues.displayRotation) ? newValues.displayRotation : undefined,
+    // displayScale: !floatEquals(oldValues.displayScale, newValues.displayScale) ? newValues.displayScale : undefined,
+    // rotation: !floatEquals(oldValues.rotation, newValues.rotation) ? newValues.rotation : undefined,
+    // scale: !floatEquals(oldValues.scale, newValues.scale) ? newValues.scale : undefined,
+    // x: !floatEquals(oldValues.x, newValues.x) ? newValues.x : undefined,
+    // y: !floatEquals(oldValues.y, newValues.y) ? newValues.y : undefined,
+    displayOffsetX: newValues.displayOffsetX - oldValues.displayOffsetX,
+    displayOffsetY: newValues.displayOffsetY - oldValues.displayOffsetY,
+    displayRotation: newValues.displayRotation - oldValues.displayRotation,
+    displayScale: newValues.displayScale - oldValues.displayScale,
+    rotation: newValues.rotation - oldValues.rotation,
+    scale: newValues.scale - oldValues.scale,
+    x: newValues.x - oldValues.x,
+    y: newValues.y - oldValues.y,
+  }
 }
 
 /**
@@ -122,9 +206,9 @@ function clampValue(value: number, clamp: HammerAreaClamp | undefined): number {
 function newValuesForPan(
   eventValues: HammerEventValues,
   eventStartValues: HammerEventValues,
-  currentValues: InternalHammerAreaValues,
+  currentValues: HammerAreaValues,
   currentProps: HammerAreaProps
-): InternalHammerAreaValues {
+): HammerAreaValues {
   let newX = currentValues.x + (eventValues.x - eventStartValues.x)
   let newY = currentValues.y + (eventValues.y - eventStartValues.y)
   const clampedX = clampValue(newX, currentProps.clampX)
@@ -185,9 +269,9 @@ function newValuesForPan(
 function newValuesForScaleRotate(
   eventValues: HammerEventValues,
   eventStartValues: HammerEventValues,
-  currentValues: InternalHammerAreaValues,
+  currentValues: HammerAreaValues,
   currentProps: HammerAreaProps
-): InternalHammerAreaValues {
+): HammerAreaValues {
   let newRotation = currentValues.rotation + eventValues.rotation - eventStartValues.rotation
   let newScale = (currentValues.scale * eventValues.scale) / eventStartValues.scale
 
@@ -277,15 +361,15 @@ function newValuesForScaleRotate(
 function newValuesForScaleRotateViaPan(
   eventValues: HammerEventValues,
   eventStartValues: HammerEventValues,
-  currentValues: InternalHammerAreaValues,
+  currentValues: HammerAreaValues,
   currentProps: InternalHammerAreaProps
-): InternalHammerAreaValues {
-  const { height, width } = currentProps
+): HammerAreaValues {
+  const { containerHeight, containerWidth } = currentProps
   const deltaX = eventStartValues.x - eventValues.x
   const deltaY = eventStartValues.y - eventValues.y
   const modifiedEventValues = {
-    rotation: (deltaX / width) * 360,
-    scale: Math.pow(2, (deltaY / height) * -2),
+    rotation: (deltaX / containerWidth) * 360,
+    scale: Math.pow(2, (deltaY / containerHeight) * -2),
     x: 0,
     y: 0,
   }
@@ -315,46 +399,46 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
   private _hammer: HammerManager | null = null
   private currentAction: HammerAction
   private currentActionIsModified: boolean
-  private currentValues: InternalHammerAreaValues
+  private currentValues: HammerAreaValues
   private eventStartValues: HammerEventValues
+  private mostRecentEvent: HammerInput | undefined = undefined
 
   constructor(props: InternalHammerAreaProps) {
     super(props)
-    this.currentValues = {
-      displayOffsetX: defaultTo(props.initialX, 0),
-      displayOffsetY: defaultTo(props.initialY, 0),
-      displayRotation: defaultTo(props.initialRotation, 0),
-      displayScale: defaultTo(props.initialScale, 1),
-      x: defaultTo(props.initialX, 0),
-      y: defaultTo(props.initialY, 0),
-      rotation: defaultTo(props.initialRotation, 0),
-      scale: defaultTo(props.initialScale, 1),
-    }
+    this.currentValues = withDefaults(props.values)
     this.eventStartValues = this.currentValues
     this.currentAction = HammerAction.None
     this.currentActionIsModified = false
   }
 
-  private readonly callOnChange: (values: InternalHammerAreaValues, complete: boolean) => void = (values, complete) => {
-    if (this.props.onChange !== undefined)
-      this.props.onChange(
-        {
-          ...values,
-          containerHeight: this.props.height,
-          containerWidth: this.props.width,
-        },
-        complete
-      )
+  private readonly callOnChange: HammerOnChangeCallback = (values, complete) => {
+    console.log(`HammerArea onChange${complete ? ' (complete)' : ''}`)
+    if (complete) {
+      console.log(`change x ${values.x}`)
+      console.log(`change y ${values.y}`)
+    }
+    if (this.props.onChange !== undefined) this.props.onChange(values, complete)
+  }
+
+  private readonly callOnResize: HammerOnResizeCallback = (width: number, height: number) => {
+    console.log(`HammerArea onResize (width: ${width}, height: ${height}`)
+    if (this.props.onResize !== undefined) this.props.onResize(width, height)
   }
 
   private readonly callOnTap: HammerOnTapCallback = (x, y, target) => {
+    console.log(`HammerArea onTap (x: ${x}, y: ${y}`)
     if (this.props.onTap !== undefined) this.props.onTap(x, y, target)
+  }
+
+  private readonly callOnUpdatePropValues: HammerOnUpdatePropValuesCallback = (newValues) => {
+    console.log(`HammerArea onUpdatePropValues`)
   }
 
   private readonly handleHammerStartPan: (ev: HammerInput) => void = (ev) => {
     if (this.currentAction !== HammerAction.None) return
-    if (this.props.modifierKey) this.currentActionIsModified = true
+    if (this.props.modifierKeyPressed) this.currentActionIsModified = true
     this.currentAction = HammerAction.Pan
+    this.mostRecentEvent = ev
     this.eventStartValues = {
       x: ev.deltaX,
       y: ev.deltaY,
@@ -366,6 +450,7 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
   private readonly handleHammerStartScaleRotate: (ev: HammerInput) => void = (ev) => {
     if (this.currentAction !== HammerAction.None) return
     this.currentAction = HammerAction.ScaleRotate
+    this.mostRecentEvent = ev
     this.eventStartValues = {
       x: 0,
       y: 0,
@@ -381,6 +466,7 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
    */
   private readonly handleHammerProgressivePan: (ev: HammerInput) => void = (ev) => {
     if (this.currentAction !== HammerAction.Pan) return
+    this.mostRecentEvent = ev
     const eventValues: HammerEventValues = { rotation: ev.rotation, scale: ev.scale, x: ev.deltaX, y: ev.deltaY }
     let newValues
     if (this.currentActionIsModified)
@@ -396,6 +482,7 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
    */
   private readonly handleHammerProgressiveScaleRotate: (ev: HammerInput) => void = (ev) => {
     if (this.currentAction !== HammerAction.ScaleRotate) return
+    this.mostRecentEvent = ev
     const eventValues: HammerEventValues = { rotation: ev.rotation, scale: ev.scale, x: ev.deltaX, y: ev.deltaY }
     const newValues = newValuesForScaleRotate(eventValues, this.eventStartValues, this.currentValues, this.props)
     this.callOnChange(newValues, false)
@@ -411,6 +498,7 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
   private readonly _handleHammerEndPanNotDebounced: (ev: HammerInput) => void = (ev) => {
     if (this.currentAction !== HammerAction.Pan) return
     this.currentAction = HammerAction.None
+    this.mostRecentEvent = undefined
     const eventValues: HammerEventValues = { rotation: ev.rotation, scale: ev.scale, x: ev.deltaX, y: ev.deltaY }
     if (this.currentActionIsModified) {
       this.currentValues = newValuesForScaleRotateViaPan(
@@ -444,6 +532,7 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
     if (this.currentAction !== HammerAction.ScaleRotate) return
     this.currentAction = HammerAction.None
     this.currentActionIsModified = false
+    this.mostRecentEvent = undefined
     const eventValues: HammerEventValues = { rotation: ev.rotation, scale: ev.scale, x: ev.deltaX, y: ev.deltaY }
     this.currentValues = newValuesForScaleRotate(eventValues, this.eventStartValues, this.currentValues, this.props)
     this.callOnChange(this.currentValues, true)
@@ -462,6 +551,7 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
   private readonly handleHammerCancelEvent: (ev: HammerInput) => void = (_) => {
     this.currentAction = HammerAction.None
     this.currentActionIsModified = false
+    this.mostRecentEvent = undefined
     this.callOnChange(this.currentValues, true)
   }
 
@@ -508,11 +598,37 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
     // attach a Hammer Manager to the container element
     this._hammer = new Hammer.Manager(this.props.containerRef.current)
     this.setupHammer(this._hammer)
+    // this.callOnChange(this.currentValues, true)
   }
 
   componentDidUpdate(prevProps: Readonly<InternalHammerAreaProps>, prevState: Readonly<{}>, snapshot?: any): void {
-    if (this.props.height !== prevProps.height || this.props.width !== prevProps.width)
-      this.callOnChange(this.currentValues, true)
+    if (this.props.containerHeight !== prevProps.containerHeight || this.props.containerWidth !== prevProps.containerWidth) {
+      this.callOnResize(this.props.containerWidth, this.props.containerHeight)
+    }
+    const newValues = withDefaults(this.props.values, this.currentValues)
+    if (!valuesEquals(this.currentValues, newValues)) {
+      console.log('new values from props')
+      const changedValues = valuesDiffs(this.currentValues, newValues)
+      console.log(changedValues)
+      // if (!floatEquals(this.currentValues.displayOffsetX, newValues.displayOffsetX))
+      //   console.log(`from props displayOffsetX ${this.currentValues.displayOffsetX} -> ${newValues.displayOffsetX}`)
+      // if (!floatEquals(this.currentValues.displayOffsetY, newValues.displayOffsetY))
+      //   console.log(`from props displayOffsetY ${this.currentValues.displayOffsetY} -> ${newValues.displayOffsetY}`)
+      // if (!floatEquals(this.currentValues.displayRotation, newValues.displayRotation))
+      //   console.log(`from props displayRotation ${this.currentValues.displayRotation} -> ${newValues.displayRotation}`)
+      // if (!floatEquals(this.currentValues.displayScale, newValues.displayScale))
+      //   console.log(`from props displayScale ${this.currentValues.displayScale} -> ${newValues.displayScale}`)
+      // if (!floatEquals(this.currentValues.rotation, newValues.rotation))
+      //   console.log(`from props rotation ${this.currentValues.rotation} -> ${newValues.rotation}`)
+      // if (!floatEquals(this.currentValues.scale, newValues.scale))
+      //   console.log(`from props scale ${this.currentValues.scale} -> ${newValues.scale}`)
+      // if (!floatEquals(this.currentValues.x, newValues.x))
+      //   console.log(`from props x ${this.currentValues.x} -> ${newValues.x}`)
+      // if (!floatEquals(this.currentValues.y, newValues.y))
+      //   console.log(`from props y ${this.currentValues.y} -> ${newValues.y}`)
+      this.currentValues = newValues
+      this.callOnUpdatePropValues(newValues)
+    }
   }
 
   componentWillUnmount(): void {
@@ -532,7 +648,7 @@ class InternalHammerArea extends Component<InternalHammerAreaProps> {
       style.position = 'relative'
     }
 
-    let cursor = this.props.modifierKey ? 'col-resize' : 'default'
+    let cursor = this.props.modifierKeyPressed ? 'col-resize' : 'default'
     if (this.currentAction !== HammerAction.None) cursor = 'grabbing'
 
     return (
@@ -559,9 +675,9 @@ export function HammerArea(props: HammerAreaProps): ReactElement {
   return (
     <InternalHammerArea
       containerRef={ref}
-      width={actualWidth}
-      height={actualHeight}
-      modifierKey={altKeyDown || ctrlKeyDown || metaKeyDown}
+      containerWidth={actualWidth}
+      containerHeight={actualHeight}
+      modifierKeyPressed={altKeyDown || ctrlKeyDown || metaKeyDown}
       {...props}
     >
       {props.children}

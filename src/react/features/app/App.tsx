@@ -3,7 +3,7 @@ import { ThemeProvider } from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
 import { ModalType, selectAppState, setActiveModal } from '../../../redux/app/appSlice'
 import { generateRandomColour } from '../../../lib/colour/colourMath'
-import { toNamed } from '../../../lib/colour/colourConversions'
+import { toHSB, toNamed } from "../../../lib/colour/colourConversions";
 import { setCurrentColour, setStartingColour } from '../../../redux/puzzle/puzzleSlice'
 import { handleKeyDown, handleKeyUp } from './keyPressHandlers'
 import { getTheme } from '../../components/theme/themeRegistry'
@@ -23,7 +23,8 @@ export function App(): ReactElement {
 
   // initialize the colour picker with a random starting colour
   useEffect(() => {
-    const startingColour = toNamed(generateRandomColour())
+    const startingColour = toHSB('mediumseagreen') // toNamed(generateRandomColour())
+    console.log(`non-random starting colour: h: ${startingColour.h}, s: ${startingColour.s}, b: ${startingColour.b}`)
     dispatch(setStartingColour(startingColour))
     dispatch(setCurrentColour(startingColour))
     // eslint-disable-next-line react-hooks/exhaustive-deps

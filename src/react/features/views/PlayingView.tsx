@@ -14,7 +14,7 @@ import { AnyColor } from "../../../lib/colour/colourConversions"
 
 export function PlayingView(): ReactElement | null {
   const { activeView } = useAppSelector(selectAppState)
-  const { currentColour, guesses, hints } = useAppSelector(selectPuzzleState)
+  const { startingColour, currentColour, guesses, hints } = useAppSelector(selectPuzzleState)
   const dispatch = useAppDispatch()
 
   if (activeView !== ViewType.playing) {
@@ -39,6 +39,7 @@ export function PlayingView(): ReactElement | null {
         <ColourChooser
           onChangeComplete={receiveNewColour}
           onSelect={receiveColourSubmit}
+          colour={currentColour}
         />
       </PlayingViewLowerSection>
     </PlayingViewOuter>
