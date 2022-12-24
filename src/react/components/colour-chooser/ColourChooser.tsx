@@ -6,11 +6,11 @@ import {
   ColourChooserSelectionPending,
 } from './colourChooserLayout'
 import { InfiniteHammerArea } from '../hammer/InfiniteHammerArea'
-import { HammerOnChangeCallback, HammerOnResizeCallback, HammerOnTapCallback } from "../hammer/HammerArea";
 import { AnyColor, HSBColor, toCssColour, toHSB } from "../../../lib/colour/colourConversions";
 import { rotateHue } from '../../../lib/colour/colourMath'
 import { ColourChooserHelpOverlay, OverlayState, useOverlayState } from './ColourChooserHelpOverlay'
 import { defaultTo } from 'lodash'
+import { HammerOnChangeCallback, HammerOnResizeCallback, HammerOnTapCallback } from "../hammer/hammerAreaTypes";
 
 export type NewColourCallback = (colour: HSBColor) => void
 
@@ -73,8 +73,9 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
     updateBrightness(hsb.b)
   }, [props, updateHue, updateSaturation, updateBrightness])
 
-  const handleHammerAreaChange: HammerOnChangeCallback = (values, gestureComplete) => {
-    const { rotation, x, y } = values
+  const handleHammerAreaChange: HammerOnChangeCallback = newData => {
+    const { newValues, gestureComplete } = newData
+    const { rotation, x, y } = newValues
     tickOverlay(1)
     setDragging(!gestureComplete)
     setSelectionPending(false)
@@ -127,13 +128,11 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
       <InfiniteHammerArea
         clampScale={[1, 10]}
         lockRotation={true}
-        values={{
-          // displayOffsetX: (propsColourHSB.s - 50) * width / 100,
-          // displayOffsetY: (propsColourHSB.b - 50) * height / 100,
-          x: (propsColourHSB.s - 50) * width / 100,
-          y: (propsColourHSB.b - 50) * height / 100,
-          rotation: propsColourHSB.h,
-        }}
+        // values={{
+        //   x: (propsColourHSB.s - 50) * width / 100,
+        //   y: (propsColourHSB.b - 50) * height / 100,
+        //   rotation: propsColourHSB.h,
+        // }}
         mirrorTiles={true}
         onChange={handleHammerAreaChange}
         onResize={handleHammerAreaResize}
