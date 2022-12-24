@@ -1,5 +1,11 @@
 import { CSSProperties, ReactNode } from "react";
 
+export enum HammerAction {
+  None = 'none',
+  Pan = 'pan',
+  ScaleRotate = 'scale/rotate',
+}
+
 export type HammerAreaClamp = [number | undefined, number | undefined] // [min, max]
 
 export interface HammerOnChangeData {

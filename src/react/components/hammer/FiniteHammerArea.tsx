@@ -2,7 +2,15 @@ import { CSSProperties, ReactElement, useState } from "react";
 import { HammerAreaProps, HammerAreaValues } from "./hammerAreaTypes";
 import { InternalHammerArea } from "./HammerArea";
 import { InternalHammerAreaProps, InternalHammerOnChangeCallback } from "./hammerAreaTypesInternal";
-import { FiniteHammerAreaInner } from "./finiteHammerAreaLayout";
+import styled from "styled-components";
+
+const FiniteHammerAreaInner = styled.div.attrs({
+  className: 'finite-hammer-area-inner',
+})`
+  position: relative;
+  width: 100%;
+  height: 100%;
+`
 
 export function InternalFiniteHammerArea(props: InternalHammerAreaProps): ReactElement {
   const { children, onChangeInternal } = props

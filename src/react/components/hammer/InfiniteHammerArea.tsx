@@ -1,16 +1,24 @@
 import { CSSProperties, ReactElement, useState } from "react";
-import { InfiniteHammerAreaTile } from './infiniteHammerAreaLayout'
 import { euclideanDistance } from '../../../lib/math/math'
 import { HammerAreaProps, HammerOnResizeCallback } from "./hammerAreaTypes";
 import { InternalHammerAreaProps, InternalHammerOnChangeCallback } from "./hammerAreaTypesInternal";
 import { InternalFiniteHammerArea } from "./FiniteHammerArea";
+import styled from "styled-components";
 
 interface InfiniteHammerAreaPropsMixin {
   mirrorTiles?: boolean
 }
 
 export type InfiniteHammerAreaProps = HammerAreaProps & InfiniteHammerAreaPropsMixin
-type InternalInfiniteHammerAreaProps = InternalHammerAreaProps & InfiniteHammerAreaPropsMixin
+export type InternalInfiniteHammerAreaProps = InternalHammerAreaProps & InfiniteHammerAreaPropsMixin
+
+const InfiniteHammerAreaTile = styled.div.attrs({
+  className: 'infinite-hammer-area-tile',
+})`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+`
 
 export function InternalInfiniteHammerArea(props: InternalInfiniteHammerAreaProps): ReactElement {
   const { onChangeInternal } = props

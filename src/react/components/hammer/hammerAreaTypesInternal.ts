@@ -1,5 +1,4 @@
-import { HammerAreaProps, HammerAreaValues, HammerOnChangeCallback, HammerOnChangeData } from "./hammerAreaTypes";
-import { RefObject } from "react";
+import { HammerAreaProps, HammerAreaValues, HammerOnChangeData } from "./hammerAreaTypes";
 
 export type HammerOnUpdatePropValuesCallback = (changedValues: Partial<HammerAreaValues>) => void
 
@@ -11,17 +10,11 @@ export type InternalHammerOnChangeCallback = (newData: InternalHammerOnChangeDat
 export interface InternalHammerAreaProps extends HammerAreaProps {
   // overrides for the internal state values of the HammerArea
   displayValues?: Partial<HammerAreaValues>
+  // additional callback function triggered when any of the coordinates changes
   onChangeInternal?: InternalHammerOnChangeCallback
   // callback function triggered when the values of the HammerArea change as
   // a result of the component's props updating
   onUpdatePropValues?: HammerOnUpdatePropValuesCallback
-}
-
-export interface _HammerAreaProps extends InternalHammerAreaProps {
-  containerHeight: number
-  modifierKeyPressed: boolean
-  containerRef: RefObject<HTMLDivElement>
-  containerWidth: number
 }
 
 export interface HammerEventValues {
@@ -29,10 +22,4 @@ export interface HammerEventValues {
   scale: number
   x: number
   y: number
-}
-
-export enum HammerAction {
-  None = 'none',
-  Pan = 'pan',
-  ScaleRotate = 'scale/rotate',
 }

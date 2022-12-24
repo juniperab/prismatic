@@ -1,4 +1,4 @@
-import { HammerEventValues, _HammerAreaProps } from "./hammerAreaTypesInternal";
+import { HammerEventValues } from "./hammerAreaTypesInternal";
 import { HammerAreaProps, HammerAreaValues } from "./hammerAreaTypes";
 import { clampValue } from "./hammerAreaFunctions";
 import { euclideanDistance } from "../../../lib/math/math";
@@ -18,7 +18,7 @@ import { euclideanDistance } from "../../../lib/math/math";
  * @param currentProps          the current component props
  * @private                     the adjusted baseline values
  */
-export function newValuesForPan(
+export function internalNewValuesForPan(
   eventValues: HammerEventValues,
   eventStartValues: HammerEventValues,
   currentValues: HammerAreaValues,
@@ -88,7 +88,7 @@ export function newValuesForPan(
  * @param currentProps          the current component props
  * @private                     the adjusted baseline values
  */
-export function newValuesForScaleRotate(
+export function internalNewValuesForScaleRotate(
   eventValues: HammerEventValues,
   eventStartValues: HammerEventValues,
   currentValues: HammerAreaValues,
@@ -185,21 +185,23 @@ export function newValuesForScaleRotate(
  * @param currentValues         the current baseline values
  * @param currentDisplayValues  the current baseline display values
  * @param currentProps          the current component props
+ * @param currentDimensions     the current dimensions of the component's main area
  * @private                     the adjusted baseline values
  */
-export function newValuesForScaleRotateViaPan(
+export function internalNewValuesForScaleRotateViaPan(
   eventValues: HammerEventValues,
   eventStartValues: HammerEventValues,
   currentValues: HammerAreaValues,
   currentDisplayValues: HammerAreaValues,
-  currentProps: _HammerAreaProps
+  currentProps: HammerAreaProps,
+  currentDimensions: { height: number, width: number },
 ): { newDisplayValues: HammerAreaValues, newValues: HammerAreaValues } {
-  const { containerHeight, containerWidth } = currentProps
+  const { height, width } = currentDimensions
   const deltaX = eventStartValues.x - eventValues.x
   const deltaY = eventStartValues.y - eventValues.y
   const modifiedEventValues = {
-    rotation: (deltaX / containerWidth) * 360,
-    scale: Math.pow(2, (deltaY / containerHeight) * -2),
+    rotation: (deltaX / width) * 360,
+    scale: Math.pow(2, (deltaY / height) * -2),
     x: 0,
     y: 0,
   }
@@ -209,7 +211,7 @@ export function newValuesForScaleRotateViaPan(
     x: 0,
     y: 0,
   }
-  return newValuesForScaleRotate(
+  return internalNewValuesForScaleRotate(
     modifiedEventValues,
     modifiedEventStartValues,
     currentValues,

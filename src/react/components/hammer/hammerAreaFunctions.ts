@@ -2,8 +2,6 @@ import { HammerAreaClamp, HammerAreaValues } from "./hammerAreaTypes";
 import { defaultTo } from "lodash";
 import { floatEquals } from "../../../lib/math/math";
 
-
-
 /**
  * Clamp a value within the given bounds, if specified.
  *
@@ -59,7 +57,7 @@ export function valuesEquals(a: HammerAreaValues, b: HammerAreaValues): boolean 
  * @param oldValues   the old values to compare
  * @param newValues   the new values that may have changed
  */
-export function valuesDiffs(oldValues: HammerAreaValues, newValues: HammerAreaValues): HammerAreaValues {
+export function valuesDiff(oldValues: HammerAreaValues, newValues: HammerAreaValues): HammerAreaValues {
   return {
     rotation: newValues.rotation - oldValues.rotation,
     scale: newValues.scale - oldValues.scale,
