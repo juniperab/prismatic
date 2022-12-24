@@ -1,19 +1,19 @@
-import { CSSProperties, ReactElement, useEffect, useState } from "react";
-import { InfiniteHammerAreaInner, InfiniteHammerAreaTile } from './infiniteHammerAreaLayout'
-import {
-  HammerArea,
-  HammerAreaProps,
-  HammerAreaValues,
-  HammerOnChangeCallback,
-  HammerOnResizeCallback
-} from "./HammerArea";
+import { CSSProperties, ReactElement, useState } from "react";
+import { InfiniteHammerAreaTile } from './infiniteHammerAreaLayout'
 import { euclideanDistance } from '../../../lib/math/math'
+import { HammerAreaProps, HammerOnResizeCallback } from "./hammerAreaTypes";
+import { InternalHammerAreaProps, InternalHammerOnChangeCallback } from "./hammerAreaTypesInternal";
+import { InternalFiniteHammerArea } from "./FiniteHammerArea";
 
-export interface InfiniteHammerAreaProps extends HammerAreaProps {
+interface InfiniteHammerAreaPropsMixin {
   mirrorTiles?: boolean
 }
 
-export function InfiniteHammerArea(props: InfiniteHammerAreaProps): ReactElement {
+export type InfiniteHammerAreaProps = HammerAreaProps & InfiniteHammerAreaPropsMixin
+type InternalInfiniteHammerAreaProps = InternalHammerAreaProps & InfiniteHammerAreaPropsMixin
+
+export function InternalInfiniteHammerArea(props: InternalInfiniteHammerAreaProps): ReactElement {
+  const { onChangeInternal } = props
   const [width, setWidth] = useState(1)
   const [height, setHeight] = useState(1)
   const [r, setR] = useState(0)
@@ -21,19 +21,13 @@ export function InfiniteHammerArea(props: InfiniteHammerAreaProps): ReactElement
   const [y, setY] = useState(0)
   const [x, setX] = useState(0)
 
-  useEffect(() => {
-    setR(prevR => props.values?.displayRotation ?? prevR)
-    setS(prevS => props.values?.displayScale ?? prevS)
-    setX(prevX => props.values?.displayOffsetX ?? prevX)
-    setY(prevY => props.values?.displayOffsetY ?? prevY)
-  }, [props.values])
-
-  const handleHammerAreaChange: HammerOnChangeCallback = (values: HammerAreaValues, gestureComplete: boolean): void => {
-    setR(values.displayRotation)
-    setS(values.displayScale)
-    setX(values.displayOffsetX)
-    setY(values.displayOffsetY)
-    if (props.onChange !== undefined) props.onChange(values, gestureComplete)
+  const handleHammerAreaChange: InternalHammerOnChangeCallback = newData => {
+    const { newDisplayValues } = newData
+    setR(newDisplayValues.rotation)
+    setS(newDisplayValues.scale)
+    setX(newDisplayValues.x)
+    setY(newDisplayValues.y)
+    if (onChangeInternal !== undefined) onChangeInternal(newData)
   }
 
   const handleHammerAreaResize: HammerOnResizeCallback = (width: number, height: number): void => {
@@ -83,13 +77,13 @@ export function InfiniteHammerArea(props: InfiniteHammerAreaProps): ReactElement
     }
   }
 
-  const innerStyle: CSSProperties = {
-    transform: `translateX(${x}px) translateY(${y}px) rotate(${r}deg) scale(${s * 100}%)`,
-  }
-
   return (
-    <HammerArea {...props} onChange={handleHammerAreaChange} onResize={handleHammerAreaResize}>
-      <InfiniteHammerAreaInner style={innerStyle}>{tiles}</InfiniteHammerAreaInner>
-    </HammerArea>
+    <InternalFiniteHammerArea {...props} onChangeInternal={handleHammerAreaChange} onResize={handleHammerAreaResize}>
+      {tiles}
+    </InternalFiniteHammerArea>
   )
+}
+
+export function InfiniteHammerArea(props: InfiniteHammerAreaProps): ReactElement {
+  return <InternalInfiniteHammerArea {...props}>{props.children}</InternalInfiniteHammerArea>
 }

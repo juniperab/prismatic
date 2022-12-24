@@ -6,7 +6,6 @@ import { HammerAreaInner, HammerAreaOuter } from './hammerAreaLayout'
 import { useModifierKeys } from '../../hooks/useModifierKeys'
 import {
   HammerAreaProps, HammerAreaValues,
-  HammerOnChangeCallback,
   HammerOnResizeCallback,
   HammerOnTapCallback
 } from "./hammerAreaTypes";
@@ -14,7 +13,7 @@ import {
   HammerAction,
   HammerEventValues,
   _HammerAreaProps,
-  HammerOnUpdatePropValuesCallback
+  HammerOnUpdatePropValuesCallback, InternalHammerOnChangeCallback, InternalHammerAreaProps
 } from "./hammerAreaTypesInternal";
 import { valuesDiffs, valuesEquals, withDefaults } from "./hammerAreaFunctions";
 import { newValuesForPan, newValuesForScaleRotate, newValuesForScaleRotateViaPan } from "./hammerAreaFunctionsInternal";
@@ -51,7 +50,7 @@ class _HammerArea extends Component<_HammerAreaProps> {
     this.currentActionIsModified = false
   }
 
-  private readonly callOnChange: HammerOnChangeCallback = newData => {
+  private readonly callOnChange: InternalHammerOnChangeCallback = newData => {
     const { newValues, gestureComplete } = newData
     console.log(`HammerArea onChange${gestureComplete ? ' (complete)' : ''}`)
     if (gestureComplete) {
@@ -59,6 +58,7 @@ class _HammerArea extends Component<_HammerAreaProps> {
       console.log(`change y ${newValues.y}`)
     }
     if (this.props.onChange !== undefined) this.props.onChange(newData)
+    if (this.props.onChangeInternal !== undefined) this.props.onChangeInternal(newData)
   }
 
   private readonly callOnResize: HammerOnResizeCallback = (width: number, height: number) => {
@@ -346,20 +346,7 @@ class _HammerArea extends Component<_HammerAreaProps> {
   }
 }
 
-/**
- * An area of the screen in which one- and two-fingers gestures can be used to
- * pan, zoom, and rotate.
- *
- * The display of the contents of this component itself are not automatically
- * manipulated in any way when these gestures occur. Rather the component's
- * onChange callback is triggered, allowing a component that wraps this one
- * to update the way its contents are displayed in various ways. For example,
- * the contents could be moved on the screen in response to a pan gesture,
- * or the position of the contents could remain unchanged but a state value
- * incremented or decremented that affects the way some other aspect of the
- * component is rendered.
- */
-export function HammerArea(props: HammerAreaProps): ReactElement {
+export function InternalHammerArea(props: InternalHammerAreaProps): ReactElement {
   const { width, height, ref } = useResizeDetector()
   const { altKeyDown, ctrlKeyDown, metaKeyDown } = useModifierKeys()
   const actualWidth = defaultTo(width, 0)
@@ -376,4 +363,21 @@ export function HammerArea(props: HammerAreaProps): ReactElement {
       {props.children}
     </_HammerArea>
   )
+}
+
+/**
+ * An area of the screen in which one- and two-fingers gestures can be used to
+ * pan, zoom, and rotate.
+ *
+ * The display of the contents of this component itself are not automatically
+ * manipulated in any way when these gestures occur. Rather the component's
+ * onChange callback is triggered, allowing a component that wraps this one
+ * to update the way its contents are displayed in various ways. For example,
+ * the contents could be moved on the screen in response to a pan gesture,
+ * or the position of the contents could remain unchanged but a state value
+ * incremented or decremented that affects the way some other aspect of the
+ * component is rendered.
+ */
+export function HammerArea(props: HammerAreaProps): ReactElement {
+  return <InternalHammerArea {...props}>{props.children}</InternalHammerArea>
 }

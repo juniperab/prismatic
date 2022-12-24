@@ -2,13 +2,12 @@ import { CSSProperties, ReactNode } from "react";
 
 export type HammerAreaClamp = [number | undefined, number | undefined] // [min, max]
 
-export type HammerOnChangeCallback = (
-  newData: {
-    newDisplayValues: HammerAreaValues,
-    newValues: HammerAreaValues,
-    gestureComplete: boolean,
-  }
-) => void
+export interface HammerOnChangeData {
+  newValues: HammerAreaValues,
+  gestureComplete: boolean,
+}
+
+export type HammerOnChangeCallback = (newData: HammerOnChangeData) => void
 export type HammerOnResizeCallback = (width: number, height: number) => void
 export type HammerOnTapCallback = (x: number, y: number, target: HTMLElement) => void
 
