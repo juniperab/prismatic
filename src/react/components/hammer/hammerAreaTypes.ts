@@ -1,4 +1,4 @@
-import { CSSProperties, ReactNode } from "react";
+import { CSSProperties, ReactNode } from 'react'
 
 export enum HammerAction {
   None = 'none',
@@ -9,8 +9,8 @@ export enum HammerAction {
 export type HammerAreaClamp = [number | undefined, number | undefined] // [min, max]
 
 export interface HammerOnChangeData {
-  newValues: HammerAreaValues,
-  gestureComplete: boolean,
+  newValues: HammerAreaValues
+  gestureComplete: boolean
 }
 
 export type HammerOnChangeCallback = (newData: HammerOnChangeData) => void

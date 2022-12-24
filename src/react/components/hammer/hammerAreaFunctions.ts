@@ -1,6 +1,6 @@
-import { HammerAreaClamp, HammerAreaValues } from "./hammerAreaTypes";
-import { defaultTo } from "lodash";
-import { floatEquals } from "../../../lib/math/math";
+import { HammerAreaClamp, HammerAreaValues } from './hammerAreaTypes'
+import { defaultTo } from 'lodash'
+import { floatEquals } from '../../../lib/math/math'
 
 /**
  * Clamp a value within the given bounds, if specified.
@@ -28,7 +28,7 @@ export function clampValue(value: number, clamp: HammerAreaClamp | undefined): n
  */
 export function withDefaults(
   partialValues: Partial<HammerAreaValues> = {},
-  defaults: HammerAreaValues,
+  defaults: HammerAreaValues
 ): HammerAreaValues {
   return {
     rotation: defaultTo(partialValues.rotation, defaults.rotation),
@@ -45,10 +45,12 @@ export function withDefaults(
  * @param b   another instance of HammerAreaValues
  */
 export function valuesEquals(a: HammerAreaValues, b: HammerAreaValues): boolean {
-  return floatEquals(a.rotation, b.rotation)
-    && floatEquals(a.scale, b.scale)
-    && floatEquals(a.x, b.x)
-    && floatEquals(a.y, b.y)
+  return (
+    floatEquals(a.rotation, b.rotation) &&
+    floatEquals(a.scale, b.scale) &&
+    floatEquals(a.x, b.x) &&
+    floatEquals(a.y, b.y)
+  )
 }
 
 /**

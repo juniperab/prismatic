@@ -1,10 +1,10 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../store";
-import { HintType } from "../../lib/puzzle/hint/hint";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { RootState } from '../store'
+import { HintType } from '../../lib/puzzle/hint/hint'
 
 export interface ConfigState {
-  maxGuesses: number,
-  hintType: HintType,
+  maxGuesses: number
+  hintType: HintType
 }
 
 const initialState: ConfigState = {

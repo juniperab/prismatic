@@ -1,9 +1,9 @@
-import { CSSProperties, ReactElement, useState } from "react";
+import { CSSProperties, ReactElement, useState } from 'react'
 import { euclideanDistance } from '../../../lib/math/math'
-import { HammerAreaProps, HammerOnResizeCallback } from "./hammerAreaTypes";
-import { InternalHammerAreaProps, InternalHammerOnChangeCallback } from "./hammerAreaTypesInternal";
-import { InternalFiniteHammerArea } from "./FiniteHammerArea";
-import styled from "styled-components";
+import { HammerAreaProps, HammerOnResizeCallback } from './hammerAreaTypes'
+import { InternalHammerAreaProps, InternalHammerOnChangeCallback } from './hammerAreaTypesInternal'
+import { InternalFiniteHammerArea } from './FiniteHammerArea'
+import styled from 'styled-components'
 
 interface InfiniteHammerAreaPropsMixin {
   mirrorTiles?: boolean
@@ -29,7 +29,7 @@ export function InternalInfiniteHammerArea(props: InternalInfiniteHammerAreaProp
   const [y, setY] = useState(0)
   const [x, setX] = useState(0)
 
-  const handleHammerAreaChange: InternalHammerOnChangeCallback = newData => {
+  const handleHammerAreaChange: InternalHammerOnChangeCallback = (newData) => {
     const { newDisplayValues } = newData
     setR(newDisplayValues.rotation)
     setS(newDisplayValues.scale)

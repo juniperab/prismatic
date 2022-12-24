@@ -1,4 +1,4 @@
-import { CSSProperties, ReactElement, useCallback, useEffect, useRef, useState } from "react";
+import { CSSProperties, ReactElement, useCallback, useEffect, useRef, useState } from 'react'
 import {
   ColourChooserInner,
   ColourChooserOuter,
@@ -6,11 +6,11 @@ import {
   ColourChooserSelectionPending,
 } from './colourChooserLayout'
 import { InfiniteHammerArea } from '../hammer/InfiniteHammerArea'
-import { AnyColor, HSBColor, toCssColour, toHSB } from "../../../lib/colour/colourConversions";
+import { AnyColor, HSBColor, toCssColour, toHSB } from '../../../lib/colour/colourConversions'
 import { rotateHue } from '../../../lib/colour/colourMath'
 import { ColourChooserHelpOverlay, OverlayState, useOverlayState } from './ColourChooserHelpOverlay'
 import { defaultTo } from 'lodash'
-import { HammerOnChangeCallback, HammerOnResizeCallback, HammerOnTapCallback } from "../hammer/hammerAreaTypes";
+import { HammerOnChangeCallback, HammerOnResizeCallback, HammerOnTapCallback } from '../hammer/hammerAreaTypes'
 
 export type NewColourCallback = (colour: HSBColor) => void
 
@@ -27,7 +27,7 @@ export interface ColourChooserProps {
 }
 
 const initialOverlayState: OverlayState = {
-  show: false,  // TODO: either make this 'true' or add a way to manually show it
+  show: false, // TODO: either make this 'true' or add a way to manually show it
   ticksBeforeHide: 20,
 }
 
@@ -44,27 +44,36 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
   const [dragging, setDragging] = useState(false)
   const [selectionPending, setSelectionPending] = useState(false)
 
-  const updateHue: (rotation: number) => number = useCallback(rotation => {
-    const newHue = rotateHue(rotation, 0)
-    setHue(newHue)
-    return newHue
-  }, [setHue])
+  const updateHue: (rotation: number) => number = useCallback(
+    (rotation) => {
+      const newHue = rotateHue(rotation, 0)
+      setHue(newHue)
+      return newHue
+    },
+    [setHue]
+  )
 
-  const updateSaturation: (x: number) => number = useCallback(x => {
-    const pctX = x / Math.max(width, 1)
-    let newSaturation = Math.abs(-1 * pctX * 100 + 50) % 200
-    newSaturation = newSaturation > 100 ? 200 - newSaturation : newSaturation
-    setSaturation(newSaturation)
-    return newSaturation
-  }, [setSaturation, width])
+  const updateSaturation: (x: number) => number = useCallback(
+    (x) => {
+      const pctX = x / Math.max(width, 1)
+      let newSaturation = Math.abs(-1 * pctX * 100 + 50) % 200
+      newSaturation = newSaturation > 100 ? 200 - newSaturation : newSaturation
+      setSaturation(newSaturation)
+      return newSaturation
+    },
+    [setSaturation, width]
+  )
 
-  const updateBrightness: (y: number) => number = useCallback(y => {
-    const pctY = y / Math.max(height, 1)
-    let newBrightness = Math.abs(pctY * 100 + 50) % 200
-    newBrightness = newBrightness > 100 ? 200 - newBrightness : newBrightness
-    setBrightness(newBrightness)
-    return newBrightness
-  }, [setBrightness, height])
+  const updateBrightness: (y: number) => number = useCallback(
+    (y) => {
+      const pctY = y / Math.max(height, 1)
+      let newBrightness = Math.abs(pctY * 100 + 50) % 200
+      newBrightness = newBrightness > 100 ? 200 - newBrightness : newBrightness
+      setBrightness(newBrightness)
+      return newBrightness
+    },
+    [setBrightness, height]
+  )
 
   useEffect(() => {
     const hsb: HSBColor = toHSB(props.colour)
@@ -73,7 +82,7 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
     updateBrightness(hsb.b)
   }, [props, updateHue, updateSaturation, updateBrightness])
 
-  const handleHammerAreaChange: HammerOnChangeCallback = newData => {
+  const handleHammerAreaChange: HammerOnChangeCallback = (newData) => {
     const { newValues, gestureComplete } = newData
     const { rotation, x, y } = newValues
     tickOverlay(1)

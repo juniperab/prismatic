@@ -1,21 +1,28 @@
 import { debounce, defaultTo, has } from 'lodash'
-import { Component, ReactElement, RefObject } from "react";
+import { Component, ReactElement, RefObject } from 'react'
 import Hammer from 'hammerjs'
 import { useResizeDetector } from 'react-resize-detector'
 import { useModifierKeys } from '../../hooks/useModifierKeys'
 import {
   HammerAction,
-  HammerAreaProps, HammerAreaValues,
+  HammerAreaProps,
+  HammerAreaValues,
   HammerOnResizeCallback,
-  HammerOnTapCallback
-} from "./hammerAreaTypes";
+  HammerOnTapCallback,
+} from './hammerAreaTypes'
 import {
   HammerEventValues,
-  HammerOnUpdatePropValuesCallback, InternalHammerOnChangeCallback, InternalHammerAreaProps
-} from "./hammerAreaTypesInternal";
-import { valuesDiff, valuesEquals, withDefaults } from "./hammerAreaFunctions";
-import { internalNewValuesForPan, internalNewValuesForScaleRotate, internalNewValuesForScaleRotateViaPan } from "./hammerAreaFunctionsInternal";
-import styled from "styled-components";
+  HammerOnUpdatePropValuesCallback,
+  InternalHammerOnChangeCallback,
+  InternalHammerAreaProps,
+} from './hammerAreaTypesInternal'
+import { valuesDiff, valuesEquals, withDefaults } from './hammerAreaFunctions'
+import {
+  internalNewValuesForPan,
+  internalNewValuesForScaleRotate,
+  internalNewValuesForScaleRotateViaPan,
+} from './hammerAreaFunctionsInternal'
+import styled from 'styled-components'
 
 const defaultHammerAreaValues: HammerAreaValues = {
   rotation: 0,
@@ -37,7 +44,6 @@ interface _InternalHammerAreaProps extends InternalHammerAreaProps {
   containerRef: RefObject<HTMLDivElement>
   containerWidth: number
 }
-
 
 const HammerAreaOuter = styled.div.attrs({
   className: 'hammer-area-outer',
@@ -72,7 +78,7 @@ class _InternalHammerArea extends Component<_InternalHammerAreaProps> {
     this.currentActionIsModified = false
   }
 
-  private readonly callOnChange: InternalHammerOnChangeCallback = newData => {
+  private readonly callOnChange: InternalHammerOnChangeCallback = (newData) => {
     const { newValues, gestureComplete } = newData
     console.log(`HammerArea onChange${gestureComplete ? ' (complete)' : ''}`)
     if (gestureComplete) {
@@ -140,7 +146,7 @@ class _InternalHammerArea extends Component<_InternalHammerAreaProps> {
           this.eventStartValues,
           this.currentValues,
           this.currentDisplayValues,
-          this.props,
+          this.props
         ),
         gestureComplete: false,
       })
@@ -162,7 +168,7 @@ class _InternalHammerArea extends Component<_InternalHammerAreaProps> {
         this.eventStartValues,
         this.currentValues,
         this.currentDisplayValues,
-        this.props,
+        this.props
       ),
       gestureComplete: true,
     })
@@ -305,7 +311,10 @@ class _InternalHammerArea extends Component<_InternalHammerAreaProps> {
   }
 
   componentDidUpdate(prevProps: Readonly<_InternalHammerAreaProps>, prevState: Readonly<{}>, snapshot?: any): void {
-    if (this.props.containerHeight !== prevProps.containerHeight || this.props.containerWidth !== prevProps.containerWidth) {
+    if (
+      this.props.containerHeight !== prevProps.containerHeight ||
+      this.props.containerWidth !== prevProps.containerWidth
+    ) {
       this.callOnResize(this.props.containerWidth, this.props.containerHeight)
     }
     const newValues = withDefaults(this.props.values, this.currentValues)

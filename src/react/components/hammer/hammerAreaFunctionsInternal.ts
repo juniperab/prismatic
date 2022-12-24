@@ -1,7 +1,7 @@
-import { HammerEventValues } from "./hammerAreaTypesInternal";
-import { HammerAreaProps, HammerAreaValues } from "./hammerAreaTypes";
-import { clampValue } from "./hammerAreaFunctions";
-import { euclideanDistance } from "../../../lib/math/math";
+import { HammerEventValues } from './hammerAreaTypesInternal'
+import { HammerAreaProps, HammerAreaValues } from './hammerAreaTypes'
+import { clampValue } from './hammerAreaFunctions'
+import { euclideanDistance } from '../../../lib/math/math'
 
 /**
  * Compute what the new baseline values would be for a pan event,
@@ -24,7 +24,7 @@ export function internalNewValuesForPan(
   currentValues: HammerAreaValues,
   currentDisplayValues: HammerAreaValues,
   currentProps: HammerAreaProps
-): { newDisplayValues: HammerAreaValues, newValues: HammerAreaValues } {
+): { newDisplayValues: HammerAreaValues; newValues: HammerAreaValues } {
   let newX = currentValues.x + (eventValues.x - eventStartValues.x)
   let newY = currentValues.y + (eventValues.y - eventStartValues.y)
   const clampedX = clampValue(newX, currentProps.clampX)
@@ -44,10 +44,8 @@ export function internalNewValuesForPan(
   // if X or Y is unlocked, calculate a new display value for them
   const actualDeltaX = newX - currentValues.x
   const actualDeltaY = newY - currentValues.y
-  const newDisplayX =
-    currentProps.lockX !== true ? currentDisplayValues.x + actualDeltaX : currentDisplayValues.x
-  const newDisplayY =
-    currentProps.lockY !== true ? currentDisplayValues.y + actualDeltaY : currentDisplayValues.y
+  const newDisplayX = currentProps.lockX !== true ? currentDisplayValues.x + actualDeltaX : currentDisplayValues.x
+  const newDisplayY = currentProps.lockY !== true ? currentDisplayValues.y + actualDeltaY : currentDisplayValues.y
 
   // adjust the amount that x or y changes according to the display scale
   newX = currentValues.x + actualDeltaX / currentDisplayValues.scale
@@ -94,7 +92,7 @@ export function internalNewValuesForScaleRotate(
   currentValues: HammerAreaValues,
   currentDisplayValues: HammerAreaValues,
   currentProps: HammerAreaProps
-): { newDisplayValues: HammerAreaValues, newValues: HammerAreaValues } {
+): { newDisplayValues: HammerAreaValues; newValues: HammerAreaValues } {
   let newRotation = currentValues.rotation + eventValues.rotation - eventStartValues.rotation
   let newScale = (currentValues.scale * eventValues.scale) / eventStartValues.scale
 
@@ -194,8 +192,8 @@ export function internalNewValuesForScaleRotateViaPan(
   currentValues: HammerAreaValues,
   currentDisplayValues: HammerAreaValues,
   currentProps: HammerAreaProps,
-  currentDimensions: { height: number, width: number },
-): { newDisplayValues: HammerAreaValues, newValues: HammerAreaValues } {
+  currentDimensions: { height: number; width: number }
+): { newDisplayValues: HammerAreaValues; newValues: HammerAreaValues } {
   const { height, width } = currentDimensions
   const deltaX = eventStartValues.x - eventValues.x
   const deltaY = eventStartValues.y - eventValues.y

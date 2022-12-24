@@ -1,8 +1,8 @@
-import { CSSProperties, ReactElement, useState } from "react";
-import { HammerAreaProps, HammerAreaValues } from "./hammerAreaTypes";
-import { InternalHammerArea } from "./HammerArea";
-import { InternalHammerAreaProps, InternalHammerOnChangeCallback } from "./hammerAreaTypesInternal";
-import styled from "styled-components";
+import { CSSProperties, ReactElement, useState } from 'react'
+import { HammerAreaProps, HammerAreaValues } from './hammerAreaTypes'
+import { InternalHammerArea } from './HammerArea'
+import { InternalHammerAreaProps, InternalHammerOnChangeCallback } from './hammerAreaTypesInternal'
+import styled from 'styled-components'
 
 const FiniteHammerAreaInner = styled.div.attrs({
   className: 'finite-hammer-area-inner',
@@ -14,9 +14,9 @@ const FiniteHammerAreaInner = styled.div.attrs({
 
 export function InternalFiniteHammerArea(props: InternalHammerAreaProps): ReactElement {
   const { children, onChangeInternal } = props
-  const [ displayValues, setDisplayValues ] = useState<HammerAreaValues>({ rotation: 0, scale: 1, x: 0, y: 0})
+  const [displayValues, setDisplayValues] = useState<HammerAreaValues>({ rotation: 0, scale: 1, x: 0, y: 0 })
 
-  const handleHammerAreaChange: InternalHammerOnChangeCallback = newData => {
+  const handleHammerAreaChange: InternalHammerOnChangeCallback = (newData) => {
     setDisplayValues(newData.newDisplayValues)
     if (onChangeInternal !== undefined) onChangeInternal(newData)
   }
@@ -26,7 +26,7 @@ export function InternalFiniteHammerArea(props: InternalHammerAreaProps): ReactE
       `translateX(${displayValues.x}px)`,
       `translateY(${displayValues.y}px)`,
       `rotate(${displayValues.rotation}deg)`,
-      `scale(${displayValues.scale * 100}%)`
+      `scale(${displayValues.scale * 100}%)`,
     ].join(' '),
   }
 

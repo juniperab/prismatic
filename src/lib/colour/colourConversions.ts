@@ -1,6 +1,6 @@
 import { HSLColor, RGBColor } from 'react-color'
 import convert from 'color-convert'
-import { euclideanDistance } from "../math/math";
+import { euclideanDistance } from '../math/math'
 
 // N.B. using the American spelling for these for consistency with the types from react-color
 export interface HSBColor {
@@ -95,7 +95,7 @@ function getHexAlpha(colour: HexColor): number | undefined {
   if (colour.length !== 9) {
     return undefined
   }
-  return parseInt(colour.slice(-2), 16) / 255 * 100
+  return (parseInt(colour.slice(-2), 16) / 255) * 100
 }
 
 function getNamedAlpha(_: NamedColor): number | undefined {
@@ -126,7 +126,7 @@ function hsbWithAlpha(colour: HSBColor, alpha: number | undefined): HSBColor {
 function hexWithAlpha(colour: HexColor, alpha: number | undefined): HexColor {
   const hexWithoutAlpha = colour.slice(0, 7)
   if (alpha === undefined) return asHex(hexWithoutAlpha)
-  const alphaString = Math.round(alpha * 255 / 100).toString(16)
+  const alphaString = Math.round((alpha * 255) / 100).toString(16)
   return asHex(`${hexWithoutAlpha}${alphaString}`)
 }
 
@@ -247,8 +247,8 @@ export function toCssColour(colour: AnyColor): string {
 export function chooseMostContrastingColour(baseColour: AnyColor, ...otherColours: AnyColor[]): AnyColor {
   const baseColourHSBQuad = toQuad(toHSB(baseColour))
   const distances = otherColours
-    .map(c => toQuad(toHSB(c)))
-    .map(cQuad => euclideanDistance(baseColourHSBQuad, cQuad))
+    .map((c) => toQuad(toHSB(c)))
+    .map((cQuad) => euclideanDistance(baseColourHSBQuad, cQuad))
   const maxDistanceIdx = distances.indexOf(Math.max(...distances))
   if (maxDistanceIdx < 0 || maxDistanceIdx >= otherColours.length) throw new Error('index out of bounds')
   return otherColours[maxDistanceIdx]

@@ -1,36 +1,33 @@
-import { CSSProperties, ReactElement } from "react";
+import { CSSProperties, ReactElement } from 'react'
 import { HintRowCell, HintRowOuter } from './hintGridLayout'
-import { Hint, HintItem, HintVisitor, HSBHint, visitHint } from "../../../lib/puzzle/hint/hint";
-import { AnyColor, chooseMostContrastingColour, toCssColour } from "../../../lib/colour/colourConversions";
+import { Hint, HintItem, HintVisitor, HSBHint, visitHint } from '../../../lib/puzzle/hint/hint'
+import { AnyColor, chooseMostContrastingColour, toCssColour } from '../../../lib/colour/colourConversions'
 
 export interface HintGridRowProps {
-  guess?: AnyColor | undefined,
-  hint?: Hint | undefined,
-  numCols: number,
+  guess?: AnyColor | undefined
+  hint?: Hint | undefined
+  numCols: number
 }
 
 function renderCell(
   key: number | string,
   colour: AnyColor | undefined,
   highlight: boolean,
-  symbol: string,
+  symbol: string
 ): ReactElement {
   // TODO: source the contrasting colour options from the theme
-  const contrastingColour = colour !== undefined
-    ? toCssColour(chooseMostContrastingColour(colour, 'white', 'black'))
-    : undefined
+  const contrastingColour =
+    colour !== undefined ? toCssColour(chooseMostContrastingColour(colour, 'white', 'black')) : undefined
   const style: CSSProperties = {
     backgroundColor: colour !== undefined ? toCssColour(colour) : undefined,
     color: contrastingColour,
     borderColor: contrastingColour,
   }
-  return <HintRowCell
-    data-highlight={highlight}
-    key={key}
-    style={style}
-  >
-    {symbol}
-  </HintRowCell>
+  return (
+    <HintRowCell data-highlight={highlight} key={key} style={style}>
+      {symbol}
+    </HintRowCell>
+  )
 }
 
 function renderHintItemCell(symbol: string, hintItem: HintItem | undefined): ReactElement {
@@ -50,7 +47,7 @@ function renderHintCellsHSB(hint: HSBHint): ReactElement[] {
 const renderCellsHintVisitor: HintVisitor<ReactElement[]> = {
   rgb: () => [],
   hsl: () => [],
-  hsb: hint => renderHintCellsHSB(hint)
+  hsb: (hint) => renderHintCellsHSB(hint),
 }
 
 export function HintGridRow(props: HintGridRowProps): ReactElement {
