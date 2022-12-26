@@ -2,7 +2,7 @@ import React, { ReactElement, useEffect } from 'react'
 import { ThemeProvider } from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
 import { ModalType, selectAppState, setActiveModal } from '../../../redux/app/appSlice'
-import { toHSB } from '../../../lib/colour/colourConversions'
+import { toNamed } from "../../../lib/colour/colourConversions";
 import { setCurrentColour, setStartingColour } from '../../../redux/puzzle/puzzleSlice'
 import { handleKeyDown, handleKeyUp } from './keyPressHandlers'
 import { getTheme } from '../../components/theme/themeRegistry'
@@ -15,6 +15,7 @@ import { UserModal } from '../modals/UserModal'
 import { SettingsModal } from '../modals/SettingsModal'
 import { PlayingView } from '../views/PlayingView'
 import { handleWindowResize, updateExtraVh } from './resizeHandlers'
+import { generateRandomColour } from "../../../lib/colour/colourMath";
 
 export function App(): ReactElement {
   const { theme } = useAppSelector(selectAppState)
@@ -22,10 +23,9 @@ export function App(): ReactElement {
 
   // initialize the colour picker with a random starting colour
   useEffect(() => {
-    const startingColour = toHSB('mediumseagreen') // toNamed(generateRandomColour())
-    // console.log(`non-random starting colour: h: ${startingColour.h}, s: ${startingColour.s}, b: ${startingColour.b}`)
-    // dispatch(setStartingColour(startingColour))
-    // dispatch(setCurrentColour(startingColour))
+    const startingColour = toNamed(generateRandomColour())
+    dispatch(setStartingColour(startingColour))
+    dispatch(setCurrentColour(startingColour))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
