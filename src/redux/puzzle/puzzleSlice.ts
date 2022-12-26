@@ -4,6 +4,7 @@ import { AnyColor, NamedColor, toHSB, toNamed } from '../../lib/colour/colourCon
 import { Hint } from '../../lib/puzzle/hint/hint'
 import { getPuzzleId, Puzzle, PuzzleId, PuzzleMode } from '../../lib/puzzle/puzzle'
 import { ClientPuzzleSpec, getNewPuzzle } from '../../lib/puzzle/puzzleServer'
+import { rotateHue } from "../../lib/colour/colourMath";
 
 export interface PuzzleState {
   answerName?: NamedColor
@@ -65,13 +66,7 @@ export const puzzleSlice = createSlice({
       state.startingColour = state.currentColour
     },
     setCurrentColour: (state, action: PayloadAction<AnyColor>) => {
-      const colourHSB = toHSB(action.payload)
-      const newColourHSB = {
-        h: colourHSB.h, // rotateHue(colourHSB.h, 90),
-        s: 50,
-        b: 50,
-      }
-      state.currentColour = newColourHSB
+      state.currentColour = action.payload
     },
     setStartingColour: (state, action: PayloadAction<AnyColor>) => {
       state.startingColour = action.payload

@@ -23,7 +23,7 @@ export interface ColourChooserProps {
 
   // callback triggered when the selection area is tapped
   onSelect?: () => void
-  colour: AnyColor
+  colour?: AnyColor
 }
 
 const initialOverlayState: OverlayState = {
@@ -31,10 +31,15 @@ const initialOverlayState: OverlayState = {
   ticksBeforeHide: 20,
 }
 
+const defaultInitialColour: AnyColor = 'mediumseagreen' // { h: 0, s: 50, b: 50 }
+
 export function ColourChooser(props: ColourChooserProps): ReactElement {
+  console.log('RENDER COLOUR CHOOSER START')
+  console.log(props)
   const { onChange, onChangeComplete, onSelect } = props
-  const propsColourHSB = toHSB(props.colour)
   const selectorRef = useRef<HTMLDivElement>(null)
+  const [propsColourHSB, setPropsColourHSB] = useState(toHSB(props.colour ?? defaultInitialColour))
+  const [newPropsColour, setNewPropsColour] = useState(true)
   const [width, setWidth] = useState(1)
   const [height, setHeight] = useState(1)
   const [hue, setHue] = useState(propsColourHSB.h)
@@ -43,6 +48,9 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
   const [overlay, showOverlay, tickOverlay] = useOverlayState(initialOverlayState)
   const [dragging, setDragging] = useState(false)
   const [selectionPending, setSelectionPending] = useState(false)
+
+  console.log(`[main] current props colour: (${propsColourHSB.h}, ${propsColourHSB.s}, ${propsColourHSB.b}) is ${newPropsColour ? 'new' : 'old'} `)
+  console.log(`[main] current state colour: (${hue}, ${saturation}, ${brightness})`)
 
   const updateHue: (rotation: number) => number = useCallback(
     (rotation) => {
@@ -75,32 +83,45 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
     [setBrightness, height]
   )
 
-  // useEffect(() => {
-  //   const hsb: HSBColor = toHSB(props.colour)
-  //   updateHue(hsb.h)
-  //   updateSaturation(hsb.s)
-  //   updateBrightness(hsb.b)
-  // }, [props, updateHue, updateSaturation, updateBrightness])
+  useEffect(() => {
+    console.log('[useEffect] ---')
+    console.log(props)
+    if (props.colour !== undefined) {
+      const newPropsColourHSB: HSBColor = toHSB(props.colour)
+      setHue(newPropsColourHSB.h)
+      setSaturation(newPropsColourHSB.s)
+      setBrightness(newPropsColourHSB.b)
+      setPropsColourHSB(newPropsColourHSB)
+      setNewPropsColour(true)
+      console.log(`[useEffect] new propsColour (${newPropsColourHSB.h}, ${newPropsColourHSB.s}, ${newPropsColourHSB.b})`)
+    }
+  }, [props, setHue, setSaturation, setBrightness])
 
   const handleHammerAreaChange: HammerOnChangeCallback = (newData) => {
-    // const { newValues, gestureComplete } = newData
-    // const { rotation, x, y } = newValues
-    // tickOverlay(1)
-    // setDragging(!gestureComplete)
-    // setSelectionPending(false)
-    // defaultTo(gestureComplete ? onChangeComplete : onChange, () => {})({
-    //   h: updateHue(rotation),
-    //   s: updateSaturation(x),
-    //   b: updateBrightness(y),
-    // })
+    const { newValues, gestureComplete } = newData
+    const { rotation, x, y } = newValues
+    console.log(`[handleHammerAreaChange] from hammer: r: ${rotation}, x: ${x}, y: ${y}`)
+    tickOverlay(1)
+    setDragging(!gestureComplete)
+    setSelectionPending(false)
+    setNewPropsColour(false)
+    const newColour = {
+      h: updateHue(rotation),
+      s: updateSaturation(x),
+      b: updateBrightness(y),
+    }
+    console.log(`[handleHammerAreaChange] new colour: (${newColour.h}, ${newColour.s}, ${newColour.b})`)
+    defaultTo(gestureComplete ? onChangeComplete : onChange, () => {})(newColour)
   }
 
   const handleHammerAreaResize: HammerOnResizeCallback = (width, height) => {
+    console.log(`[handleHammerAreaResize] w: ${width}, h: ${height}`)
     setWidth(width)
     setHeight(height)
   }
 
   const handleHammerAreaTap: HammerOnTapCallback = (x, y, target: HTMLElement) => {
+    console.log('[handleHammerAreaTap] ---')
     if (overlay.show) {
       showOverlay(false)
       return
@@ -120,10 +141,12 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
   const overlayStyle: CSSProperties = {
     backgroundColor: toCssColour({ h: hue, s: 50, b: 100, a: 50 }),
   }
+  const selectorColour = toCssColour({ h: hue, s: saturation, b: brightness })
   const selectionStyle: CSSProperties = {
-    backgroundColor: toCssColour({ h: hue, s: saturation, b: brightness }),
+    backgroundColor: selectorColour,
     cursor: dragging ? undefined : 'pointer',
   }
+  console.log(`[main] selector colour: (${hue}, ${saturation}, ${brightness}) = ${selectorColour}`)
 
   const underlayComponent = <ColourChooserHelpOverlay style={overlayStyle} visible={overlay.show} />
   const overlayComponent = selectionPending ? (
@@ -132,16 +155,22 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
     <ColourChooserSelection data-show={!overlay.show} ref={selectorRef} style={selectionStyle} />
   )
 
-  return (
+  const hammerValues = newPropsColour ? {
+    x: (50 - propsColourHSB.s) * width / 100,
+    y: (propsColourHSB.b - 50) * height / 100,
+    rotation: propsColourHSB.h,
+  } : undefined
+  if (hammerValues !== undefined) {
+    console.log(`[main] current size: w: ${width}, h: ${height}`)
+    console.log(`[main] to hammer: r: ${hammerValues.rotation}, x: ${hammerValues.x}, y: ${hammerValues.y}`)
+  }
+
+  const result = (
     <ColourChooserOuter>
       <InfiniteHammerArea
         clampScale={[1, 10]}
         lockRotation={true}
-        values={{
-          x: 206, // (propsColourHSB.s - 50) * width / 100,
-          y: 71, // (propsColourHSB.b - 50) * height / 100,
-          // rotation: propsColourHSB.h,
-        }}
+        values={hammerValues}
         mirrorTiles={true}
         onChange={handleHammerAreaChange}
         onResize={handleHammerAreaResize}
@@ -162,4 +191,6 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
       </InfiniteHammerArea>
     </ColourChooserOuter>
   )
+  console.log('RENDER COLOUR CHOOSER END')
+  return result
 }

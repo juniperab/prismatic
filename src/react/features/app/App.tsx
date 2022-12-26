@@ -23,9 +23,9 @@ export function App(): ReactElement {
   // initialize the colour picker with a random starting colour
   useEffect(() => {
     const startingColour = toHSB('mediumseagreen') // toNamed(generateRandomColour())
-    console.log(`non-random starting colour: h: ${startingColour.h}, s: ${startingColour.s}, b: ${startingColour.b}`)
-    dispatch(setStartingColour(startingColour))
-    dispatch(setCurrentColour(startingColour))
+    // console.log(`non-random starting colour: h: ${startingColour.h}, s: ${startingColour.s}, b: ${startingColour.b}`)
+    // dispatch(setStartingColour(startingColour))
+    // dispatch(setCurrentColour(startingColour))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

@@ -233,8 +233,13 @@ export function internalNewValuesFromProps(
   const prevPropsValues = withDefaults(prevPropsValuesPartial, currentValues)
   const newPropsValues = withDefaults(newPropsValuesPartial, currentValues)
   if (!valuesEquals(prevPropsValues, newPropsValues)) {
-    console.log('new values from props')
-    console.log(valuesDiff(currentValues, newPropsValues))
+    console.log('[HAMMER] new values from props:')
+    console.log(prevPropsValuesPartial)
+    console.log(prevPropsValues)
+    console.log(newPropsValuesPartial)
+    console.log(newPropsValues)
+    // console.log('new values from props diff:')
+    // console.log(valuesDiff(currentValues, newPropsValues))
     let newData = internalNewValuesForScaleRotate(
       { rotation: 0, scale: 1 },
       currentValues,
@@ -257,6 +262,8 @@ export function internalNewValuesFromProps(
       currentProps,
     )
     return newData
+  } else {
+    console.log('[HAMMER] values from props did not change')
   }
   return undefined
 }
