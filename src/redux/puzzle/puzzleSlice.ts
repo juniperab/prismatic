@@ -66,10 +66,7 @@ export const puzzleSlice = createSlice({
       state.startingColour = state.currentColour
     },
     setCurrentColour: (state, action: PayloadAction<AnyColor>) => {
-      const hsb = toHSB(action.payload)
-      hsb.h = rotateHue(hsb.h, 30)
-      hsb.s = Math.min(hsb.s * 1.25, 100)
-      state.currentColour = hsb
+      state.currentColour = action.payload
     },
     setStartingColour: (state, action: PayloadAction<AnyColor>) => {
       state.startingColour = action.payload
