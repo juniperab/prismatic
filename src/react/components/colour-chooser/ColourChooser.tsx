@@ -75,24 +75,24 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
     [setBrightness, height]
   )
 
-  useEffect(() => {
-    const hsb: HSBColor = toHSB(props.colour)
-    updateHue(hsb.h)
-    updateSaturation(hsb.s)
-    updateBrightness(hsb.b)
-  }, [props, updateHue, updateSaturation, updateBrightness])
+  // useEffect(() => {
+  //   const hsb: HSBColor = toHSB(props.colour)
+  //   updateHue(hsb.h)
+  //   updateSaturation(hsb.s)
+  //   updateBrightness(hsb.b)
+  // }, [props, updateHue, updateSaturation, updateBrightness])
 
   const handleHammerAreaChange: HammerOnChangeCallback = (newData) => {
-    const { newValues, gestureComplete } = newData
-    const { rotation, x, y } = newValues
-    tickOverlay(1)
-    setDragging(!gestureComplete)
-    setSelectionPending(false)
-    defaultTo(gestureComplete ? onChangeComplete : onChange, () => {})({
-      h: updateHue(rotation),
-      s: updateSaturation(x),
-      b: updateBrightness(y),
-    })
+    // const { newValues, gestureComplete } = newData
+    // const { rotation, x, y } = newValues
+    // tickOverlay(1)
+    // setDragging(!gestureComplete)
+    // setSelectionPending(false)
+    // defaultTo(gestureComplete ? onChangeComplete : onChange, () => {})({
+    //   h: updateHue(rotation),
+    //   s: updateSaturation(x),
+    //   b: updateBrightness(y),
+    // })
   }
 
   const handleHammerAreaResize: HammerOnResizeCallback = (width, height) => {
@@ -137,11 +137,11 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
       <InfiniteHammerArea
         clampScale={[1, 10]}
         lockRotation={true}
-        // values={{
-        //   x: (propsColourHSB.s - 50) * width / 100,
-        //   y: (propsColourHSB.b - 50) * height / 100,
-        //   rotation: propsColourHSB.h,
-        // }}
+        values={{
+          x: 206, // (propsColourHSB.s - 50) * width / 100,
+          y: 71, // (propsColourHSB.b - 50) * height / 100,
+          // rotation: propsColourHSB.h,
+        }}
         mirrorTiles={true}
         onChange={handleHammerAreaChange}
         onResize={handleHammerAreaResize}

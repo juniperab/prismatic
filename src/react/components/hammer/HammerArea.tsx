@@ -11,17 +11,16 @@ import {
   HammerOnTapCallback,
 } from './hammerAreaTypes'
 import {
-  HammerEventValues,
-  HammerOnUpdatePropValuesCallback,
+  InternalHammerOnUpdatePropValuesCallback,
   InternalHammerOnChangeCallback,
   InternalHammerAreaProps,
 } from './hammerAreaTypesInternal'
-import { valuesDiff, valuesEquals, withDefaults } from './hammerAreaFunctions'
+import { withDefaults } from './hammerAreaFunctions'
 import {
   internalNewValuesForPan,
   internalNewValuesForScaleRotate,
-  internalNewValuesForScaleRotateViaPan,
-} from './hammerAreaFunctionsInternal'
+  internalNewValuesForScaleRotateViaPan, internalNewValuesFromProps
+} from "./hammerAreaFunctionsInternal";
 import styled from 'styled-components'
 
 const defaultHammerAreaValues: HammerAreaValues = {
@@ -66,16 +65,32 @@ class _InternalHammerArea extends Component<_InternalHammerAreaProps> {
   private currentActionIsModified: boolean
   private currentValues: HammerAreaValues
   private currentDisplayValues: HammerAreaValues
-  private eventStartValues: HammerEventValues
+  private eventStartValues: HammerAreaValues
   private mostRecentEvent: HammerInput | undefined = undefined
 
   constructor(props: _InternalHammerAreaProps) {
     super(props)
-    this.currentValues = withDefaults(props.values, defaultHammerAreaValues)
-    this.currentDisplayValues = withDefaults(props.values, defaultHammerAreaDisplayValues)
+    this.currentValues = defaultHammerAreaValues
+    this.currentDisplayValues = defaultHammerAreaDisplayValues
     this.eventStartValues = this.currentValues
     this.currentAction = HammerAction.None
     this.currentActionIsModified = false
+
+    console.log(`initial props values: ${props.values?.x ?? '_'},${props.values?.y ?? '_'}`)
+    const newDataFromProps = internalNewValuesFromProps(
+      this.props.values,
+      undefined,
+      this.currentValues,
+      this.currentDisplayValues,
+      this.props,
+    )
+    if (newDataFromProps !== undefined) {
+      this.currentValues = newDataFromProps.newValues
+      this.currentDisplayValues = newDataFromProps.newDisplayValues
+      console.log(this.currentDisplayValues)
+      this.callOnUpdatePropValues(this.currentValues, this.currentDisplayValues)
+    }
+    console.log('finished updating data based on initial props')
   }
 
   private readonly callOnChange: InternalHammerOnChangeCallback = (newData) => {
@@ -99,8 +114,10 @@ class _InternalHammerArea extends Component<_InternalHammerAreaProps> {
     if (this.props.onTap !== undefined) this.props.onTap(x, y, target)
   }
 
-  private readonly callOnUpdatePropValues: HammerOnUpdatePropValuesCallback = (newValues) => {
+  private readonly callOnUpdatePropValues: InternalHammerOnUpdatePropValuesCallback =
+    (newValues, newDisplayValues)  => {
     console.log(`HammerArea onUpdatePropValues`)
+    if (this.props.onUpdatePropValues !== undefined) this.props.onUpdatePropValues(newValues, newDisplayValues)
   }
 
   private readonly handleHammerStartPan: (ev: HammerInput) => void = (ev) => {
@@ -126,11 +143,10 @@ class _InternalHammerArea extends Component<_InternalHammerAreaProps> {
   private readonly handleHammerProgressivePan: (ev: HammerInput) => void = (ev) => {
     if (this.currentAction !== HammerAction.Pan) return
     this.mostRecentEvent = ev
-    const eventValues: HammerEventValues = { rotation: ev.rotation, scale: ev.scale, x: ev.deltaX, y: ev.deltaY }
     if (this.currentActionIsModified) {
       this.callOnChange({
         ...internalNewValuesForScaleRotateViaPan(
-          eventValues,
+          { rotation: ev.rotation, scale: ev.scale, x: ev.deltaX, y: ev.deltaY },
           this.eventStartValues,
           this.currentValues,
           this.currentDisplayValues,
@@ -142,7 +158,7 @@ class _InternalHammerArea extends Component<_InternalHammerAreaProps> {
     } else {
       this.callOnChange({
         ...internalNewValuesForPan(
-          eventValues,
+          { x: ev.deltaX, y: ev.deltaY },
           this.eventStartValues,
           this.currentValues,
           this.currentDisplayValues,
@@ -161,10 +177,9 @@ class _InternalHammerArea extends Component<_InternalHammerAreaProps> {
   private readonly handleHammerProgressiveScaleRotate: (ev: HammerInput) => void = (ev) => {
     if (this.currentAction !== HammerAction.ScaleRotate) return
     this.mostRecentEvent = ev
-    const eventValues: HammerEventValues = { rotation: ev.rotation, scale: ev.scale, x: ev.deltaX, y: ev.deltaY }
     this.callOnChange({
       ...internalNewValuesForScaleRotate(
-        eventValues,
+        { rotation: ev.rotation, scale: ev.scale },
         this.eventStartValues,
         this.currentValues,
         this.currentDisplayValues,
@@ -185,11 +200,10 @@ class _InternalHammerArea extends Component<_InternalHammerAreaProps> {
     if (this.currentAction !== HammerAction.Pan) return
     this.currentAction = HammerAction.None
     this.mostRecentEvent = undefined
-    const eventValues: HammerEventValues = { rotation: ev.rotation, scale: ev.scale, x: ev.deltaX, y: ev.deltaY }
     let newData
     if (this.currentActionIsModified) {
       newData = internalNewValuesForScaleRotateViaPan(
-        eventValues,
+        { rotation: ev.rotation, scale: ev.scale, x: ev.deltaX, y: ev.deltaY },
         this.eventStartValues,
         this.currentValues,
         this.currentDisplayValues,
@@ -198,7 +212,7 @@ class _InternalHammerArea extends Component<_InternalHammerAreaProps> {
       )
     } else {
       newData = internalNewValuesForPan(
-        eventValues,
+        { x: ev.deltaX, y: ev.deltaY },
         this.eventStartValues,
         this.currentValues,
         this.currentDisplayValues,
@@ -230,9 +244,8 @@ class _InternalHammerArea extends Component<_InternalHammerAreaProps> {
     this.currentAction = HammerAction.None
     this.currentActionIsModified = false
     this.mostRecentEvent = undefined
-    const eventValues: HammerEventValues = { rotation: ev.rotation, scale: ev.scale, x: ev.deltaX, y: ev.deltaY }
     const newData = internalNewValuesForScaleRotate(
-      eventValues,
+      { rotation: ev.rotation, scale: ev.scale },
       this.eventStartValues,
       this.currentValues,
       this.currentDisplayValues,
@@ -317,13 +330,19 @@ class _InternalHammerArea extends Component<_InternalHammerAreaProps> {
     ) {
       this.callOnResize(this.props.containerWidth, this.props.containerHeight)
     }
-    const newValues = withDefaults(this.props.values, this.currentValues)
-    if (!valuesEquals(this.currentValues, newValues)) {
-      console.log('new values from props')
-      const changedValues = valuesDiff(this.currentValues, newValues)
-      console.log(changedValues)
-      this.currentValues = newValues
-      this.callOnUpdatePropValues(newValues)
+
+    const newDataFromProps = internalNewValuesFromProps(
+      this.props.values,
+      prevProps.values,
+      this.currentValues,
+      this.currentDisplayValues,
+      this.props,
+    )
+    if (newDataFromProps !== undefined) {
+      this.currentValues = newDataFromProps.newValues
+      this.currentDisplayValues = newDataFromProps.newDisplayValues
+      console.log(this.currentDisplayValues)
+      this.callOnUpdatePropValues(this.currentValues, this.currentDisplayValues)
     }
   }
 
@@ -382,6 +401,7 @@ export function InternalHammerArea(props: InternalHammerAreaProps): ReactElement
   )
 }
 
+// noinspection JSUnusedGlobalSymbols
 /**
  * An area of the screen in which one- and two-fingers gestures can be used to
  * pan, zoom, and rotate.

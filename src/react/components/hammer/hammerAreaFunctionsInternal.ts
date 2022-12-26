@@ -1,6 +1,5 @@
-import { HammerEventValues } from './hammerAreaTypesInternal'
 import { HammerAreaProps, HammerAreaValues } from './hammerAreaTypes'
-import { clampValue } from './hammerAreaFunctions'
+import { clampValue, valuesDiff, valuesEquals, withDefaults } from "./hammerAreaFunctions";
 import { euclideanDistance } from '../../../lib/math/math'
 
 /**
@@ -19,8 +18,8 @@ import { euclideanDistance } from '../../../lib/math/math'
  * @private                     the adjusted baseline values
  */
 export function internalNewValuesForPan(
-  eventValues: HammerEventValues,
-  eventStartValues: HammerEventValues,
+  eventValues: { x: number, y: number },
+  eventStartValues: { x: number, y: number },
   currentValues: HammerAreaValues,
   currentDisplayValues: HammerAreaValues,
   currentProps: HammerAreaProps
@@ -75,10 +74,6 @@ export function internalNewValuesForPan(
  * Compute what the new baseline values would be for a scale/rotate event,
  * given the event input.
  *
- * The input is assumed to be a 'scale/rotate' event,
- * so the scale and rotation of the input are considered,
- * while deltaX and deltaY are ignored.
- *
  * @param eventValues           the current values of event
  * @param eventStartValues      the initial values at the beginning of the event
  * @param currentValues         the current baseline values
@@ -87,8 +82,8 @@ export function internalNewValuesForPan(
  * @private                     the adjusted baseline values
  */
 export function internalNewValuesForScaleRotate(
-  eventValues: HammerEventValues,
-  eventStartValues: HammerEventValues,
+  eventValues: { rotation: number, scale: number },
+  eventStartValues: { rotation: number, scale: number },
   currentValues: HammerAreaValues,
   currentDisplayValues: HammerAreaValues,
   currentProps: HammerAreaProps
@@ -187,8 +182,8 @@ export function internalNewValuesForScaleRotate(
  * @private                     the adjusted baseline values
  */
 export function internalNewValuesForScaleRotateViaPan(
-  eventValues: HammerEventValues,
-  eventStartValues: HammerEventValues,
+  eventValues: HammerAreaValues,
+  eventStartValues: HammerAreaValues,
   currentValues: HammerAreaValues,
   currentDisplayValues: HammerAreaValues,
   currentProps: HammerAreaProps,
@@ -216,4 +211,52 @@ export function internalNewValuesForScaleRotateViaPan(
     currentDisplayValues,
     currentProps
   )
+}
+
+/**
+ * Compute what the new baseline values would be as the result of an update
+ * to the HammerArea's props.values.
+ *
+ * @param newPropsValuesPartial     the values specified by the newly updated props
+ * @param prevPropsValuesPartial    the previously specified values from the old props
+ * @param currentValues             the current baseline values
+ * @param currentDisplayValues      the current baseline display values
+ * @param currentProps              the current props
+ */
+export function internalNewValuesFromProps(
+  newPropsValuesPartial: Partial<HammerAreaValues> | undefined,
+  prevPropsValuesPartial: Partial<HammerAreaValues> | undefined,
+  currentValues: HammerAreaValues,
+  currentDisplayValues: HammerAreaValues,
+  currentProps: HammerAreaProps,
+): { newDisplayValues: HammerAreaValues; newValues: HammerAreaValues } | undefined {
+  const prevPropsValues = withDefaults(prevPropsValuesPartial, currentValues)
+  const newPropsValues = withDefaults(newPropsValuesPartial, currentValues)
+  if (!valuesEquals(prevPropsValues, newPropsValues)) {
+    console.log('new values from props')
+    console.log(valuesDiff(currentValues, newPropsValues))
+    let newData = internalNewValuesForScaleRotate(
+      { rotation: 0, scale: 1 },
+      currentValues,
+      currentValues,
+      currentDisplayValues,
+      currentProps,
+    )
+    newData = internalNewValuesForPan(
+      newPropsValues,
+      newData.newValues,
+      newData.newValues,
+      newData.newDisplayValues,
+      currentProps,
+    )
+    newData = internalNewValuesForScaleRotate(
+      newPropsValues,
+      newData.newValues,
+      newData.newValues,
+      newData.newDisplayValues,
+      currentProps,
+    )
+    return newData
+  }
+  return undefined
 }

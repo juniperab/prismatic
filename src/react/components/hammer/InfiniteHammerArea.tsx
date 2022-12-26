@@ -1,7 +1,11 @@
 import { CSSProperties, ReactElement, useState } from 'react'
 import { euclideanDistance } from '../../../lib/math/math'
 import { HammerAreaProps, HammerOnResizeCallback } from './hammerAreaTypes'
-import { InternalHammerAreaProps, InternalHammerOnChangeCallback } from './hammerAreaTypesInternal'
+import {
+  InternalHammerAreaProps,
+  InternalHammerOnChangeCallback,
+  InternalHammerOnUpdatePropValuesCallback
+} from "./hammerAreaTypesInternal";
 import { InternalFiniteHammerArea } from './FiniteHammerArea'
 import styled from 'styled-components'
 
@@ -21,7 +25,7 @@ const InfiniteHammerAreaTile = styled.div.attrs({
 `
 
 export function InternalInfiniteHammerArea(props: InternalInfiniteHammerAreaProps): ReactElement {
-  const { onChangeInternal } = props
+  const { onChangeInternal, onUpdatePropValues } = props
   const [width, setWidth] = useState(1)
   const [height, setHeight] = useState(1)
   const [r, setR] = useState(0)
@@ -43,6 +47,15 @@ export function InternalInfiniteHammerArea(props: InternalInfiniteHammerAreaProp
     setHeight(height)
     if (props.onResize !== undefined) props.onResize(width, height)
   }
+
+  const handleHammerAreaUpdatePropValues: InternalHammerOnUpdatePropValuesCallback =
+    (newValues, newDisplayValues) => {
+      setR(newDisplayValues.rotation)
+      setS(newDisplayValues.scale)
+      setX(newDisplayValues.x)
+      setY(newDisplayValues.y)
+      if (onUpdatePropValues !== undefined) onUpdatePropValues(newValues, newDisplayValues)
+    }
 
   // calculate the tile shifts necessary so that the viewable area is always filled
   const hypotenuse = euclideanDistance([x, y])
@@ -86,7 +99,12 @@ export function InternalInfiniteHammerArea(props: InternalInfiniteHammerAreaProp
   }
 
   return (
-    <InternalFiniteHammerArea {...props} onChangeInternal={handleHammerAreaChange} onResize={handleHammerAreaResize}>
+    <InternalFiniteHammerArea
+      {...props}
+      onChangeInternal={handleHammerAreaChange}
+      onResize={handleHammerAreaResize}
+      onUpdatePropValues={handleHammerAreaUpdatePropValues}
+    >
       {tiles}
     </InternalFiniteHammerArea>
   )
