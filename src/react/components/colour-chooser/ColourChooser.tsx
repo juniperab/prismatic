@@ -45,6 +45,8 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
   const [hue, setHue] = useState(propsColourHSB.h)
   const [saturation, setSaturation] = useState(propsColourHSB.s)
   const [brightness, setBrightness] = useState(propsColourHSB.b)
+  const [saturationTile, setSaturationTile] = useState(0)
+  const [brightnessTile, setBrightnessTile] = useState(0)
   const [overlay, showOverlay, tickOverlay] = useOverlayState(initialOverlayState)
   const [dragging, setDragging] = useState(false)
   const [selectionPending, setSelectionPending] = useState(false)
@@ -64,6 +66,7 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
   const updateSaturation: (x: number) => number = useCallback(
     (x) => {
       const pctX = x / Math.max(width, 1)
+      setSaturationTile(Math.floor(pctX + 0.5))
       let newSaturation = Math.abs(-1 * pctX * 100 + 50) % 200
       newSaturation = newSaturation > 100 ? 200 - newSaturation : newSaturation
       setSaturation(newSaturation)
@@ -75,6 +78,7 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
   const updateBrightness: (y: number) => number = useCallback(
     (y) => {
       const pctY = y / Math.max(height, 1)
+      setBrightnessTile(Math.floor(pctY + 0.5))
       let newBrightness = Math.abs(pctY * 100 + 50) % 200
       newBrightness = newBrightness > 100 ? 200 - newBrightness : newBrightness
       setBrightness(newBrightness)
@@ -88,14 +92,17 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
     console.log(props)
     if (props.colour !== undefined) {
       const newPropsColourHSB: HSBColor = toHSB(props.colour)
-      setHue(newPropsColourHSB.h)
-      setSaturation(newPropsColourHSB.s)
-      setBrightness(newPropsColourHSB.b)
-      setPropsColourHSB(newPropsColourHSB)
-      setNewPropsColour(true)
-      console.log(`[useEffect] new propsColour (${newPropsColourHSB.h}, ${newPropsColourHSB.s}, ${newPropsColourHSB.b})`)
+      if (propsColourHSB !== newPropsColourHSB) {
+        setHue(newPropsColourHSB.h)
+        setSaturation(newPropsColourHSB.s)
+        setBrightness(newPropsColourHSB.b)
+        setPropsColourHSB(newPropsColourHSB)
+        setNewPropsColour(true)
+        console.log(`[useEffect] new propsColour (${newPropsColourHSB.h}, ${newPropsColourHSB.s}, ${newPropsColourHSB.b})`)
+      }
     }
-  }, [props, setHue, setSaturation, setBrightness])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props])
 
   const handleHammerAreaChange: HammerOnChangeCallback = (newData) => {
     const { newValues, gestureComplete } = newData
@@ -155,12 +162,15 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
     <ColourChooserSelection data-show={!overlay.show} ref={selectorRef} style={selectionStyle} />
   )
 
+  console.log(`[main] tiles: s: ${saturationTile}, b: ${brightnessTile}`)
   const hammerValues = newPropsColour ? {
-    x: (50 - propsColourHSB.s) * width / 100,
-    y: (propsColourHSB.b - 50) * height / 100,
+    x: (50 - propsColourHSB.s) * width / 100, // - (width * saturationTile),
+    y: (propsColourHSB.b - 50) * height / 100, // - (height * brightnessTile),
     rotation: propsColourHSB.h,
   } : undefined
   if (hammerValues !== undefined) {
+    if (saturationTile % 2 !== 0) hammerValues.x = width - hammerValues.x
+    if (brightnessTile % 2 !== 0) hammerValues.y = height - hammerValues.y
     console.log(`[main] current size: w: ${width}, h: ${height}`)
     console.log(`[main] to hammer: r: ${hammerValues.rotation}, x: ${hammerValues.x}, y: ${hammerValues.y}`)
   }
