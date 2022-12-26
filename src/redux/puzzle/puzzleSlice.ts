@@ -1,10 +1,10 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { AppThunk, RootState } from '../store'
-import { AnyColor, isNamed, NamedColor, toHSB, toNamed } from '../../lib/colour/colourConversions'
+import { AnyColor, NamedColor, toHSB, toNamed } from '../../lib/colour/colourConversions'
 import { Hint } from '../../lib/puzzle/hint/hint'
 import { getPuzzleId, Puzzle, PuzzleId, PuzzleMode } from '../../lib/puzzle/puzzle'
-import { getPuzzleAnswerFromServer, submitGuessToServer } from './puzzleClient'
 import { ClientPuzzleSpec, getNewPuzzle } from '../../lib/puzzle/puzzleServer'
+import { rotateHue } from "../../lib/colour/colourMath";
 
 export interface PuzzleState {
   answerName?: NamedColor
@@ -74,7 +74,8 @@ export const puzzleSlice = createSlice({
   },
 })
 
-export const { giveUp, makeGuess, receiveAnswer, receiveHint, resetPuzzleState, setCurrentColour, setStartingColour } = puzzleSlice.actions
+export const { giveUp, makeGuess, receiveAnswer, receiveHint, resetPuzzleState, setCurrentColour, setStartingColour } =
+  puzzleSlice.actions
 export const selectPuzzleState = (state: RootState): PuzzleState => state.puzzle
 export default puzzleSlice.reducer
 
