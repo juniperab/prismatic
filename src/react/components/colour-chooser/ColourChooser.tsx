@@ -49,6 +49,7 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
   const [saturation, setSaturation] = useState(propsColourHSB.s)
   const [saturationTile, setSaturationTile] = useState(0)
   const [selectionPending, setSelectionPending] = useState(false)
+  const [visible, setVisible] = useState(false)
   const [width, setWidth] = useState(1)
 
   const updateHue: (rotation: number) => number = useCallback(
@@ -95,6 +96,7 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
         setHasNewPropsColour(true)
       }
     }
+    setVisible(true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props])
 
@@ -165,7 +167,7 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
   }
 
   return (
-    <ColourChooserOuter>
+    <ColourChooserOuter data-show={visible}>
       <InfiniteHammerArea
         clampScale={[1, 10]}
         lockRotation={true}

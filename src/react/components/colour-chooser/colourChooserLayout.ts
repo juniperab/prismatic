@@ -28,6 +28,7 @@ export const ColourChooserOuter = styled.div.attrs({
   position: relative;
   width: 100%;
   z-index: 1;
+  ${(props) => fadeInOut((props as any)['data-show'])}
 `
 
 export const ColourChooserInner = styled.div.attrs({
