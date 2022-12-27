@@ -1,5 +1,5 @@
 import { HammerAreaProps, HammerAreaValues } from './hammerAreaTypes'
-import { clampValue, valuesDiff, valuesEquals, withDefaults } from "./hammerAreaFunctions";
+import { clampValue, valuesEquals, withDefaults } from "./hammerAreaFunctions";
 import { euclideanDistance } from '../../../lib/math/math'
 
 /**

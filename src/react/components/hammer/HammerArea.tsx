@@ -76,7 +76,6 @@ class _InternalHammerArea extends Component<_InternalHammerAreaProps> {
     this.currentAction = HammerAction.None
     this.currentActionIsModified = false
 
-    // console.log(`initial props values: ${props.values?.x ?? '_'},${props.values?.y ?? '_'}`)
     const newDataFromProps = internalNewValuesFromProps(
       this.props.values,
       undefined,
@@ -87,36 +86,25 @@ class _InternalHammerArea extends Component<_InternalHammerAreaProps> {
     if (newDataFromProps !== undefined) {
       this.currentValues = newDataFromProps.newValues
       this.currentDisplayValues = newDataFromProps.newDisplayValues
-      // console.log(this.currentDisplayValues)
       this.callOnUpdatePropValues(this.currentValues, this.currentDisplayValues)
     }
-    // console.log('finished updating data based on initial props')
   }
 
   private readonly callOnChange: InternalHammerOnChangeCallback = (newData) => {
-    const { newValues, gestureComplete } = newData
-    // console.log(`HammerArea onChange${gestureComplete ? ' (complete)' : ''}`)
-    if (gestureComplete) {
-      // console.log(`change x ${newValues.x}`)
-      // console.log(`change y ${newValues.y}`)
-    }
     if (this.props.onChange !== undefined) this.props.onChange(newData)
     if (this.props.onChangeInternal !== undefined) this.props.onChangeInternal(newData)
   }
 
   private readonly callOnResize: HammerOnResizeCallback = (width: number, height: number) => {
-    // console.log(`HammerArea onResize (width: ${width}, height: ${height}`)
     if (this.props.onResize !== undefined) this.props.onResize(width, height)
   }
 
   private readonly callOnTap: HammerOnTapCallback = (x, y, target) => {
-    // console.log(`HammerArea onTap (x: ${x}, y: ${y}`)
     if (this.props.onTap !== undefined) this.props.onTap(x, y, target)
   }
 
   private readonly callOnUpdatePropValues: InternalHammerOnUpdatePropValuesCallback =
     (newValues, newDisplayValues)  => {
-    // console.log(`HammerArea onUpdatePropValues`)
     if (this.props.onUpdatePropValues !== undefined) this.props.onUpdatePropValues(newValues, newDisplayValues)
   }
 
@@ -185,7 +173,7 @@ class _InternalHammerArea extends Component<_InternalHammerAreaProps> {
         this.currentDisplayValues,
         this.props
       ),
-      gestureComplete: true,
+      gestureComplete: false,
     })
   }
 
@@ -341,7 +329,6 @@ class _InternalHammerArea extends Component<_InternalHammerAreaProps> {
     if (newDataFromProps !== undefined) {
       this.currentValues = newDataFromProps.newValues
       this.currentDisplayValues = newDataFromProps.newDisplayValues
-      // console.log(this.currentDisplayValues)
       this.callOnUpdatePropValues(this.currentValues, this.currentDisplayValues)
     }
   }
