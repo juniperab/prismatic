@@ -1,5 +1,7 @@
 import styled from 'styled-components'
 import { fadeInOut } from "../theme/styles/fadeInOut";
+import { windowLayout } from "../page/windowLayout";
+import { Icon } from "../theme/elements/Icon";
 
 export const colourChooserLayout = {
   container: {
@@ -9,6 +11,9 @@ export const colourChooserLayout = {
     fadeInOut: (show: any) => fadeInOut(show['data-show'], 0.5, 0.5),
     section: {
       padding: 10,
+    },
+    buttons: {
+      size: 40,
     }
   },
   selector: {
@@ -29,6 +34,14 @@ export const ColourChooserOuter = styled.div.attrs({
   ${props => colourChooserLayout.container.fadeIn(props)}
 `
 
+export const ColourChooserOuterFullscreen = styled(ColourChooserOuter)`
+  position: fixed;
+  top: -${windowLayout.padding.topBottom}px;
+  left: -${windowLayout.padding.side}px;
+  height: calc(100vh - var(--extra-vh, 0px));
+  width: 100vw;
+`
+
 export const ColourChooserInner = styled.div.attrs({
   className: 'colour-chooser-inner',
 })`
@@ -36,6 +49,28 @@ export const ColourChooserInner = styled.div.attrs({
   height: 100%;
   position: relative;
   width: 100%;
+`
+
+export const ColourChooserOverlay = styled.div`
+  ${props => colourChooserLayout.selector.fadeInOut(props)}
+`
+
+export const ColourChooserHelpButton = styled(Icon)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: ${colourChooserLayout.overlay.buttons.size}px;
+  width: ${colourChooserLayout.overlay.buttons.size}px;
+  cursor: pointer;
+`
+
+export const ColourChooserFullscreenToggle = styled(Icon)`
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: ${colourChooserLayout.overlay.buttons.size}px;
+  width: ${colourChooserLayout.overlay.buttons.size}px;
+  cursor: pointer;
 `
 
 export const ColourChooserSelection = styled.div.attrs({
@@ -51,7 +86,6 @@ export const ColourChooserSelection = styled.div.attrs({
   top: 50%;
   transform: translate(-50%, -50%);
   width: ${colourChooserLayout.selector.diameter}px;
-  ${props => colourChooserLayout.selector.fadeInOut(props)}
 `
 
 export const ColourChooserSelectionPending = styled(ColourChooserSelection)`

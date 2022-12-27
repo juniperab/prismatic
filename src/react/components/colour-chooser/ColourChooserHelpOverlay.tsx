@@ -3,17 +3,20 @@ import pinchZoomImage from './PinchZoom.png'
 import swipeImage from './Swipe.png'
 import rotateImage from './Rotate.png'
 import modifiedDragImage from './ModifiedDrag.png'
-import { ColourChooserOverlay, ColourChooserOverlaySection } from './colourChooserOverlayLayout'
+import { ColourChooserHelpOverlayOuter, ColourChooserHelpOverlaySection } from './colourChooserOverlayLayout'
 import { isMobile } from 'react-device-detect'
 
-export interface OverlayState {
+export interface HelpOverlayState {
   show: boolean
   ticksBeforeHide: number
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function overlayStateFunctions(initialState: OverlayState, setState: Dispatch<SetStateAction<OverlayState>>) {
-  const addOverlayTicks = (ticks: number): void =>
+function helpOverlayStateFunctions(
+  initialState: HelpOverlayState,
+  setState: Dispatch<SetStateAction<HelpOverlayState>>
+) {
+  const addHelpOverlayTicks = (ticks: number): void =>
     setState((prev) => {
       const newTicks = prev.ticksBeforeHide - ticks
       return {
@@ -23,12 +26,12 @@ function overlayStateFunctions(initialState: OverlayState, setState: Dispatch<Se
       }
     })
 
-  const hideOverlay = (): void =>
+  const hideHelpOverlay = (): void =>
     setState((prev) => {
       return { ...prev, show: false }
     })
 
-  const showOverlay = (): void =>
+  const showHelpOverlay = (): void =>
     setState((prev) => {
       return {
         ...prev,
@@ -37,15 +40,15 @@ function overlayStateFunctions(initialState: OverlayState, setState: Dispatch<Se
       }
     })
 
-  return { addOverlayTicks, hideOverlay, showOverlay }
+  return { addHelpOverlayTicks, hideHelpOverlay, showHelpOverlay }
 }
 
-export function useOverlayState(
-  initialState: OverlayState
-): [OverlayState, (show: boolean) => void, (ticks: number) => void] {
-  const [overlay, setOverlay] = useState(initialState)
-  const { hideOverlay, showOverlay, addOverlayTicks } = overlayStateFunctions(initialState, setOverlay)
-  return [overlay, (show: boolean) => (show ? showOverlay() : hideOverlay()), addOverlayTicks]
+export function useHelpOverlayState(
+  initialState: HelpOverlayState
+): [HelpOverlayState, (show: boolean) => void, (ticks: number) => void] {
+  const [helpOverlay, setHelpOverlay] = useState(initialState)
+  const { hideHelpOverlay, showHelpOverlay, addHelpOverlayTicks } = helpOverlayStateFunctions(initialState, setHelpOverlay)
+  return [helpOverlay, (show: boolean) => (show ? showHelpOverlay() : hideHelpOverlay()), addHelpOverlayTicks]
 }
 
 export interface ColourChooserHelpOverlayProps {
@@ -55,33 +58,33 @@ export interface ColourChooserHelpOverlayProps {
 
 const overlayContentsMobile = (
   <>
-    <ColourChooserOverlaySection>
+    <ColourChooserHelpOverlaySection>
       <img alt="zoom" src={pinchZoomImage} />
-    </ColourChooserOverlaySection>
-    <ColourChooserOverlaySection>
+    </ColourChooserHelpOverlaySection>
+    <ColourChooserHelpOverlaySection>
       <img alt="swipe" src={swipeImage} />
-    </ColourChooserOverlaySection>
-    <ColourChooserOverlaySection>
+    </ColourChooserHelpOverlaySection>
+    <ColourChooserHelpOverlaySection>
       <img alt="rotate" src={rotateImage} />
-    </ColourChooserOverlaySection>
+    </ColourChooserHelpOverlaySection>
   </>
 )
 const overlayContentsDesktop = (
   <>
-    <ColourChooserOverlaySection>
+    <ColourChooserHelpOverlaySection>
       <img alt="drag" src={swipeImage} />
-    </ColourChooserOverlaySection>
-    <ColourChooserOverlaySection>
+    </ColourChooserHelpOverlaySection>
+    <ColourChooserHelpOverlaySection>
       <img alt="drag (modified)" src={modifiedDragImage} />
-    </ColourChooserOverlaySection>
+    </ColourChooserHelpOverlaySection>
   </>
 )
 
 export function ColourChooserHelpOverlay(props: ColourChooserHelpOverlayProps): ReactElement {
   const { style, visible } = props
   return (
-    <ColourChooserOverlay style={style} data-show={visible}>
+    <ColourChooserHelpOverlayOuter style={style} data-show={visible}>
       {isMobile ? overlayContentsMobile : overlayContentsDesktop}
-    </ColourChooserOverlay>
+    </ColourChooserHelpOverlayOuter>
   )
 }

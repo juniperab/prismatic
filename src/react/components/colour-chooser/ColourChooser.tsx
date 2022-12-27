@@ -1,16 +1,19 @@
 import { CSSProperties, ReactElement, useCallback, useEffect, useRef, useState } from 'react'
 import {
+  ColourChooserFullscreenToggle, ColourChooserHelpButton,
   ColourChooserInner,
-  ColourChooserOuter,
+  ColourChooserOuter, ColourChooserOuterFullscreen, ColourChooserOverlay,
   ColourChooserSelection,
-  ColourChooserSelectionPending,
-} from './colourChooserLayout'
+  ColourChooserSelectionPending
+} from "./colourChooserLayout";
 import { InfiniteHammerArea } from '../hammer/InfiniteHammerArea'
 import { AnyColor, HSBColor, toCssColour, toHSB } from '../../../lib/colour/colourConversions'
 import { rotateHue } from '../../../lib/colour/colourMath'
-import { ColourChooserHelpOverlay, OverlayState, useOverlayState } from './ColourChooserHelpOverlay'
+import { ColourChooserHelpOverlay, HelpOverlayState, useHelpOverlayState } from './ColourChooserHelpOverlay'
 import { defaultTo } from 'lodash'
 import { HammerOnChangeCallback, HammerOnResizeCallback, HammerOnTapCallback } from '../hammer/hammerAreaTypes'
+import { useTheme } from "styled-components";
+import { Theme } from "../theme/theme";
 
 export type NewColourCallback = (colour: HSBColor) => void
 
@@ -26,8 +29,8 @@ export interface ColourChooserProps {
   colour?: AnyColor
 }
 
-const initialOverlayState: OverlayState = {
-  show: false, // TODO: either make this 'true' or add a way to manually show it
+const initialHelpOverlayState: HelpOverlayState = {
+  show: false,
   ticksBeforeHide: 20,
 }
 
@@ -39,13 +42,17 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
   const [hasNewPropsColour, setHasNewPropsColour] = useState(true)
 
   const selectorRef = useRef<HTMLDivElement>(null)
+  const helpButtonRef = useRef<HTMLDivElement>(null)
+  const fullscreenToggleRef = useRef<HTMLDivElement>(null)
+  const theme = useTheme() as Theme
 
   const [brightness, setBrightness] = useState(propsColourHSB.b)
   const [brightnessTile, setBrightnessTile] = useState(0)
   const [dragging, setDragging] = useState(false)
+  const [fullscreen, setFullscreen] = useState(false)
   const [height, setHeight] = useState(1)
   const [hue, setHue] = useState(propsColourHSB.h)
-  const [overlay, showOverlay, tickOverlay] = useOverlayState(initialOverlayState)
+  const [helpOverlay, showHelpOverlay, tickHelpOverlay] = useHelpOverlayState(initialHelpOverlayState)
   const [saturation, setSaturation] = useState(propsColourHSB.s)
   const [saturationTile, setSaturationTile] = useState(0)
   const [selectionPending, setSelectionPending] = useState(false)
@@ -103,7 +110,7 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
   const handleHammerAreaChange: HammerOnChangeCallback = (newData) => {
     const { newValues, gestureComplete } = newData
     const { rotation, x, y } = newValues
-    tickOverlay(1)
+    tickHelpOverlay(1)
     setDragging(!gestureComplete)
     setSelectionPending(false)
     setHasNewPropsColour(false)
@@ -121,11 +128,13 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
   }
 
   const handleHammerAreaTap: HammerOnTapCallback = (x, y, target: HTMLElement) => {
-    if (overlay.show) {
-      showOverlay(false)
+    console.log(target)
+    if (helpOverlay.show) {
+      showHelpOverlay(false)
     } else if (target === selectorRef.current) {
       setSelectionPending(!selectionPending)
       if (selectionPending && onSelect !== undefined) onSelect()
+      if (selectionPending) setFullscreen(false)
     } else {
       setSelectionPending(false)
     }
@@ -139,7 +148,7 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
   const innerStyle: CSSProperties = {
     backgroundColor: `hsl(${hue}, 100%, 50%)`,
   }
-  const overlayStyle: CSSProperties = {
+  const helpOverlayStyle: CSSProperties = {
     backgroundColor: toCssColour({ h: hue, s: 50, b: 100, a: 50 }),
   }
   const selectionStyle: CSSProperties = {
@@ -148,12 +157,22 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
   }
 
 
-  const underlayComponent = <ColourChooserHelpOverlay style={overlayStyle} visible={overlay.show} />
+  const helpOverlapComponent = <ColourChooserHelpOverlay style={helpOverlayStyle} visible={helpOverlay.show} />
 
-  const overlayComponent = selectionPending ? (
-    <ColourChooserSelectionPending data-show={!overlay.show} ref={selectorRef} style={selectionStyle} />
-  ) : (
-    <ColourChooserSelection data-show={!overlay.show} ref={selectorRef} style={selectionStyle} />
+  const overlayComponent = (
+    <ColourChooserOverlay data-show={!helpOverlay.show}>
+      <ColourChooserHelpButton color='white' onClick={() => showHelpOverlay(true)}>
+        <theme.icons.question.svg />
+      </ColourChooserHelpButton>
+      <ColourChooserFullscreenToggle color='white' onClick={() => setFullscreen(!fullscreen)}>
+        { fullscreen ? <theme.icons.minimize.svg /> : <theme.icons.expand.svg /> }
+      </ColourChooserFullscreenToggle>
+      { selectionPending ? (
+        <ColourChooserSelectionPending ref={selectorRef} style={selectionStyle} />
+      ) : (
+        <ColourChooserSelection ref={selectorRef} style={selectionStyle} />
+      )}
+    </ColourChooserOverlay>
   )
 
   const hammerValues = hasNewPropsColour ? {
@@ -166,22 +185,32 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
     if (brightnessTile % 2 !== 0) hammerValues.y = height - hammerValues.y
   }
 
+  const colourChooserContents = (
+    <InfiniteHammerArea
+      clampScale={[1, 10]}
+      lockRotation={true}
+      values={hammerValues}
+      mirrorTiles={true}
+      onChange={handleHammerAreaChange}
+      onResize={handleHammerAreaResize}
+      onTap={handleHammerAreaTap}
+      underlay={helpOverlapComponent}
+      overlay={overlayComponent}
+      style={hammerAreaStyle}
+    >
+      <ColourChooserInner style={innerStyle} />
+    </InfiniteHammerArea>
+  )
+
+  if (fullscreen) return (
+    <ColourChooserOuterFullscreen data-show={visible}>
+      {colourChooserContents}
+    </ColourChooserOuterFullscreen>
+  )
+
   return (
     <ColourChooserOuter data-show={visible}>
-      <InfiniteHammerArea
-        clampScale={[1, 10]}
-        lockRotation={true}
-        values={hammerValues}
-        mirrorTiles={true}
-        onChange={handleHammerAreaChange}
-        onResize={handleHammerAreaResize}
-        onTap={handleHammerAreaTap}
-        underlay={underlayComponent}
-        overlay={overlayComponent}
-        style={hammerAreaStyle}
-      >
-        <ColourChooserInner style={innerStyle} />
-      </InfiniteHammerArea>
+      {colourChooserContents}
     </ColourChooserOuter>
   )
 }

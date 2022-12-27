@@ -31,14 +31,17 @@ export interface SVGIcon {
 
 export interface ThemeIcons {
   close: SVGIcon
+  expand: SVGIcon
   help: SVGIcon
   hint: SVGIcon
   key: SVGIcon
   menu: SVGIcon
+  minimize: SVGIcon
+  person: SVGIcon
   puzzle: SVGIcon
+  question: SVGIcon
   search: SVGIcon
   settings: SVGIcon
-  person: SVGIcon
 }
 
 export interface ThemeImages {

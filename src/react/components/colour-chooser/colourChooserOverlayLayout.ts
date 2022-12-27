@@ -1,8 +1,8 @@
 import styled from 'styled-components'
 import { colourChooserLayout } from './colourChooserLayout'
 
-export const ColourChooserOverlay = styled.div.attrs({
-  className: 'colour-chooser-overlay',
+export const ColourChooserHelpOverlayOuter = styled.div.attrs({
+  className: 'colour-chooser-help-overlay-outer',
 })`
   align-content: stretch;
   align-items: stretch;
@@ -15,8 +15,8 @@ export const ColourChooserOverlay = styled.div.attrs({
   ${props => colourChooserLayout.overlay.fadeInOut(props)}
 `
 
-export const ColourChooserOverlaySection = styled.div.attrs({
-  className: 'colour-chooser-overlay-section',
+export const ColourChooserHelpOverlaySection = styled.div.attrs({
+  className: 'colour-chooser-help-overlay-section',
 })`
   box-sizing: border-box;
   flex: 1 1 auto;
