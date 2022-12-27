@@ -8,7 +8,7 @@ export interface ConfigState {
 }
 
 const initialState: ConfigState = {
-  guessGridShape: [2, 3],
+  guessGridShape: [3, 3],
   hintType: HintType.HSB,
 }
 
