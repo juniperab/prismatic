@@ -21,6 +21,7 @@ export interface ThemeColours {
   modalBackground: string
   modalBorder: string
   modalBoxShadow: string
+  modalSectionBorder: string
 }
 
 export interface SVGIcon {

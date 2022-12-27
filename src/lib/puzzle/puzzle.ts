@@ -1,14 +1,17 @@
-import { AnyColor, HSBColor } from '../colour/colourConversions'
+import { AnyColor, CMYKColor, HSBColor } from "../colour/colourConversions";
 import { HSLColor, RGBColor } from 'react-color'
 import base64 from 'base-64'
 import utf8 from 'utf8'
 import { HintConfig } from './hint/hintConfig'
+import { HintType } from "./hint/hint";
 
 export type PuzzleId = string
 
-export type PuzzleMode = 'rgb' | 'hsl' | 'hsb'
+export type PuzzleMode = HintType.RGB | HintType.HSB | HintType.CMYK
 
-export type Puzzle = PuzzleRGB | PuzzleHSL | PuzzleHSB
+export type Puzzle = PuzzleRGB  | PuzzleHSB | PuzzleCMYK
+
+export const allPuzzleModes: PuzzleMode[] = [HintType.RGB, HintType.HSB, HintType.CMYK]
 
 interface PuzzleBase {
   answer: AnyColor
@@ -17,18 +20,18 @@ interface PuzzleBase {
   precision: number
 }
 export interface PuzzleRGB extends PuzzleBase {
-  mode: 'rgb'
+  mode: HintType.RGB
   answer: RGBColor
 }
 
-export interface PuzzleHSL extends PuzzleBase {
-  mode: 'hsl'
-  answer: HSLColor
+export interface PuzzleHSB extends PuzzleBase {
+  mode: HintType.HSB
+  answer: HSBColor
 }
 
-export interface PuzzleHSB extends PuzzleBase {
-  mode: 'hsb'
-  answer: HSBColor
+export interface PuzzleCMYK extends PuzzleBase {
+  mode: HintType.CMYK
+  answer: CMYKColor
 }
 
 export interface PuzzleConfig {

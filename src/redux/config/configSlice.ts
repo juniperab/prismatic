@@ -3,12 +3,12 @@ import { RootState } from '../store'
 import { HintType } from '../../lib/puzzle/hint/hint'
 
 export interface ConfigState {
-  maxGuesses: number
+  guessGridShape: [number, number] // cols, rows
   hintType: HintType
 }
 
 const initialState: ConfigState = {
-  maxGuesses: 6,
+  guessGridShape: [2, 3],
   hintType: HintType.HSB,
 }
 
@@ -19,12 +19,12 @@ export const configSlice = createSlice({
     setHintType: (state, action: PayloadAction<HintType>) => {
       state.hintType = action.payload
     },
-    setMaxGuesses: (state, action: PayloadAction<number>) => {
-      state.maxGuesses = action.payload
+    setGuessGridShape: (state, action: PayloadAction<[number, number]>) => {
+      state.guessGridShape = action.payload
     },
   },
 })
 
-export const { setHintType, setMaxGuesses } = configSlice.actions
+export const { setHintType, setGuessGridShape } = configSlice.actions
 export const selectConfigState = (state: RootState): ConfigState => state.config
 export default configSlice.reducer

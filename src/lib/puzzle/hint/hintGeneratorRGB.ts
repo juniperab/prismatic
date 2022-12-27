@@ -2,7 +2,6 @@ import { HintItem, HintType, RGBHint } from './hint'
 import { RGBColor } from 'react-color'
 import { PuzzleRGB } from '../puzzle'
 import { HintConfigRGB } from './hintConfig'
-import { hueDiff } from '../../colour/colourMath'
 import { bounded } from '../../math/math'
 import { toRGB } from '../../colour/colourConversions'
 
@@ -11,20 +10,26 @@ export function generateHintRGB(guess: RGBColor, puzzle: PuzzleRGB, config: Hint
   return {
     type: HintType.RGB,
     guessedColour: guess,
-    red: getRedHint(guess, answer, precision, config),
-    green: getGreenHint(guess, answer, precision, config),
-    blue: getBlueHint(guess, answer, precision, config),
+    red: getRedHintItem(guess, answer, precision, config),
+    green: getGreenHintItem(guess, answer, precision, config),
+    blue: getBlueHintItem(guess, answer, precision, config),
   }
 }
 
-function getRedHint(guess: RGBColor, target: RGBColor, precision: number, config: HintConfigRGB): HintItem | undefined {
-  const diff = hueDiff(target.r, guess.r)
+function getHintItem(
+  guessVal: number,
+  targetVal: number,
+  precision: number,
+  cutoff: number,
+  maxStep: number
+): HintItem | undefined {
+  const diff = targetVal - guessVal
   if (Math.abs(diff) <= precision) {
     return { match: true, colour: { r: 255, g: 255, b: 255 }, value: 0 }
-  } else if (Math.abs(diff) > config.redCutoff) {
+  } else if (Math.abs(diff) > cutoff) {
     return
   }
-  const value = bounded(diff / config.redMaxStep, -1, 1)
+  const value = bounded(diff / maxStep, -1, 1)
   if (value > 0) {
     return {
       match: false,
@@ -40,58 +45,29 @@ function getRedHint(guess: RGBColor, target: RGBColor, precision: number, config
   }
 }
 
-function getGreenHint(
+function getRedHintItem(
   guess: RGBColor,
   target: RGBColor,
   precision: number,
   config: HintConfigRGB
 ): HintItem | undefined {
-  const diff = hueDiff(target.g, guess.g)
-  if (Math.abs(diff) <= precision) {
-    return { match: true, colour: { r: 255, g: 255, b: 255 }, value: 0 }
-  } else if (Math.abs(diff) > config.greenCutoff) {
-    return
-  }
-  const value = bounded(diff / config.greenMaxStep, -1, 1)
-  if (value > 0) {
-    return {
-      match: false,
-      colour: toRGB({ h: 120, s: 100 * (1 - value), b: 100 }),
-      value,
-    }
-  } else {
-    return {
-      match: false,
-      colour: toRGB({ h: 300, s: 100 * (1 + value), b: 100 }),
-      value,
-    }
-  }
+  return getHintItem(guess.r, target.r, precision, config.redCutoff, config.redMaxStep)
 }
 
-function getBlueHint(
+function getGreenHintItem(
   guess: RGBColor,
   target: RGBColor,
   precision: number,
   config: HintConfigRGB
 ): HintItem | undefined {
-  const diff = hueDiff(target.b, guess.b)
-  if (Math.abs(diff) <= precision) {
-    return { match: true, colour: { r: 255, g: 255, b: 255 }, value: 0 }
-  } else if (Math.abs(diff) > config.blueCutoff) {
-    return
-  }
-  const value = bounded(diff / config.blueMaxStep, -1, 1)
-  if (value > 0) {
-    return {
-      match: false,
-      colour: toRGB({ h: 240, s: 100 * (1 - value), b: 100 }),
-      value,
-    }
-  } else {
-    return {
-      match: false,
-      colour: toRGB({ h: 60, s: 100 * (1 + value), b: 100 }),
-      value,
-    }
-  }
+  return getHintItem(guess.g, target.g, precision, config.greenCutoff, config.greenMaxStep)
+}
+
+function getBlueHintItem(
+  guess: RGBColor,
+  target: RGBColor,
+  precision: number,
+  config: HintConfigRGB
+): HintItem | undefined {
+  return getHintItem(guess.b, target.b, precision, config.blueCutoff, config.blueMaxStep)
 }

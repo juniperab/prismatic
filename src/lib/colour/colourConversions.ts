@@ -1,6 +1,7 @@
 import { HSLColor, RGBColor } from 'react-color'
 import convert from 'color-convert'
 import { euclideanDistance } from '../math/math'
+import { CMYK } from "color-convert/conversions";
 
 // N.B. using the American spelling for these for consistency with the types from react-color
 export interface HSBColor {
@@ -9,12 +10,20 @@ export interface HSBColor {
   s: number
   b: number
 }
+export interface CMYKColor {
+  a?: number | undefined
+  c: number
+  m: number
+  y: number
+  k: number
+}
 export type HexColor = string
 export type NamedColor = string
-export type AnyColor = RGBColor | HSLColor | HSBColor | HexColor | NamedColor
+export type AnyColor = RGBColor | HSLColor | HSBColor | CMYKColor | HexColor | NamedColor
 
 type ColourTriple = [number, number, number]
 type ColourQuad = [number, number, number, number]
+type ColourQuint = [number, number, number, number, number]
 
 export function isRGB(colour: any): colour is RGBColor {
   const rgb = colour as RGBColor
@@ -29,6 +38,11 @@ export function isHSL(colour: any): colour is HSLColor {
 export function isHSB(colour: any): colour is HSBColor {
   const hsb = colour as HSBColor
   return hsb.h !== undefined && hsb.s !== undefined && hsb.b !== undefined
+}
+
+export function isCMYK(colour: any): colour is CMYKColor {
+  const cmyk = colour as CMYKColor
+  return cmyk.c !== undefined && cmyk.m !== undefined && cmyk.y !== undefined && cmyk.k !== undefined
 }
 
 export function isHex(colour: any): colour is HexColor {
@@ -48,6 +62,8 @@ function toTriple(colour: AnyColor): ColourTriple {
     return [colour.h, colour.s, colour.l]
   } else if (isHSB(colour)) {
     return [colour.h, colour.s, colour.b]
+  } else if (isCMYK(colour)) {
+    throw new Error('cannot convert CMYK colour to three-element vector')
   } else if (isHex(colour)) {
     return toTriple(toRGB(colour))
   } else if (isNamed(colour)) {
@@ -63,8 +79,27 @@ function toQuad(colour: AnyColor): ColourQuad {
     return [colour.h, colour.s, colour.l, colour.a !== undefined ? colour.a : 100]
   } else if (isHSB(colour)) {
     return [colour.h, colour.s, colour.b, colour.a !== undefined ? colour.a : 100]
+  } else if (isCMYK(colour)) {
+    return [colour.c, colour.m, colour.y, colour.k]
   } else if (isHex(colour)) {
     return toQuad(toRGB(colour))
+  } else if (isNamed(colour)) {
+    throw new Error('cannot convert named colour to vector')
+  }
+  throw new Error('invalid colour type')
+}
+
+function toQuint(colour: AnyColor): ColourQuint {
+  if (isRGB(colour)) {
+    throw new Error('cannot convert RGB colour to five-element vector')
+  } else if (isHSL(colour)) {
+    throw new Error('cannot convert HSL colour to five-element vector')
+  } else if (isHSB(colour)) {
+    throw new Error('cannot convert HSB colour to five-element vector')
+  } else if (isCMYK(colour)) {
+    return [colour.c, colour.m, colour.y, colour.k, colour.a !== undefined ? colour.a : 100]
+  } else if (isHex(colour)) {
+    throw new Error('cannot convert Hex colour to five-element vector')
   } else if (isNamed(colour)) {
     throw new Error('cannot convert named colour to vector')
   }
@@ -81,6 +116,10 @@ function asHSL(colour: ColourTriple): HSLColor {
 
 function asHSB(colour: ColourTriple): HSBColor {
   return { h: colour[0], s: colour[1], b: colour[2] }
+}
+
+function asCMYK(colour: ColourQuad): CMYKColor {
+  return { c: colour[0], m: colour[1], y: colour[2], k: colour[3] }
 }
 
 function asHex(colour: string): HexColor {
@@ -123,6 +162,13 @@ function hsbWithAlpha(colour: HSBColor, alpha: number | undefined): HSBColor {
   }
 }
 
+function cmykWithAlpha(colour: CMYKColor, alpha: number | undefined): CMYKColor {
+  return {
+    ...colour,
+    a: alpha,
+  }
+}
+
 function hexWithAlpha(colour: HexColor, alpha: number | undefined): HexColor {
   const hexWithoutAlpha = colour.slice(0, 7)
   if (alpha === undefined) return asHex(hexWithoutAlpha)
@@ -142,6 +188,8 @@ export function withAlpha(colour: AnyColor, alpha: number | undefined): AnyColor
     return hslWithAlpha(colour, alpha)
   } else if (isHSB(colour)) {
     return hsbWithAlpha(colour, alpha)
+  } else if (isCMYK(colour)) {
+    return cmykWithAlpha(colour, alpha)
   } else if (isHex(colour)) {
     return hexWithAlpha(colour, alpha)
   } else if (isNamed(colour)) {
@@ -157,6 +205,8 @@ export function toRGB(colour: AnyColor): RGBColor {
     return rgbWithAlpha(asRGB(convert.hsl.rgb(toTriple(colour))), colour.a)
   } else if (isHSB(colour)) {
     return rgbWithAlpha(asRGB(convert.hsv.rgb(toTriple(colour))), colour.a)
+  } else if (isCMYK(colour)) {
+    return rgbWithAlpha(asRGB(convert.cmyk.rgb(toQuad(colour))), colour.a)
   } else if (isHex(colour)) {
     return rgbWithAlpha(asRGB(convert.hex.rgb(colour.slice(1))), getHexAlpha(colour))
   } else if (isNamed(colour)) {
@@ -172,6 +222,8 @@ export function toHSL(colour: AnyColor): HSLColor {
     return colour
   } else if (isHSB(colour)) {
     return hslWithAlpha(asHSL(convert.hsv.hsl(toTriple(colour))), colour.a)
+  } else if (isCMYK(colour)) {
+    return hslWithAlpha(asHSL(convert.cmyk.hsl(toQuad(colour))), colour.a)
   } else if (isHex(colour)) {
     return hslWithAlpha(asHSL(convert.hex.hsl(colour.slice(1))), getHexAlpha(colour))
   } else if (isNamed(colour)) {
@@ -187,10 +239,29 @@ export function toHSB(colour: AnyColor): HSBColor {
     return hsbWithAlpha(asHSB(convert.hsl.hsv(toTriple(colour))), colour.a)
   } else if (isHSB(colour)) {
     return colour
+  } else if (isCMYK(colour)) {
+    return hsbWithAlpha(asHSB(convert.cmyk.hsv(toQuad(colour))), colour.a)
   } else if (isHex(colour)) {
     return hsbWithAlpha(asHSB(convert.hex.hsv(colour.slice(1))), getHexAlpha(colour))
   } else if (isNamed(colour)) {
     return hsbWithAlpha(asHSB(convert.keyword.hsv(colour)), getNamedAlpha(colour))
+  }
+  throw new Error('invalid colour type')
+}
+
+export function toCMYK(colour: AnyColor): CMYKColor {
+  if (isRGB(colour)) {
+    return cmykWithAlpha(asCMYK(convert.rgb.cmyk(toTriple(colour))), colour.a)
+  } else if (isHSL(colour)) {
+    return cmykWithAlpha(asCMYK(convert.hsl.cmyk(toTriple(colour))), colour.a)
+  } else if (isHSB(colour)) {
+    return cmykWithAlpha(asCMYK(convert.hsv.cmyk(toTriple(colour))), colour.a)
+  } else if (isCMYK(colour)) {
+    return colour
+  } else if (isHex(colour)) {
+    return cmykWithAlpha(asCMYK(convert.hex.cmyk(colour.slice(1))), getHexAlpha(colour))
+  } else if (isNamed(colour)) {
+    return cmykWithAlpha(asCMYK(convert.keyword.cmyk(colour)), getNamedAlpha(colour))
   }
   throw new Error('invalid colour type')
 }
@@ -202,6 +273,8 @@ export function toHex(colour: AnyColor): HexColor {
     return hexWithAlpha(asHex(convert.hsl.hex(toTriple(colour))), colour.a)
   } else if (isHSB(colour)) {
     return hexWithAlpha(asHex(convert.hsv.hex(toTriple(colour))), colour.a)
+  } else if (isCMYK(colour)) {
+    return hexWithAlpha(asHex(convert.cmyk.hex(toQuad(colour))), colour.a)
   } else if (isHex(colour)) {
     return colour
   } else if (isNamed(colour)) {
@@ -217,6 +290,8 @@ export function toNamed(colour: AnyColor): NamedColor {
     return namedWithAlpha(asNamed(convert.hsl.keyword(toTriple(colour))), colour.a)
   } else if (isHSB(colour)) {
     return namedWithAlpha(asNamed(convert.hsv.keyword(toTriple(colour))), colour.a)
+  } else if (isCMYK(colour)) {
+    return namedWithAlpha(asNamed(convert.cmyk.keyword(toQuad(colour))), colour.a)
   } else if (isHex(colour)) {
     return namedWithAlpha(asNamed(convert.hex.keyword(colour.slice(1))), getHexAlpha(colour))
   } else if (isNamed(colour)) {
@@ -233,9 +308,9 @@ export function toCssColour(colour: AnyColor): string {
     if (colour.a !== undefined) return `hsla(${colour.h}, ${colour.s}%, ${colour.l}%, ${colour.a}%)`
     return `hsl(${colour.h}, ${colour.s}%, ${colour.l}%)`
   } else if (isHSB(colour)) {
-    const hslColour = toHSL(colour)
-    if (hslColour.a !== undefined) return `hsla(${hslColour.h}, ${hslColour.s}%, ${hslColour.l}%, ${hslColour.a}%)`
-    return `hsl(${hslColour.h}, ${hslColour.s}%, ${hslColour.l}%)`
+    return toCssColour(toHSL(colour))
+  } else if (isCMYK(colour)) {
+    return toCssColour(toRGB(colour))
   } else if (isHex(colour)) {
     return colour
   } else if (isNamed(colour)) {

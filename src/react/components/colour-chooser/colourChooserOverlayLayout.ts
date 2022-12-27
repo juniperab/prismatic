@@ -1,11 +1,5 @@
 import styled from 'styled-components'
-import { colourChooserLayout, fadeInOut } from './colourChooserLayout'
-
-export const colourChooserOverlayLayout = {
-  section: {
-    padding: 10,
-  },
-}
+import { colourChooserLayout } from './colourChooserLayout'
 
 export const ColourChooserOverlay = styled.div.attrs({
   className: 'colour-chooser-overlay',
@@ -18,7 +12,7 @@ export const ColourChooserOverlay = styled.div.attrs({
   height: 100%;
   justify-content: space-around;
   width: 100%;
-  ${(props) => fadeInOut((props as any)['data-show'])}
+  ${props => colourChooserLayout.overlay.fadeInOut(props)}
 `
 
 export const ColourChooserOverlaySection = styled.div.attrs({
@@ -27,7 +21,7 @@ export const ColourChooserOverlaySection = styled.div.attrs({
   box-sizing: border-box;
   flex: 1 1 auto;
   height: 100%;
-  padding: ${colourChooserOverlayLayout.section.padding}px;
+  padding: ${colourChooserLayout.overlay.section.padding}px;
   position: relative;
   vertical-align: top;
   width: calc((100% - ${colourChooserLayout.selector.diameter}px) / 2);
@@ -37,8 +31,8 @@ export const ColourChooserOverlaySection = styled.div.attrs({
     display: inline-block;
     height: auto;
     left: 50%;
-    max-height: calc(100% - ${colourChooserOverlayLayout.section.padding * 2}px);
-    max-width: calc(100% - ${colourChooserOverlayLayout.section.padding * 2}px);
+    max-height: calc(100% - ${colourChooserLayout.overlay.section.padding * 2}px);
+    max-width: calc(100% - ${colourChooserLayout.overlay.section.padding * 2}px);
     position: absolute;
     top: 50%;
     transform: translate(-50%, -50%);

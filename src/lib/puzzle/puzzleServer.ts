@@ -1,11 +1,11 @@
-import { AnyColor, NamedColor, toHSB, toHSL, toNamed, toRGB } from '../colour/colourConversions'
-import { generateRandomColour } from '../colour/colourMath'
-import { getPuzzleId, loadPuzzleById, Puzzle, PuzzleId, PuzzleMode } from './puzzle'
-import { Hint, visitHintItems } from './hint/hint'
-import { puzzleConfig } from './puzzleConfig'
-import { generateHintRGB } from './hint/hintGeneratorRGB'
-import { generateHintHSL } from './hint/hintGeneratorHSL'
-import { generateHintHSB } from './hint/hintGeneratorHSB'
+import { AnyColor, NamedColor, toCMYK, toHSB, toNamed, toRGB } from "../colour/colourConversions";
+import { generateRandomColour } from "../colour/colourMath";
+import { getPuzzleId, loadPuzzleById, Puzzle, PuzzleId, PuzzleMode } from "./puzzle";
+import { Hint, HintType, visitHintItems } from "./hint/hint";
+import { puzzleConfig } from "./puzzleConfig";
+import { generateHintRGB } from "./hint/hintGeneratorRGB";
+import { generateHintHSB } from "./hint/hintGeneratorHSB";
+import { generateHintCMYK } from "./hint/hintGeneratorCMYK";
 
 export interface ClientPuzzleSpec {
   puzzleId: PuzzleId
@@ -18,7 +18,7 @@ export function getNewPuzzle(): ClientPuzzleSpec {
   const newPuzzleSpec: Puzzle = {
     answer: toHSB(answer),
     answerName: toNamed(answer),
-    mode: 'hsb',
+    mode: HintType.HSB,
     precision: 3,
   }
   return {
@@ -33,14 +33,14 @@ export function evaluateGuess(guess: AnyColor, puzzleId: PuzzleId): Hint | Named
   const hintConfig = puzzleConfig.hint
   let hint
   switch (puzzle.mode) {
-    case 'rgb':
+    case HintType.RGB:
       hint = generateHintRGB(toRGB(guess), puzzle, hintConfig.rgb)
       break
-    case 'hsl':
-      hint = generateHintHSL(toHSL(guess), puzzle, hintConfig.hsl)
-      break
-    case 'hsb':
+    case HintType.HSB:
       hint = generateHintHSB(toHSB(guess), puzzle, hintConfig.hsb)
+      break
+    case HintType.CMYK:
+      hint = generateHintCMYK(toCMYK(guess), puzzle, hintConfig.cmyk)
       break
     default:
       throw new Error('invalid mode')

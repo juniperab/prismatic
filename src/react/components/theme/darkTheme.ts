@@ -18,6 +18,7 @@ export const darkTheme: Theme = {
     modalBackground: 'darkgrey',
     modalBorder: 'lightgrey',
     modalBoxShadow: 'rgba(255, 255, 255, 70%)',
+    modalSectionBorder: 'white',
   },
   icons: {
     close: { svg: iconClose, colour: '#a45490' },

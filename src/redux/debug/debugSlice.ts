@@ -1,13 +1,14 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { RootState } from '../store'
-import { PuzzleMode } from '../../lib/puzzle/puzzle'
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "../store";
+import { PuzzleMode } from "../../lib/puzzle/puzzle";
+import { HintType } from "../../lib/puzzle/hint/hint";
 
 export interface DebugState {
   displayMode: PuzzleMode
 }
 
 const initialState: DebugState = {
-  displayMode: 'hsb',
+  displayMode: HintType.HSB,
 }
 
 export const debugSlice = createSlice({

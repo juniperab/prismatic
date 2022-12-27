@@ -7,10 +7,15 @@ export interface HintConfigRGB {
   blueMaxStep: number
 }
 
-export interface HintConfigHSL {
-  hueCutoff: number
-  hueStep: number
-  saturationMaxStep: number
+export interface HintConfigCMYK {
+  cyanCutoff: number
+  cyanMaxStep: number
+  magentaCutoff: number
+  magentaMaxStep: number
+  yellowCutoff: number
+  yellowMaxStep: number
+  blackCutoff: number
+  blackMaxStep: number
 }
 
 export interface HintConfigHSB {
@@ -21,6 +26,6 @@ export interface HintConfigHSB {
 }
 export interface HintConfig {
   rgb: HintConfigRGB
-  hsl: HintConfigHSL
   hsb: HintConfigHSB
+  cmyk: HintConfigCMYK
 }

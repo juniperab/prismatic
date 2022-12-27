@@ -1,10 +1,9 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { AppThunk, RootState } from '../store'
-import { AnyColor, NamedColor, toHSB, toNamed } from '../../lib/colour/colourConversions'
-import { Hint } from '../../lib/puzzle/hint/hint'
-import { getPuzzleId, Puzzle, PuzzleId, PuzzleMode } from '../../lib/puzzle/puzzle'
-import { ClientPuzzleSpec, getNewPuzzle } from '../../lib/puzzle/puzzleServer'
-import { rotateHue } from "../../lib/colour/colourMath";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { AppThunk, RootState } from "../store";
+import { AnyColor, NamedColor, toHSB, toNamed } from "../../lib/colour/colourConversions";
+import { Hint, HintType } from "../../lib/puzzle/hint/hint";
+import { getPuzzleId, Puzzle, PuzzleId, PuzzleMode } from "../../lib/puzzle/puzzle";
+import { ClientPuzzleSpec, getNewPuzzle } from "../../lib/puzzle/puzzleServer";
 
 export interface PuzzleState {
   answerName?: NamedColor
@@ -21,7 +20,7 @@ export interface PuzzleState {
 const initialPuzzle: Puzzle = {
   answer: toHSB('mediumseagreen'),
   answerName: toNamed('mediumseagreen'),
-  mode: 'hsb',
+  mode: HintType.HSB,
   precision: 3,
 }
 const startingColour: AnyColor = 'slateblue'

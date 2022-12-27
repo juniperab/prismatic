@@ -1,24 +1,22 @@
 import styled from 'styled-components'
+import { fadeInOut } from "../theme/styles/fadeInOut";
 
 export const colourChooserLayout = {
+  container: {
+    fadeIn: (show: any) => fadeInOut(show['data-show'], 0.5, 0),
+  },
+  overlay: {
+    fadeInOut: (show: any) => fadeInOut(show['data-show'], 0.5, 0.5),
+    section: {
+      padding: 10,
+    }
+  },
   selector: {
     diameter: 50,
+    fadeInOut: (show: any) => fadeInOut(show['data-show'], 0.5, 0.5)
   },
 }
 
-export function fadeInOut(show: boolean): string {
-  return show
-    ? `
-          visibility: visible;
-          opacity: 1;
-          transition: opacity 2s linear;
-          `
-    : `
-          visibility: hidden;
-          opacity: 0;
-          transition: visibility 0s 0.5s, opacity 0.5s linear;
-          `
-}
 
 export const ColourChooserOuter = styled.div.attrs({
   className: 'colour-chooser-outer',
@@ -28,7 +26,7 @@ export const ColourChooserOuter = styled.div.attrs({
   position: relative;
   width: 100%;
   z-index: 1;
-  ${(props) => fadeInOut((props as any)['data-show'])}
+  ${props => colourChooserLayout.container.fadeIn(props)}
 `
 
 export const ColourChooserInner = styled.div.attrs({
@@ -53,7 +51,7 @@ export const ColourChooserSelection = styled.div.attrs({
   top: 50%;
   transform: translate(-50%, -50%);
   width: ${colourChooserLayout.selector.diameter}px;
-  ${(props) => fadeInOut((props as any)['data-show'])}
+  ${props => colourChooserLayout.selector.fadeInOut(props)}
 `
 
 export const ColourChooserSelectionPending = styled(ColourChooserSelection)`

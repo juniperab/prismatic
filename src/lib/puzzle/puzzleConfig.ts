@@ -10,16 +10,21 @@ const hintConfig: HintConfig = {
     blueCutoff: 128,
     blueMaxStep: 64,
   },
-  hsl: {
-    hueCutoff: 90,
-    hueStep: 90,
-    saturationMaxStep: 25,
-  },
   hsb: {
     hueCutoff: 90,
     hueStep: 60,
     saturationMaxStep: 25,
     brightnessMaxStep: 25,
+  },
+  cmyk: {
+    cyanCutoff: 128,
+    cyanMaxStep: 64,
+    magentaCutoff: 128,
+    magentaMaxStep: 64,
+    yellowCutoff: 128,
+    yellowMaxStep: 64,
+    blackCutoff: 128,
+    blackMaxStep: 64,
   },
 }
 

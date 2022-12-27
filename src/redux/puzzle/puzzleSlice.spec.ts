@@ -1,11 +1,12 @@
-import reducer, { setCurrentColour, setStartingColour, PuzzleState } from './puzzleSlice'
-import { AnyColor, toHSB, toNamed } from '../../lib/colour/colourConversions'
-import { getPuzzleId, Puzzle } from '../../lib/puzzle/puzzle'
+import reducer, { PuzzleState, setCurrentColour, setStartingColour } from "./puzzleSlice";
+import { AnyColor, toHSB, toNamed } from "../../lib/colour/colourConversions";
+import { getPuzzleId, Puzzle } from "../../lib/puzzle/puzzle";
+import { HintType } from "../../lib/puzzle/hint/hint";
 
 const testInitialPuzzle: Puzzle = {
   answer: toHSB('brickred'),
   answerName: toNamed('brickred'),
-  mode: 'hsb',
+  mode: HintType.HSB,
   precision: 3,
 }
 const testStartingColour: AnyColor = 'yellow'
@@ -25,7 +26,7 @@ describe('puzzle reducer', () => {
     const realInitialPuzzle: Puzzle = {
       answer: toHSB('mediumseagreen'),
       answerName: toNamed('mediumseagreen'),
-      mode: 'hsb',
+      mode: HintType.HSB,
       precision: 3,
     }
     const realStartingColour: AnyColor = 'slateblue'

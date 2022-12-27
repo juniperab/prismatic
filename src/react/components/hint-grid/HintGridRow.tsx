@@ -46,8 +46,8 @@ function renderHintCellsHSB(hint: HSBHint): ReactElement[] {
 
 const renderCellsHintVisitor: HintVisitor<ReactElement[]> = {
   rgb: () => [],
-  hsl: () => [],
   hsb: (hint) => renderHintCellsHSB(hint),
+  cmyk: () => [],
 }
 
 export function HintGridRow(props: HintGridRowProps): ReactElement {

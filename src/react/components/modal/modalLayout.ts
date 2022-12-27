@@ -17,7 +17,22 @@ export const modalLayout = {
     top: 10,
     bottom: 10,
   },
-  headerHeight: 30,
+  header: {
+    height: 30,
+  },
+  body: {
+    section: {
+      margin: {
+        topBottom: 10,
+      },
+      separatorBorder: 1,
+    },
+    paragraph: {
+      margin: {
+        topBottom: 5,
+      },
+    },
+  },
 }
 
 modalLayout.margin.fromTopOfScreen = headerLayout.height + modalLayout.margin.top
@@ -88,7 +103,7 @@ export const ModalHeaderOuter = styled.div.attrs({
 const ModalHeaderSection = styled.div.attrs({
   className: 'modal-header-section',
 })`
-  font-size: ${modalLayout.headerHeight / 2}px;
+  font-size: ${modalLayout.header.height / 2}px;
   font-weight: 700;
 `
 
@@ -102,8 +117,28 @@ export const ModalHeaderSectionEdge = styled(ModalHeaderSection)`
 
 export const ModalBody = styled.div.attrs({
   className: 'modal-body',
-})``
+})`
+  .modal-body-section {
+    border-bottom-width: ${modalLayout.body.section.separatorBorder}px;
+    border-bottom-style: dashed;
+    border-bottom-color: ${props => props.theme.colours.modalSectionBorder};
+  }
+  .modal-body-section:last-child {
+    border-bottom: none;
+  }
+`
 
 export const ModalIcon = styled(Icon)`
-  height: ${modalLayout.headerHeight}px;
+  height: ${modalLayout.header.height}px;
+`
+
+export const ModalBodySection = styled.div.attrs({
+  className: 'modal-body-section'
+})`
+  box-sizing: border-box;
+  margin: ${modalLayout.body.section.margin.topBottom}px 0;
+
+  // p {
+  //   margin: ${modalLayout.body.paragraph.margin.topBottom}px 0;
+  // }
 `

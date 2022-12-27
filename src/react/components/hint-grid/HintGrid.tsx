@@ -7,16 +7,14 @@ import { selectConfigState } from '../../../redux/config/configSlice'
 import { AnyColor } from '../../../lib/colour/colourConversions'
 
 export interface HintGridProps {
+  hints: Hint[],
   guesses: AnyColor[]
-  hints: Hint[]
+  numCols: number,
+  numRows: number,
 }
 
 export function HintGrid(props: HintGridProps): ReactElement {
-  const { guesses, hints } = props
-  const { maxGuesses } = useAppSelector(selectConfigState)
-
-  const numCols = 4 // 5 for CMYK hints if I do them
-  const numRows = maxGuesses
+  const { hints, guesses, numCols, numRows } = props
   const aspectRatio = numCols / numRows
 
   const rows = []
