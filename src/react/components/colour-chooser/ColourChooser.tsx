@@ -1,19 +1,22 @@
 import { CSSProperties, ReactElement, useCallback, useEffect, useRef, useState } from 'react'
 import {
-  ColourChooserFullscreenToggle, ColourChooserHelpButton,
+  ColourChooserFullscreenToggle,
+  ColourChooserHelpButton,
   ColourChooserInner,
-  ColourChooserOuter, ColourChooserOuterFullscreen, ColourChooserOverlay,
+  ColourChooserOuter,
+  ColourChooserOuterFullscreen,
+  ColourChooserOverlay,
   ColourChooserSelection,
-  ColourChooserSelectionPending
-} from "./colourChooserLayout";
+  ColourChooserSelectionPending,
+} from './colourChooserLayout'
 import { InfiniteHammerArea } from '../hammer/InfiniteHammerArea'
 import { AnyColor, HSBColor, toCssColour, toHSB } from '../../../lib/colour/colourConversions'
 import { rotateHue } from '../../../lib/colour/colourMath'
 import { ColourChooserHelpOverlay, HelpOverlayState, useHelpOverlayState } from './ColourChooserHelpOverlay'
 import { defaultTo } from 'lodash'
 import { HammerOnChangeCallback, HammerOnResizeCallback, HammerOnTapCallback } from '../hammer/hammerAreaTypes'
-import { useTheme } from "styled-components";
-import { Theme } from "../theme/theme";
+import { useTheme } from 'styled-components'
+import { Theme } from '../theme/theme'
 
 export type NewColourCallback = (colour: HSBColor) => void
 
@@ -42,8 +45,6 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
   const [hasNewPropsColour, setHasNewPropsColour] = useState(true)
 
   const selectorRef = useRef<HTMLDivElement>(null)
-  const helpButtonRef = useRef<HTMLDivElement>(null)
-  const fullscreenToggleRef = useRef<HTMLDivElement>(null)
   const theme = useTheme() as Theme
 
   const [brightness, setBrightness] = useState(propsColourHSB.b)
@@ -156,18 +157,17 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
     cursor: dragging ? undefined : 'pointer',
   }
 
-
   const helpOverlapComponent = <ColourChooserHelpOverlay style={helpOverlayStyle} visible={helpOverlay.show} />
 
   const overlayComponent = (
     <ColourChooserOverlay data-show={!helpOverlay.show}>
-      <ColourChooserHelpButton color='white' onClick={() => showHelpOverlay(true)}>
+      <ColourChooserHelpButton color="white" onClick={() => showHelpOverlay(true)}>
         <theme.icons.question.svg />
       </ColourChooserHelpButton>
-      <ColourChooserFullscreenToggle color='white' onClick={() => setFullscreen(!fullscreen)}>
-        { fullscreen ? <theme.icons.minimize.svg /> : <theme.icons.expand.svg /> }
+      <ColourChooserFullscreenToggle color="white" onClick={() => setFullscreen(!fullscreen)}>
+        {fullscreen ? <theme.icons.minimize.svg /> : <theme.icons.expand.svg />}
       </ColourChooserFullscreenToggle>
-      { selectionPending ? (
+      {selectionPending ? (
         <ColourChooserSelectionPending ref={selectorRef} style={selectionStyle} />
       ) : (
         <ColourChooserSelection ref={selectorRef} style={selectionStyle} />
@@ -175,11 +175,13 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
     </ColourChooserOverlay>
   )
 
-  const hammerValues = hasNewPropsColour ? {
-    x: (50 - propsColourHSB.s) * width / 100,
-    y: (propsColourHSB.b - 50) * height / 100,
-    rotation: propsColourHSB.h,
-  } : undefined
+  const hammerValues = hasNewPropsColour
+    ? {
+        x: ((50 - propsColourHSB.s) * width) / 100,
+        y: ((propsColourHSB.b - 50) * height) / 100,
+        rotation: propsColourHSB.h,
+      }
+    : undefined
   if (hammerValues !== undefined) {
     if (saturationTile % 2 !== 0) hammerValues.x = width - hammerValues.x
     if (brightnessTile % 2 !== 0) hammerValues.y = height - hammerValues.y
@@ -202,15 +204,8 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
     </InfiniteHammerArea>
   )
 
-  if (fullscreen) return (
-    <ColourChooserOuterFullscreen data-show={visible}>
-      {colourChooserContents}
-    </ColourChooserOuterFullscreen>
-  )
+  if (fullscreen)
+    return <ColourChooserOuterFullscreen data-show={visible}>{colourChooserContents}</ColourChooserOuterFullscreen>
 
-  return (
-    <ColourChooserOuter data-show={visible}>
-      {colourChooserContents}
-    </ColourChooserOuter>
-  )
+  return <ColourChooserOuter data-show={visible}>{colourChooserContents}</ColourChooserOuter>
 }

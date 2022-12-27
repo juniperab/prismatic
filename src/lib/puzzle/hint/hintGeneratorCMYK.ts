@@ -1,8 +1,8 @@
 import { HintItem, HintType, CMYKHint } from './hint'
 import { bounded } from '../../math/math'
-import { HintConfigCMYK } from "./hintConfig";
-import { CMYKColor, toCMYK, toRGB } from "../../colour/colourConversions";
-import { PuzzleCMYK } from "../puzzle";
+import { HintConfigCMYK } from './hintConfig'
+import { CMYKColor, toCMYK, toRGB } from '../../colour/colourConversions'
+import { PuzzleCMYK } from '../puzzle'
 
 export function generateHintCMYK(guess: CMYKColor, puzzle: PuzzleCMYK, config: HintConfigCMYK): CMYKHint {
   const { answer, precision } = puzzle

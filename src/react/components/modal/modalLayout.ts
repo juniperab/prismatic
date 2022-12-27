@@ -121,7 +121,7 @@ export const ModalBody = styled.div.attrs({
   .modal-body-section {
     border-bottom-width: ${modalLayout.body.section.separatorBorder}px;
     border-bottom-style: dashed;
-    border-bottom-color: ${props => props.theme.colours.modalSectionBorder};
+    border-bottom-color: ${(props) => props.theme.colours.modalSectionBorder};
   }
   .modal-body-section:last-child {
     border-bottom: none;
@@ -133,7 +133,7 @@ export const ModalIcon = styled(Icon)`
 `
 
 export const ModalBodySection = styled.div.attrs({
-  className: 'modal-body-section'
+  className: 'modal-body-section',
 })`
   box-sizing: border-box;
   margin: ${modalLayout.body.section.margin.topBottom}px 0;

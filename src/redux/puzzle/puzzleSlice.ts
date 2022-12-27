@@ -1,9 +1,9 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AppThunk, RootState } from "../store";
-import { AnyColor, NamedColor, toHSB, toNamed } from "../../lib/colour/colourConversions";
-import { Hint, HintType } from "../../lib/puzzle/hint/hint";
-import { getPuzzleId, Puzzle, PuzzleId, PuzzleMode } from "../../lib/puzzle/puzzle";
-import { ClientPuzzleSpec, getNewPuzzle } from "../../lib/puzzle/puzzleServer";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { AppThunk, RootState } from '../store'
+import { AnyColor, NamedColor, toHSB, toNamed } from '../../lib/colour/colourConversions'
+import { Hint, HintType } from '../../lib/puzzle/hint/hint'
+import { getPuzzleId, Puzzle, PuzzleId, PuzzleMode } from '../../lib/puzzle/puzzle'
+import { ClientPuzzleSpec, getNewPuzzle } from '../../lib/puzzle/puzzleServer'
 
 export interface PuzzleState {
   answerName?: NamedColor

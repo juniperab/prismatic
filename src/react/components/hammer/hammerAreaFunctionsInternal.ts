@@ -1,5 +1,5 @@
 import { HammerAreaProps, HammerAreaValues } from './hammerAreaTypes'
-import { clampValue, valuesEquals, withDefaults } from "./hammerAreaFunctions";
+import { clampValue, valuesEquals, withDefaults } from './hammerAreaFunctions'
 import { euclideanDistance } from '../../../lib/math/math'
 
 /**
@@ -18,8 +18,8 @@ import { euclideanDistance } from '../../../lib/math/math'
  * @private                     the adjusted baseline values
  */
 export function internalNewValuesForPan(
-  eventValues: { x: number, y: number },
-  eventStartValues: { x: number, y: number },
+  eventValues: { x: number; y: number },
+  eventStartValues: { x: number; y: number },
   currentValues: HammerAreaValues,
   currentDisplayValues: HammerAreaValues,
   currentProps: HammerAreaProps
@@ -82,8 +82,8 @@ export function internalNewValuesForPan(
  * @private                     the adjusted baseline values
  */
 export function internalNewValuesForScaleRotate(
-  eventValues: { rotation: number, scale: number },
-  eventStartValues: { rotation: number, scale: number },
+  eventValues: { rotation: number; scale: number },
+  eventStartValues: { rotation: number; scale: number },
   currentValues: HammerAreaValues,
   currentDisplayValues: HammerAreaValues,
   currentProps: HammerAreaProps
@@ -228,7 +228,7 @@ export function internalNewValuesFromProps(
   prevPropsValuesPartial: Partial<HammerAreaValues> | undefined,
   currentValues: HammerAreaValues,
   currentDisplayValues: HammerAreaValues,
-  currentProps: HammerAreaProps,
+  currentProps: HammerAreaProps
 ): { newDisplayValues: HammerAreaValues; newValues: HammerAreaValues } | undefined {
   const prevPropsValues = withDefaults(prevPropsValuesPartial, currentValues)
   const newPropsValues = withDefaults(newPropsValuesPartial, currentValues)
@@ -238,21 +238,21 @@ export function internalNewValuesFromProps(
       currentValues,
       currentValues,
       currentDisplayValues,
-      currentProps,
+      currentProps
     )
     newData = internalNewValuesForPan(
       newPropsValues,
       newData.newValues,
       newData.newValues,
       newData.newDisplayValues,
-      currentProps,
+      currentProps
     )
     newData = internalNewValuesForScaleRotate(
       newPropsValues,
       newData.newValues,
       newData.newValues,
       newData.newDisplayValues,
-      currentProps,
+      currentProps
     )
     return newData
   }

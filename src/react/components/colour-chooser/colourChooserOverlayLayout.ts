@@ -12,7 +12,7 @@ export const ColourChooserHelpOverlayOuter = styled.div.attrs({
   height: 100%;
   justify-content: space-around;
   width: 100%;
-  ${props => colourChooserLayout.overlay.fadeInOut(props)}
+  ${(props) => colourChooserLayout.overlay.fadeInOut(props)}
 `
 
 export const ColourChooserHelpOverlaySection = styled.div.attrs({

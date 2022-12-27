@@ -1,11 +1,11 @@
-import { AnyColor, NamedColor, toCMYK, toHSB, toNamed, toRGB } from "../colour/colourConversions";
-import { generateRandomColour } from "../colour/colourMath";
-import { getPuzzleId, loadPuzzleById, Puzzle, PuzzleId, PuzzleMode } from "./puzzle";
-import { Hint, HintType, visitHintItems } from "./hint/hint";
-import { puzzleConfig } from "./puzzleConfig";
-import { generateHintRGB } from "./hint/hintGeneratorRGB";
-import { generateHintHSB } from "./hint/hintGeneratorHSB";
-import { generateHintCMYK } from "./hint/hintGeneratorCMYK";
+import { AnyColor, NamedColor, toCMYK, toHSB, toNamed, toRGB } from '../colour/colourConversions'
+import { generateRandomColour } from '../colour/colourMath'
+import { getPuzzleId, loadPuzzleById, Puzzle, PuzzleId, PuzzleMode } from './puzzle'
+import { Hint, HintType, visitHintItems } from './hint/hint'
+import { puzzleConfig } from './puzzleConfig'
+import { generateHintRGB } from './hint/hintGeneratorRGB'
+import { generateHintHSB } from './hint/hintGeneratorHSB'
+import { generateHintCMYK } from './hint/hintGeneratorCMYK'
 
 export interface ClientPuzzleSpec {
   puzzleId: PuzzleId

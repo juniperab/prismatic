@@ -47,7 +47,10 @@ export function useHelpOverlayState(
   initialState: HelpOverlayState
 ): [HelpOverlayState, (show: boolean) => void, (ticks: number) => void] {
   const [helpOverlay, setHelpOverlay] = useState(initialState)
-  const { hideHelpOverlay, showHelpOverlay, addHelpOverlayTicks } = helpOverlayStateFunctions(initialState, setHelpOverlay)
+  const { hideHelpOverlay, showHelpOverlay, addHelpOverlayTicks } = helpOverlayStateFunctions(
+    initialState,
+    setHelpOverlay
+  )
   return [helpOverlay, (show: boolean) => (show ? showHelpOverlay() : hideHelpOverlay()), addHelpOverlayTicks]
 }
 

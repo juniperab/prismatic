@@ -2,15 +2,13 @@ import { ReactElement } from 'react'
 import { HintGridMiddle2, HintGridMiddle1, HintGridOuter, HintGridInner } from './hintGridLayout'
 import { Hint } from '../../../lib/puzzle/hint/hint'
 import { HintGridRow } from './HintGridRow'
-import { useAppSelector } from '../../../redux/hooks'
-import { selectConfigState } from '../../../redux/config/configSlice'
 import { AnyColor } from '../../../lib/colour/colourConversions'
 
 export interface HintGridProps {
-  hints: Hint[],
+  hints: Hint[]
   guesses: AnyColor[]
-  numCols: number,
-  numRows: number,
+  numCols: number
+  numRows: number
 }
 
 export function HintGrid(props: HintGridProps): ReactElement {

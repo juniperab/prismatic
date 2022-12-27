@@ -1,7 +1,6 @@
 import { HSLColor, RGBColor } from 'react-color'
 import convert from 'color-convert'
 import { euclideanDistance } from '../math/math'
-import { CMYK } from "color-convert/conversions";
 
 // N.B. using the American spelling for these for consistency with the types from react-color
 export interface HSBColor {
@@ -89,6 +88,7 @@ function toQuad(colour: AnyColor): ColourQuad {
   throw new Error('invalid colour type')
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function toQuint(colour: AnyColor): ColourQuint {
   if (isRGB(colour)) {
     throw new Error('cannot convert RGB colour to five-element vector')

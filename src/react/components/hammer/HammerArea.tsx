@@ -15,12 +15,12 @@ import {
   InternalHammerOnChangeCallback,
   InternalHammerAreaProps,
 } from './hammerAreaTypesInternal'
-import { withDefaults } from './hammerAreaFunctions'
 import {
   internalNewValuesForPan,
   internalNewValuesForScaleRotate,
-  internalNewValuesForScaleRotateViaPan, internalNewValuesFromProps
-} from "./hammerAreaFunctionsInternal";
+  internalNewValuesForScaleRotateViaPan,
+  internalNewValuesFromProps,
+} from './hammerAreaFunctionsInternal'
 import styled from 'styled-components'
 
 const defaultHammerAreaValues: HammerAreaValues = {
@@ -81,7 +81,7 @@ class _InternalHammerArea extends Component<_InternalHammerAreaProps> {
       undefined,
       this.currentValues,
       this.currentDisplayValues,
-      this.props,
+      this.props
     )
     if (newDataFromProps !== undefined) {
       this.currentValues = newDataFromProps.newValues
@@ -103,8 +103,7 @@ class _InternalHammerArea extends Component<_InternalHammerAreaProps> {
     if (this.props.onTap !== undefined) this.props.onTap(x, y, target)
   }
 
-  private readonly callOnUpdatePropValues: InternalHammerOnUpdatePropValuesCallback =
-    (newValues, newDisplayValues)  => {
+  private readonly callOnUpdatePropValues: InternalHammerOnUpdatePropValuesCallback = (newValues, newDisplayValues) => {
     if (this.props.onUpdatePropValues !== undefined) this.props.onUpdatePropValues(newValues, newDisplayValues)
   }
 
@@ -324,7 +323,7 @@ class _InternalHammerArea extends Component<_InternalHammerAreaProps> {
       prevProps.values,
       this.currentValues,
       this.currentDisplayValues,
-      this.props,
+      this.props
     )
     if (newDataFromProps !== undefined) {
       this.currentValues = newDataFromProps.newValues

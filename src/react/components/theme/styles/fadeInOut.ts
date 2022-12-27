@@ -1,4 +1,3 @@
-
 export function fadeInOut(show: any, inSpeed: number, outSpeed: number): string {
   // eslint-disable-next-line no-undef-init
   let _show: boolean | undefined = undefined

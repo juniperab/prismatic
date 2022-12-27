@@ -78,9 +78,9 @@ export function visitHint<T>(hint: Hint, visitor: HintVisitor<T>): T {
 }
 
 const getHintItemsAsArrayVisitor: HintVisitor<Array<HintItem | undefined>> = {
-  rgb: hint => [hint.red, hint.green, hint.blue],
-  hsb: hint => [hint.hue, hint.saturation, hint.brightness],
-  cmyk: hint => [hint.cyan, hint.magenta, hint.yellow, hint.black],
+  rgb: (hint) => [hint.red, hint.green, hint.blue],
+  hsb: (hint) => [hint.hue, hint.saturation, hint.brightness],
+  cmyk: (hint) => [hint.cyan, hint.magenta, hint.yellow, hint.black],
 }
 
 export function visitHintItems<T>(hint: Hint, visitor: (hintItem: HintItem) => T): Array<T | undefined> {

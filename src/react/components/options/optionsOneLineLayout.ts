@@ -1,16 +1,16 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 export const optionsOneLineLayout = {
   label: {
     margin: {
       right: 10,
-    }
+    },
   },
   item: {
     margin: {
       sides: 10,
-    }
-  }
+    },
+  },
 }
 
 export const OptionsOneLineOuter = styled.div.attrs({

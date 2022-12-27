@@ -1,7 +1,9 @@
 import { HammerAreaProps, HammerAreaValues, HammerOnChangeData } from './hammerAreaTypes'
 
-export type InternalHammerOnUpdatePropValuesCallback =
-  (newValues: HammerAreaValues, newDisplayValues: HammerAreaValues) => void
+export type InternalHammerOnUpdatePropValuesCallback = (
+  newValues: HammerAreaValues,
+  newDisplayValues: HammerAreaValues
+) => void
 
 export interface InternalHammerOnChangeData extends HammerOnChangeData {
   newDisplayValues: HammerAreaValues

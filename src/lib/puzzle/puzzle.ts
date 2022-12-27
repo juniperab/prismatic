@@ -1,15 +1,15 @@
-import { AnyColor, CMYKColor, HSBColor } from "../colour/colourConversions";
-import { HSLColor, RGBColor } from 'react-color'
+import { AnyColor, CMYKColor, HSBColor } from '../colour/colourConversions'
+import { RGBColor } from 'react-color'
 import base64 from 'base-64'
 import utf8 from 'utf8'
 import { HintConfig } from './hint/hintConfig'
-import { HintType } from "./hint/hint";
+import { HintType } from './hint/hint'
 
 export type PuzzleId = string
 
 export type PuzzleMode = HintType.RGB | HintType.HSB | HintType.CMYK
 
-export type Puzzle = PuzzleRGB  | PuzzleHSB | PuzzleCMYK
+export type Puzzle = PuzzleRGB | PuzzleHSB | PuzzleCMYK
 
 export const allPuzzleModes: PuzzleMode[] = [HintType.RGB, HintType.HSB, HintType.CMYK]
 

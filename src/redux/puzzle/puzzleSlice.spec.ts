@@ -1,7 +1,7 @@
-import reducer, { PuzzleState, setCurrentColour, setStartingColour } from "./puzzleSlice";
-import { AnyColor, toHSB, toNamed } from "../../lib/colour/colourConversions";
-import { getPuzzleId, Puzzle } from "../../lib/puzzle/puzzle";
-import { HintType } from "../../lib/puzzle/hint/hint";
+import reducer, { PuzzleState, setCurrentColour, setStartingColour } from './puzzleSlice'
+import { AnyColor, toHSB, toNamed } from '../../lib/colour/colourConversions'
+import { getPuzzleId, Puzzle } from '../../lib/puzzle/puzzle'
+import { HintType } from '../../lib/puzzle/hint/hint'
 
 const testInitialPuzzle: Puzzle = {
   answer: toHSB('brickred'),

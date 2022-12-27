@@ -4,8 +4,8 @@ import { InternalHammerArea } from './HammerArea'
 import {
   InternalHammerAreaProps,
   InternalHammerOnChangeCallback,
-  InternalHammerOnUpdatePropValuesCallback
-} from "./hammerAreaTypesInternal";
+  InternalHammerOnUpdatePropValuesCallback,
+} from './hammerAreaTypesInternal'
 import styled from 'styled-components'
 
 const FiniteHammerAreaInner = styled.div.attrs({
@@ -25,10 +25,9 @@ export function InternalFiniteHammerArea(props: InternalHammerAreaProps): ReactE
     if (onChangeInternal !== undefined) onChangeInternal(newData)
   }
 
-  const handleHammerAreaUpdatePropValues: InternalHammerOnUpdatePropValuesCallback =
-    (newValues, newDisplayValues) => {
+  const handleHammerAreaUpdatePropValues: InternalHammerOnUpdatePropValuesCallback = (newValues, newDisplayValues) => {
     setDisplayValues(newDisplayValues)
-      if (onUpdatePropValues !== undefined) onUpdatePropValues(newValues, newDisplayValues)
+    if (onUpdatePropValues !== undefined) onUpdatePropValues(newValues, newDisplayValues)
   }
 
   const innerStyle: CSSProperties = {

@@ -1,7 +1,7 @@
 import styled from 'styled-components'
-import { fadeInOut } from "../theme/styles/fadeInOut";
-import { windowLayout } from "../page/windowLayout";
-import { Icon } from "../theme/elements/Icon";
+import { fadeInOut } from '../theme/styles/fadeInOut'
+import { windowLayout } from '../page/windowLayout'
+import { Icon } from '../theme/elements/Icon'
 
 export const colourChooserLayout = {
   container: {
@@ -14,14 +14,13 @@ export const colourChooserLayout = {
     },
     buttons: {
       size: 40,
-    }
+    },
   },
   selector: {
     diameter: 50,
-    fadeInOut: (show: any) => fadeInOut(show['data-show'], 0.5, 0.5)
+    fadeInOut: (show: any) => fadeInOut(show['data-show'], 0.5, 0.5),
   },
 }
-
 
 export const ColourChooserOuter = styled.div.attrs({
   className: 'colour-chooser-outer',
@@ -31,7 +30,7 @@ export const ColourChooserOuter = styled.div.attrs({
   position: relative;
   width: 100%;
   z-index: 1;
-  ${props => colourChooserLayout.container.fadeIn(props)}
+  ${(props) => colourChooserLayout.container.fadeIn(props)}
 `
 
 export const ColourChooserOuterFullscreen = styled(ColourChooserOuter)`
@@ -52,7 +51,7 @@ export const ColourChooserInner = styled.div.attrs({
 `
 
 export const ColourChooserOverlay = styled.div`
-  ${props => colourChooserLayout.selector.fadeInOut(props)}
+  ${(props) => colourChooserLayout.selector.fadeInOut(props)}
 `
 
 export const ColourChooserHelpButton = styled(Icon)`

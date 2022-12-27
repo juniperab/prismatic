@@ -11,7 +11,7 @@ import { HintGrid } from '../../components/hint-grid/HintGrid'
 import { makeGuess, selectPuzzleState, setCurrentColour } from '../../../redux/puzzle/puzzleSlice'
 import { ColourChooser, NewColourCallback } from '../../components/colour-chooser/ColourChooser'
 import { AnyColor } from '../../../lib/colour/colourConversions'
-import { selectConfigState } from "../../../redux/config/configSlice";
+import { selectConfigState } from '../../../redux/config/configSlice'
 
 export function PlayingView(): ReactElement | null {
   const { activeView } = useAppSelector(selectAppState)
@@ -34,12 +34,7 @@ export function PlayingView(): ReactElement | null {
   return (
     <PlayingViewOuter>
       <PlayingViewUpperSection>
-        <HintGrid
-          hints={hints}
-          guesses={guesses}
-          numCols={guessGridShape[0]}
-          numRows={guessGridShape[1]}
-        />
+        <HintGrid hints={hints} guesses={guesses} numCols={guessGridShape[0]} numRows={guessGridShape[1]} />
       </PlayingViewUpperSection>
       <PlayingViewSectionDivider />
       <PlayingViewLowerSection>
