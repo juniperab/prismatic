@@ -10,7 +10,6 @@ export enum HintType {
 
 export interface HintItem {
   match: boolean
-  colour: AnyColor
   value: number
 }
 

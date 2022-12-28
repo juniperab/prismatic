@@ -52,21 +52,11 @@ export const HintGridInner = styled.div.attrs({
   row-gap: ${hintGridLayout.gap}px;
 `
 
-export const HintRowOuter = styled.div.attrs({
-  className: 'hint-grid-row-outer',
+export const HintGridRow = styled.div.attrs({
+  className: 'hint-grid-row',
 })`
   box-sizing: border-box;
   display: grid;
   grid-template-columns: repeat(${(props) => (props as any)['data-cols']}, 1fr);
   column-gap: ${hintGridLayout.gap}px;
-`
-
-export const HintRowCell = styled.div.attrs({
-  className: 'hint-grid-row-cell',
-})`
-  box-sizing: border-box;
-  border-style: ${(props) => ((props as any)['data-highlight'] === true ? 'dashed' : 'solid')};
-  border-width: ${(props) => ((props as any)['data-highlight'] === true ? '2px' : '1px')};
-  border-color: ${(props) => props.theme.colours.border};
-  border-radius: 50%;
 `

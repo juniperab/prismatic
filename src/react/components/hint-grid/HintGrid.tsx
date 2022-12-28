@@ -1,29 +1,27 @@
 import { ReactElement } from 'react'
-import { HintGridMiddle2, HintGridMiddle1, HintGridOuter, HintGridInner } from './hintGridLayout'
+import { HintGridMiddle2, HintGridMiddle1, HintGridOuter, HintGridInner, HintGridRow } from "./hintGridLayout";
 import { Hint } from '../../../lib/puzzle/hint/hint'
-import { HintGridRow } from './HintGridRow'
-import { AnyColor } from '../../../lib/colour/colourConversions'
+import { HintDisplay } from "../hint-display/HintDisplay";
 
 export interface HintGridProps {
   hints: Hint[]
-  guesses: AnyColor[]
   numCols: number
   numRows: number
 }
 
 export function HintGrid(props: HintGridProps): ReactElement {
-  const { hints, guesses, numCols, numRows } = props
+  const { hints, numCols, numRows } = props
   const aspectRatio = numCols / numRows
 
-  const rows = []
-  for (let i = 0; i < numRows; i++) {
-    if (hints.length > i) {
-      rows.push(<HintGridRow hint={hints[i]} numCols={numCols} key={i} />)
-    } else if (guesses.length > i) {
-      rows.push(<HintGridRow guess={guesses[i]} numCols={numCols} key={i} />)
-    } else {
-      rows.push(<HintGridRow numCols={numCols} key={i} />)
+  const rows: ReactElement[] = []
+  for (let rowIdx = 0; rowIdx < numRows; rowIdx++) {
+    const cells: ReactElement[] = []
+    for (let colIdx = 0; colIdx < numCols; colIdx++) {
+      const hintIdx = rowIdx * numCols + colIdx
+      const hint = hints[hintIdx]
+      cells.push(<HintDisplay hint={hint} key={colIdx}/>)
     }
+    rows.push(<HintGridRow data-cols={numCols} key={rowIdx}>{cells}</HintGridRow>)
   }
 
   return (
