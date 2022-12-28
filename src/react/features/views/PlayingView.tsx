@@ -36,6 +36,7 @@ export function PlayingView(): ReactElement | null {
   const h = Math.max(height ?? 1, 1)
   const w = Math.max(width ?? 1, 1)
   const aspectRatio = guessGridShape[0] / guessGridShape[1] // width / height
+  const maxHints = guessGridShape[0] * guessGridShape[1]
   const upperHeight = Math.min(
     (w + hintGridLayout.gap) / aspectRatio - hintGridLayout.gap,
     h - playingViewLayout.lower.minHeight - playingViewLayout.gap
@@ -67,7 +68,7 @@ export function PlayingView(): ReactElement | null {
            onChangeComplete={receiveNewColour}
            onSelect={receiveColourSubmit}
            colour={currentColour}
-           disabled={answerName !== undefined}
+           disabled={answerName !== undefined || hints.length >= maxHints}
          />
       </PVSectionLower>
     </PlayingViewElement>

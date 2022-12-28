@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const hintDisplayLayout = {
+export const hintCircleLayout = {
   container: {
     border: {
       width: 2,
@@ -14,24 +14,18 @@ export const hintDisplayLayout = {
   }
 }
 
-export const HintDisplayOuter = styled.div.attrs({
-  className: 'hint-display-outer',
+export const _HintCircle = styled.div.attrs({
+  className: 'hint-circle',
 })`
   place-self: stretch;
-`
 
-export const HintDisplayInner = styled.div.attrs({
-  className: 'hint-display-inner',
-})`
   aspect-ratio: 1;
   box-sizing: border-box;
   position: relative;
   border-style: solid;
-  border-width: ${hintDisplayLayout.container.border.width}px;
+  border-width: ${hintCircleLayout.container.border.width}px;
   border-color: ${(props) => props.theme.colours.border};
   border-radius: 50%;
-  height: 100%;
-  width: 100%;
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
@@ -40,8 +34,9 @@ export const HintDisplayInner = styled.div.attrs({
   gap: 0;
   overflow: hidden;
 `
-export const HintDisplayQuadrant = styled.div.attrs({
-  className: 'hint-display-quadrant',
+
+export const _HintCircleQuadrant = styled.div.attrs({
+  className: 'hint-circle-quadrant',
 })`
   box-sizing: border-box;
   height: 50%;
@@ -49,14 +44,14 @@ export const HintDisplayQuadrant = styled.div.attrs({
   flex: 1 1 50%;
 `
 
-export const HintDisplayCentre = styled.div.attrs({
-  className: 'hint-display-centre',
+export const _HintCircleCentre = styled.div.attrs({
+  className: 'hint-circle-centre',
 })`
   box-sizing: border-box;
   aspect-ratio: 1;
-  width: ${hintDisplayLayout.centre.diameter}%;
+  width: ${hintCircleLayout.centre.diameter}%;
   border-style: solid;
-  border-width: ${hintDisplayLayout.centre.border.width}px;
+  border-width: ${hintCircleLayout.centre.border.width}px;
   border-color: ${(props) => props.theme.colours.border};
   border-radius: 50%;
   position: absolute;

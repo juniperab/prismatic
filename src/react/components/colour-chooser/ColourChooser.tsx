@@ -203,7 +203,7 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
     </InfiniteHammerArea>
   )
 
-  if (fullscreen)
+  if (fullscreen && visible)
     return <ColourChooserFullscreenElement data-show={visible}>{colourChooserContents}</ColourChooserFullscreenElement>
 
   return <ColourChooserElement data-show={visible}>{colourChooserContents}</ColourChooserElement>

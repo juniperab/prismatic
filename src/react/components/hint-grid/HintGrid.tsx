@@ -4,7 +4,7 @@ import {
   hintGridLayout
 } from "./hintGridLayout";
 import { Hint } from '../../../lib/puzzle/hint/hint'
-import { HintDisplay } from "../hint-display/HintDisplay";
+import { HintCircle } from "../hint-circle/HintCircle";
 import { AnyColor } from "../../../lib/colour/colourConversions";
 
 export interface HintGridProps {
@@ -27,11 +27,11 @@ export function HintGrid(props: HintGridProps): ReactElement {
   }, [])
 
   const items = hints.slice(0, maxItems)
-    .map((hint, idx) => <HintDisplay hint={hint} key={idx} onClick={onClick}/>)
+    .map((hint, idx) => <HintCircle hint={hint} key={idx} onClick={onClick}/>)
   if (items.length < maxItems && answer !== undefined) {
-    items.push(<HintDisplay answer={answer} key='answer' onClick={onClick}/>)
+    items.push(<HintCircle answer={answer} key='answer' onClick={onClick}/>)
   }
-  while (items.length < maxItems) items.push(<HintDisplay key={items.length}/>)
+  while (items.length < maxItems) items.push(<HintCircle key={items.length}/>)
 
   const h = Math.max(maxHeight ?? 1, 1)
   const w = Math.max(maxWidth ?? 1, 1)
