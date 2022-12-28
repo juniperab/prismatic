@@ -3,7 +3,7 @@ import { HintDisplayInner, HintDisplayOuter, HintDisplayQuadrant } from "./hintD
 import { HintDisplayProps } from "./HintDisplay";
 import { Hint, HintItem, HSBHint } from "../../../lib/puzzle/hint/hint";
 import { renderHintDisplayCentre } from "./hintDisplayCommon";
-import { AnyColor, toCssColour, toHSB } from "../../../lib/colour/colourConversions";
+import { AnyColor, HSBColor, toCssColour, toHSB } from "../../../lib/colour/colourConversions";
 import { bounded } from "../../../lib/math/math";
 import { rotateHue, toGrey } from "../../../lib/colour/colourMath";
 
@@ -21,15 +21,17 @@ function showValueInQuadrant(hintItem: HintItem | undefined, signPositive: boole
 }
 
 function getCssGradiant(hint: HSBHint, top: boolean, right: boolean): string {
-  const guessedColourHSB = toHSB(hint.guessedColour)
-
-  const edgeHue = rotateHue(guessedColourHSB.h, (hint.hue?.diff ?? 0))
-  const edgeSaturation = bounded(guessedColourHSB.s + (hint.saturation?.diff ?? 0), 0, 100)
-  const edgeBrightness = bounded(guessedColourHSB.b + (hint.brightness?.diff ?? 0), 0, 100)
-  let edgeColour: AnyColor = {h: edgeHue, s: edgeSaturation, b: edgeBrightness}
-  if (hint.hue === undefined) edgeColour = toGrey(edgeColour)
-  const centreColour = hint.hue !== undefined ? hint.guessedColour : toGrey(hint.guessedColour)
-  return `radial-gradient(circle at ${right ? 0 : 100}% ${top ? 100 : 0}%, ${toCssColour(centreColour)} 10%, ${toCssColour(edgeColour)} 75%)`
+  const innerColour = toHSB(hint.guessedColour)
+  const outerColour: HSBColor = {
+    h: rotateHue(innerColour.h, (hint.hue?.diff ?? 0)),
+    s: bounded(innerColour.s + (hint.saturation?.diff ?? 0), 0, 100),
+    b: bounded(innerColour.b + (hint.brightness?.diff ?? 0), 0, 100),
+  }
+  if (hint.hue === undefined) {
+    innerColour.s = 0
+    outerColour.s = 0
+  }
+  return `radial-gradient(circle at ${right ? 0 : 100}% ${top ? 100 : 0}%, ${toCssColour(innerColour)} 10%, ${toCssColour(outerColour)} 75%)`
 }
 
 function renderQuadrant(hint: HSBHint, top: boolean, right: boolean): ReactElement {

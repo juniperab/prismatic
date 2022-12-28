@@ -14,7 +14,7 @@ import { HelpModal } from '../modals/help/HelpModal'
 import { UserModal } from '../modals/user/UserModal'
 import { SettingsModal } from '../modals/settings/SettingsModal'
 import { PlayingView } from '../views/PlayingView'
-import { handleWindowResize, updateExtraVh } from './resizeHandlers'
+import { handleWindowResize } from './resizeHandlers'
 import { generateRandomColour } from '../../../lib/colour/colourMath'
 
 export function App(): ReactElement {
@@ -51,10 +51,8 @@ export function App(): ReactElement {
   useEffect(() => {
     receiveResize() // fire once on app load
     window.addEventListener('resize', receiveResize)
-    window.addEventListener('resize', updateExtraVh)
     return function cleanup() {
       window.removeEventListener('resize', receiveResize)
-      window.removeEventListener('resize', updateExtraVh)
     }
   }, [])
 
@@ -74,7 +72,7 @@ export function App(): ReactElement {
           onClickSettings={openModal(ModalType.settings)}
         />
         <Body>
-          <PlayingView />
+          {/* <PlayingView /> */}
         </Body>
         <Footer />
       </Window>

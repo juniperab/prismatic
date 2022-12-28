@@ -1,47 +1,57 @@
 import styled from 'styled-components'
-import { windowLayout } from './windowLayout'
+import { windowLayout } from "./windowLayout";
 
 export const footerLayout = {
-  height: 0,
   border: {
-    top: 0,
     bottom: 0,
+    sides: 0,
+    top: 0,
   },
+  contentHeight: 15,
+  height: -999,
   padding: {
-    side: 3,
+    bottom: 3,
+    sides: 3,
+    top: 3,
   },
-  contentHeight: -999,
 }
 
-footerLayout.contentHeight = footerLayout.height - footerLayout.border.top - footerLayout.border.bottom
+footerLayout.height = footerLayout.contentHeight
+  + footerLayout.border.top
+  + footerLayout.padding.top
+  + footerLayout.padding.bottom
+  + footerLayout.border.bottom
 
-export const FooterOuter = styled.div.attrs({
-  className: 'footer-outer',
+export const _Footer = styled.div.attrs({
+  className: 'footer',
 })`
-  box-sizing: border-box;
-  border-color: ${(props) => props.theme.colours.border};
-  border-bottom: ${footerLayout.border.bottom}px solid;
-  border-top: ${footerLayout.border.top}px solid;
-  width: calc(100% + ${windowLayout.padding.side * 2}px);
-  left: -${windowLayout.padding.side}px;
-  position: absolute;
-  height: ${footerLayout.height}px;
-  padding-left: ${footerLayout.padding.side}px;
-  padding-right: ${footerLayout.padding.side}px;
-  display: flex;
-  justify-content: space-between;
   align-items: flex-end;
+  border-bottom: ${footerLayout.border.bottom}px solid;
+  border-color: ${(props) => props.theme.colours.border};
+  border-left: ${footerLayout.border.sides}px solid;
+  border-right: ${footerLayout.border.sides}px solid;
+  border-top: ${footerLayout.border.top}px solid;
+  bottom: ${windowLayout.padding.topBottom}px;
+  box-sizing: border-box;
+  display: flex;
   gap: 3px;
-  bottom: 0;
+  height: ${footerLayout.height}px;
+  justify-content: space-between;
+  left: 0;
+  padding-bottom: ${footerLayout.padding.bottom}px;
+  padding-left: ${footerLayout.padding.sides}px;
+  padding-right: ${footerLayout.padding.sides}px;
+  padding-top: ${footerLayout.padding.top}px;
+  position: absolute;
+  width: 100%;
 `
 
-const FooterSection = styled.div.attrs({
+const _FooterSection = styled.div.attrs({
   className: 'footer-section',
 })`
   box-sizing: border-box;
-  flex-grow: 1;
+  flex: 1 1 content;
   display: inline-block;
-  flex-basis: content;
   height: ${footerLayout.contentHeight}px;
   overflow: hidden;
   width: calc(100% / 1);
@@ -50,15 +60,15 @@ const FooterSection = styled.div.attrs({
   }
 `
 
-export const FooterSectionLeft = styled(FooterSection)`
+export const _FooterSectionLeft = styled(_FooterSection)`
   text-align: left;
 `
 
-export const FooterSectionRight = styled(FooterSection)`
+export const _FooterSectionRight = styled(_FooterSection)`
   text-align: right;
 `
 
-export const FooterText = styled.p.attrs({
+export const _FooterText = styled.p.attrs({
   className: 'footer-text',
 })`
   box-sizing: border-box;

@@ -1,15 +1,20 @@
 import { ReactElement } from 'react'
-import { FooterOuter, FooterSectionLeft, FooterSectionRight, FooterText } from './footerLayout'
+import {
+  _Footer as FooterElement,
+  _FooterSectionLeft as FSectionLeft,
+  _FooterSectionRight as FSectionRight,
+  _FooterText as FText,
+} from './footerLayout'
 
 export function Footer(): ReactElement {
   return (
-    <FooterOuter>
-      <FooterSectionLeft>
-        <FooterText>© Juniper Alanna Berry</FooterText>
-      </FooterSectionLeft>
-      <FooterSectionRight>
-        <FooterText>Acknowledgements</FooterText>
-      </FooterSectionRight>
-    </FooterOuter>
+    <FooterElement>
+      <FSectionLeft>
+        <FText>© Juniper Alanna Berry</FText> {/* TODO: add email or web page link */}
+      </FSectionLeft>
+      <FSectionRight>
+        <FText>Acknowledgements</FText> {/* TODO: add content to acknowledgements */}
+      </FSectionRight>
+    </FooterElement>
   )
 }

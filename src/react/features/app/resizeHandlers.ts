@@ -1,6 +1,6 @@
 import * as _ from 'lodash'
 
-export const updateExtraVh: () => void = _.throttle(() => {
+const updateExtraVh: () => void = _.throttle(() => {
   // N.B. this is a hack to handle 100vh not being the same as the visible window size on some mobile browsers
   // the CSS variable '--extra-vh' will be populated with the number of non-visible pixels included in
   // the 100vh height measurement. This value should change infrequently as the view is manipulated

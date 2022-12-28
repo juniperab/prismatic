@@ -19,7 +19,7 @@ export interface PuzzleState {
 }
 
 // TODO: need a better way of creating a random puzzle
-const secretColour = toNamed(generateRandomColour()) // 'mediumseagreen'
+const secretColour = 'mediumseagreen' // toNamed(generateRandomColour()) // 'mediumseagreen'
 const initialPuzzle: Puzzle = {
   answer: toHSB(secretColour),
   answerName: toNamed(secretColour),

@@ -1,49 +1,52 @@
 import styled from 'styled-components'
 import { H1 } from '../theme/elements/H1'
-import { windowLayout } from './windowLayout'
 import { IconClickable } from '../theme/elements/Icon'
 import { ImgClickable } from '../theme/elements/Image'
+import { windowLayout } from "./windowLayout";
 
 export const headerLayout = {
   height: 40,
   border: {
     top: 0,
     bottom: 1,
+    sides: 0,
   },
   padding: {
-    side: 3,
+    sides: 3,
   },
   contentHeight: -999,
 }
 
 headerLayout.contentHeight = headerLayout.height - headerLayout.border.top - headerLayout.border.bottom
 
-export const HeaderOuter = styled.div.attrs({
-  className: 'header-outer',
+export const _Header = styled.div.attrs({
+  className: 'header',
 })`
-  box-sizing: border-box;
-  border-color: ${(props) => props.theme.colours.border};
-  border-bottom: ${headerLayout.border.bottom}px solid;
-  border-top: ${headerLayout.border.top}px solid;
-  width: calc(100% + ${windowLayout.padding.side * 2}px);
-  left: -${windowLayout.padding.side}px;
-  position: absolute;
-  height: ${headerLayout.height}px;
-  padding-left: ${headerLayout.padding.side}px;
-  padding-right: ${headerLayout.padding.side}px;
-  display: flex;
-  justify-content: space-between;
   align-items: flex-end;
+  border-bottom: ${headerLayout.border.bottom}px solid;
+  border-color: ${(props) => props.theme.colours.border};
+  border-left: ${headerLayout.border.sides}px solid;
+  border-right: ${headerLayout.border.sides}px solid;
+  border-top: ${headerLayout.border.top}px solid;
+  box-sizing: border-box;
+  display: flex;
   gap: 3px;
+  height: ${headerLayout.height}px;
+  justify-content: space-between;
+  left: 0;
+  padding-left: ${headerLayout.padding.sides}px;
+  padding-right: ${headerLayout.padding.sides}px;
+  position: absolute;
+  top: ${windowLayout.padding.topBottom}px;
+  width: 100%;
 `
 
-const HeaderSection = styled.div.attrs({
+const _HeaderSection = styled.div.attrs({
   className: 'header-section',
 })`
   box-sizing: border-box;
-  flex-grow: 1;
+  flex: 1 1 content;
   display: inline-block;
-  flex-basis: content;
   height: ${headerLayout.contentHeight}px;
   overflow: hidden;
   width: calc(100% / 1);
@@ -52,15 +55,15 @@ const HeaderSection = styled.div.attrs({
   }
 `
 
-export const HeaderSectionLeft = styled(HeaderSection)`
+export const _HeaderSectionLeft = styled(_HeaderSection)`
   text-align: left;
 `
 
-export const HeaderSectionRight = styled(HeaderSection)`
+export const _HeaderSectionRight = styled(_HeaderSection)`
   text-align: right;
 `
 
-export const HeaderImage = styled(ImgClickable).attrs({
+export const _HeaderImage = styled(ImgClickable).attrs({
   alt: 'logo',
   className: 'header-image',
 })`
@@ -68,11 +71,11 @@ export const HeaderImage = styled(ImgClickable).attrs({
   height: ${headerLayout.contentHeight}px;
 `
 
-export const HeaderIcon = styled(IconClickable)`
+export const _HeaderIcon = styled(IconClickable)`
   height: ${headerLayout.contentHeight}px;
 `
 
-export const HeaderTitle = styled(H1).attrs({
+export const _HeaderTitle = styled(H1).attrs({
   className: 'header-title',
 })`
   box-sizing: border-box;

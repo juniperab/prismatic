@@ -1,12 +1,15 @@
 import styled from 'styled-components'
 import { headerLayout } from './headerLayout'
 import { footerLayout } from './footerLayout'
+import { windowLayout } from "./windowLayout";
 
 export const bodyLayout = {
   margin: {
     top: 0,
     bottom: 0,
-    side: 0,
+    sides: 0,
+  },
+  offset: {
     fromTopOfWindow: -999,
     fromBottomOfWindow: -999,
   },
@@ -16,19 +19,19 @@ export const bodyLayout = {
   },
 }
 
-bodyLayout.margin.fromTopOfWindow = headerLayout.height + bodyLayout.margin.top
-bodyLayout.margin.fromBottomOfWindow = footerLayout.height + bodyLayout.margin.bottom
+bodyLayout.offset.fromTopOfWindow = windowLayout.padding.topBottom + headerLayout.height + bodyLayout.margin.top
+bodyLayout.offset.fromBottomOfWindow = windowLayout.padding.topBottom + footerLayout.height + bodyLayout.margin.bottom
 
-export const BodyOuter = styled.div.attrs({
-  className: 'body-outer',
+export const _Body = styled.div.attrs({
+  className: 'body',
 })`
-  bottom: ${bodyLayout.margin.fromBottomOfWindow}px;
+  bottom: ${bodyLayout.offset.fromBottomOfWindow}px;
   box-sizing: border-box;
   padding-bottom: ${bodyLayout.padding.topBottom}px;
   padding-left: ${bodyLayout.padding.sides}px;
   padding-right: ${bodyLayout.padding.sides}px;
   padding-top: ${bodyLayout.padding.topBottom}px;
   position: absolute;
-  top: ${bodyLayout.margin.fromTopOfWindow}px;
+  top: ${bodyLayout.offset.fromTopOfWindow}px;
   width: 100%;
 `
