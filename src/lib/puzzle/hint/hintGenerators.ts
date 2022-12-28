@@ -9,13 +9,13 @@ export function generateHintItem(
   hardStep: boolean,
 ): HintItem | undefined {
   if (Math.abs(valueDiff) <= precision) {
-    return { match: true, value: valueDiff }
+    return { match: true, diff: valueDiff }
   } else if (Math.abs(valueDiff) > cutoff) {
     return undefined
   }
   if (hardStep) {
-    return { match: false, value: step * Math.sign(valueDiff) }
+    return { match: false, diff: step * Math.sign(valueDiff) }
   } else {
-    return { match: false, value: bounded(valueDiff / step, -1, 1) * step }
+    return { match: false, diff: bounded(valueDiff / step, -1, 1) * step }
   }
 }

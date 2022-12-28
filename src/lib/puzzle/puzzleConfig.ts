@@ -13,10 +13,10 @@ const hintConfig: HintConfig = {
   hsb: {
     hueCutoff: 90,
     hueStep: 60,
-    saturationCutoff: 50,
-    saturationMaxStep: 25,
-    brightnessCutoff: 50,
-    brightnessMaxStep: 25,
+    saturationCutoff: 33,
+    saturationMaxStep: 50,
+    brightnessCutoff: 33,
+    brightnessMaxStep: 50,
   },
   cmyk: {
     cyanCutoff: 128,

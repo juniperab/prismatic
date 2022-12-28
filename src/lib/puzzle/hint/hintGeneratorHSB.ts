@@ -1,6 +1,6 @@
 import { HSBColor } from '../../colour/colourConversions'
 import { HintItem, HintType, HSBHint } from './hint'
-import { hueDiff, rotateHue } from "../../colour/colourMath";
+import { hueDiff } from "../../colour/colourMath";
 import { PuzzleHSB } from '../puzzle'
 import { HintConfigHSB } from './hintConfig'
 import { generateHintItem } from "./hintGenerators";
@@ -17,16 +17,7 @@ export function generateHintHSB(guess: HSBColor, puzzle: PuzzleHSB, config: Hint
 }
 
 function getHueHint(guess: HSBColor, target: HSBColor, precision: number, config: HintConfigHSB): HintItem | undefined {
-  const diff = hueDiff(target.h, guess.h)
-  const hintItem = generateHintItem(diff, precision, config.hueCutoff, config.hueStep, true)
-  if (hintItem !== undefined) {
-    return {
-      ...hintItem,
-      value: rotateHue(hintItem.value, 0), // normalize the hue value
-    }
-  } else {
-    return undefined
-  }
+  return generateHintItem(hueDiff(target.h, guess.h), precision, config.hueCutoff, config.hueStep, true)
 }
 
 function getSaturationHint(
@@ -35,7 +26,7 @@ function getSaturationHint(
   precision: number,
   config: HintConfigHSB
 ): HintItem | undefined {
-  return generateHintItem(target.s - guess.s, precision, config.saturationCutoff, config.saturationMaxStep, false)
+  return generateHintItem(target.s - guess.s, precision, config.saturationCutoff, config.saturationMaxStep, true)
 }
 
 function getBrightnessHint(
@@ -44,5 +35,5 @@ function getBrightnessHint(
   precision: number,
   config: HintConfigHSB
 ): HintItem | undefined {
-  return generateHintItem(target.b - guess.b, precision, config.brightnessCutoff, config.brightnessMaxStep, false)
+  return generateHintItem(target.b - guess.b, precision, config.brightnessCutoff, config.brightnessMaxStep, true)
 }

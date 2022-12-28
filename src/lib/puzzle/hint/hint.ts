@@ -10,7 +10,7 @@ export enum HintType {
 
 export interface HintItem {
   match: boolean
-  value: number
+  diff: number
 }
 
 export interface BaseHint {

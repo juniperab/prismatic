@@ -44,7 +44,11 @@ export function PlayingView(): ReactElement | null {
       </PlayingViewUpperSection>
       <PlayingViewSectionDivider />
       <PlayingViewLowerSection>
-        <ColourChooser onChangeComplete={receiveNewColour} onSelect={receiveColourSubmit} colour={currentColour} />
+        <ColourChooser
+          onChangeComplete={receiveNewColour}
+          onSelect={receiveColourSubmit}
+          colour={currentColour}
+        />
       </PlayingViewLowerSection>
     </PlayingViewOuter>
   )
