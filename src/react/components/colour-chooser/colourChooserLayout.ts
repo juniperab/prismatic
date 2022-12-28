@@ -35,8 +35,8 @@ export const ColourChooserOuter = styled.div.attrs({
 
 export const ColourChooserOuterFullscreen = styled(ColourChooserOuter)`
   position: fixed;
-  top: -${windowLayout.padding.topBottom}px;
-  left: -${windowLayout.padding.side}px;
+  top: -${windowLayout.padding.top}px;
+  left: -${windowLayout.padding.sides}px;
   height: calc(100vh - var(--extra-vh, 0px));
   width: 100vw;
 `

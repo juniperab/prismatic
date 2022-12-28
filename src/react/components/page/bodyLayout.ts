@@ -19,8 +19,8 @@ export const bodyLayout = {
   },
 }
 
-bodyLayout.offset.fromTopOfWindow = windowLayout.padding.topBottom + headerLayout.height + bodyLayout.margin.top
-bodyLayout.offset.fromBottomOfWindow = windowLayout.padding.topBottom + footerLayout.height + bodyLayout.margin.bottom
+bodyLayout.offset.fromTopOfWindow = windowLayout.padding.top + headerLayout.height + bodyLayout.margin.top
+bodyLayout.offset.fromBottomOfWindow = windowLayout.padding.bottom + footerLayout.height + bodyLayout.margin.bottom
 
 export const _Body = styled.div.attrs({
   className: 'body',
@@ -33,5 +33,5 @@ export const _Body = styled.div.attrs({
   padding-top: ${bodyLayout.padding.topBottom}px;
   position: absolute;
   top: ${bodyLayout.offset.fromTopOfWindow}px;
-  width: 100%;
+  width: calc(100% - ${windowLayout.padding.sides * 2}px);
 `

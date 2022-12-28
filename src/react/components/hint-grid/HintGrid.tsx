@@ -3,7 +3,6 @@ import { HintGridMiddle2, HintGridMiddle1, HintGridOuter, HintGridInner, HintGri
 import { Hint } from '../../../lib/puzzle/hint/hint'
 import { HintDisplay } from "../hint-display/HintDisplay";
 import { AnyColor } from "../../../lib/colour/colourConversions";
-import { on } from "hammerjs";
 
 export interface HintGridProps {
   answer?: AnyColor

@@ -37,7 +37,7 @@ export const _Header = styled.div.attrs({
   padding-left: ${headerLayout.padding.sides}px;
   padding-right: ${headerLayout.padding.sides}px;
   position: absolute;
-  top: ${windowLayout.padding.topBottom}px;
+  top: ${windowLayout.padding.top}px;
   width: 100%;
 `
 

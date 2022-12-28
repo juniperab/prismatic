@@ -31,7 +31,7 @@ export const _Footer = styled.div.attrs({
   border-left: ${footerLayout.border.sides}px solid;
   border-right: ${footerLayout.border.sides}px solid;
   border-top: ${footerLayout.border.top}px solid;
-  bottom: ${windowLayout.padding.topBottom}px;
+  bottom: ${windowLayout.padding.bottom}px;
   box-sizing: border-box;
   display: flex;
   gap: 3px;

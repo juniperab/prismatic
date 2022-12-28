@@ -72,7 +72,7 @@ export function App(): ReactElement {
           onClickSettings={openModal(ModalType.settings)}
         />
         <Body>
-          {/* <PlayingView /> */}
+          <PlayingView />
         </Body>
         <Footer />
       </Window>

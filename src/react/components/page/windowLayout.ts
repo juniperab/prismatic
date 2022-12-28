@@ -2,8 +2,9 @@ import styled from "styled-components";
 
 export const windowLayout = {
   padding: {
-    side: 15,
-    topBottom: 5,
+    bottom: 5,
+    sides: 15,
+    top: 5,
   },
   width: {
     max: 800,
@@ -19,7 +20,10 @@ export const _Window = styled.div.attrs({
   color: ${(props) => props.theme.colours.text};
   height: 100%;
   left: 50%;
-  padding: ${windowLayout.padding.topBottom}px ${windowLayout.padding.side}px;
+  padding-bottom: ${windowLayout.padding.bottom}px;
+  padding-left: ${windowLayout.padding.sides}px;
+  padding-right: ${windowLayout.padding.sides}px;
+  padding-top: ${windowLayout.padding.top}px;
   position: fixed;
   top: 50%;
   transform: translate(-50%, -50%);

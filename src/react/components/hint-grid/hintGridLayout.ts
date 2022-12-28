@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import { playingViewLayout } from '../../features/views/playingViewLayout'
 
 export const hintGridLayout = {
   gap: 20,
@@ -22,15 +21,16 @@ export const HintGridMiddle1 = styled.div.attrs({
   max-width: 100%;
 `
 
+
+// max-height: calc(
+//   100vh - var(--extra-vh, 0px) - ${playingViewLayout.windowHeightMinusUpper}px + ${hintGridLayout.gap}px
+// );
 export const HintGridMiddle2 = styled.div.attrs({
   className: 'hint-grid-grid-middle2',
 })`
   aspect-ratio: ${(props) => (props as any)['data-aspect-ratio']};
   box-sizing: border-box;
   left: 50%;
-  max-height: calc(
-    100vh - var(--extra-vh, 0px) - ${playingViewLayout.windowHeightMinusUpper}px + ${hintGridLayout.gap}px
-  );
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
