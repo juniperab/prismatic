@@ -1,13 +1,13 @@
 import { CSSProperties, ReactElement, useCallback, useEffect, useRef, useState } from 'react'
 import {
-  ColourChooserFullscreenToggle,
-  ColourChooserHelpButton,
-  ColourChooserInner,
-  ColourChooserOuter,
-  ColourChooserOuterFullscreen,
-  ColourChooserOverlay,
-  ColourChooserSelection,
-  ColourChooserSelectionPending,
+  _ColourChooserFullscreenButton as CCFullscreenButton,
+  _ColourChooserHelpButton as CCHelpButton,
+  _ColourChooserArea as CCArea,
+  _ColourChooser as ColourChooserElement,
+  _ColourChooserFullscreen as ColourChooserFullscreenElement,
+  _ColourChooserOverlay as CCOverlay,
+  _ColourChooserSelection as CCSelection,
+  ColourChooserSelectionPending as CCSelectionPending,
 } from './colourChooserLayout'
 import { InfiniteHammerArea } from '../hammer/InfiniteHammerArea'
 import { AnyColor, HSBColor, toCssColour, toHSB } from '../../../lib/colour/colourConversions'
@@ -161,19 +161,19 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
   const helpOverlapComponent = <ColourChooserHelpOverlay style={helpOverlayStyle} visible={helpOverlay.show} />
 
   const overlayComponent = (
-    <ColourChooserOverlay data-show={disabled !== true && !helpOverlay.show}>
-      <ColourChooserHelpButton color="white" onClick={() => showHelpOverlay(true)}>
+    <CCOverlay data-show={disabled !== true && !helpOverlay.show}>
+      <CCHelpButton color="white" onClick={() => showHelpOverlay(true)}>
         <theme.icons.question.svg />
-      </ColourChooserHelpButton>
-      <ColourChooserFullscreenToggle color="white" onClick={() => setFullscreen(!fullscreen)}>
+      </CCHelpButton>
+      <CCFullscreenButton color="white" onClick={() => setFullscreen(!fullscreen)}>
         {fullscreen ? <theme.icons.minimize.svg /> : <theme.icons.expand.svg />}
-      </ColourChooserFullscreenToggle>
+      </CCFullscreenButton>
       {selectionPending ? (
-        <ColourChooserSelectionPending ref={selectorRef} style={selectionStyle} />
+        <CCSelectionPending ref={selectorRef} style={selectionStyle} />
       ) : (
-        <ColourChooserSelection ref={selectorRef} style={selectionStyle} />
+        <CCSelection ref={selectorRef} style={selectionStyle} />
       )}
-    </ColourChooserOverlay>
+    </CCOverlay>
   )
 
   const hammerValues = hasNewPropsColour
@@ -201,12 +201,12 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
       overlay={overlayComponent}
       style={hammerAreaStyle}
     >
-      <ColourChooserInner style={innerStyle} />
+      <CCArea style={innerStyle} />
     </InfiniteHammerArea>
   )
 
   if (fullscreen)
-    return <ColourChooserOuterFullscreen data-show={visible}>{colourChooserContents}</ColourChooserOuterFullscreen>
+    return <ColourChooserFullscreenElement data-show={visible}>{colourChooserContents}</ColourChooserFullscreenElement>
 
-  return <ColourChooserOuter data-show={visible}>{colourChooserContents}</ColourChooserOuter>
+  return <ColourChooserElement data-show={visible}>{colourChooserContents}</ColourChooserElement>
 }

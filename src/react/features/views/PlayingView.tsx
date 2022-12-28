@@ -57,12 +57,12 @@ export function PlayingView(): ReactElement | null {
         {/* /> */}
       </PVSectionUpper>
       <PVSectionLower style={styleLower}>
-        {/* <ColourChooser */}
-        {/*   onChangeComplete={receiveNewColour} */}
-        {/*   onSelect={receiveColourSubmit} */}
-        {/*   colour={currentColour} */}
-        {/*   disabled={answerName !== undefined} */}
-        {/* /> */}
+         <ColourChooser
+           onChangeComplete={receiveNewColour}
+           onSelect={receiveColourSubmit}
+           colour={currentColour}
+           disabled={answerName !== undefined}
+         />
       </PVSectionLower>
     </PlayingViewElement>
   )

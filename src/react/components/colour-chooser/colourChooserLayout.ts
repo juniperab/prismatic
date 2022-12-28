@@ -22,8 +22,8 @@ export const colourChooserLayout = {
   },
 }
 
-export const ColourChooserOuter = styled.div.attrs({
-  className: 'colour-chooser-outer',
+export const _ColourChooser = styled.div.attrs({
+  className: 'colour-chooser',
 })`
   height: 100%;
   overflow: hidden;
@@ -33,16 +33,16 @@ export const ColourChooserOuter = styled.div.attrs({
   ${(props) => colourChooserLayout.container.fadeIn(props)}
 `
 
-export const ColourChooserOuterFullscreen = styled(ColourChooserOuter)`
+export const _ColourChooserFullscreen = styled(_ColourChooser)`
   position: fixed;
-  top: -${windowLayout.padding.top}px;
-  left: -${windowLayout.padding.sides}px;
+  top: 0;
+  left: 0;
   height: calc(100vh - var(--extra-vh, 0px));
   width: 100vw;
 `
 
-export const ColourChooserInner = styled.div.attrs({
-  className: 'colour-chooser-inner',
+export const _ColourChooserArea = styled.div.attrs({
+  className: 'colour-chooser-area',
 })`
   background-image: linear-gradient(0deg, #000, transparent), linear-gradient(90deg, #fff, hsla(0, 0%, 100%, 0));
   height: 100%;
@@ -50,29 +50,28 @@ export const ColourChooserInner = styled.div.attrs({
   width: 100%;
 `
 
-export const ColourChooserOverlay = styled.div`
+export const _ColourChooserOverlay = styled.div`
   ${(props) => colourChooserLayout.selector.fadeInOut(props)}
 `
 
-export const ColourChooserHelpButton = styled(Icon)`
+const _ColourChooserButton = styled(Icon)`
   position: absolute;
+  height: ${colourChooserLayout.overlay.buttons.size}px;
+  width: ${colourChooserLayout.overlay.buttons.size}px;
+  cursor: pointer;
+`
+
+export const _ColourChooserHelpButton = styled(_ColourChooserButton)`
   top: 0;
   left: 0;
-  height: ${colourChooserLayout.overlay.buttons.size}px;
-  width: ${colourChooserLayout.overlay.buttons.size}px;
-  cursor: pointer;
 `
 
-export const ColourChooserFullscreenToggle = styled(Icon)`
-  position: absolute;
+export const _ColourChooserFullscreenButton = styled(_ColourChooserButton)`
   top: 0;
   right: 0;
-  height: ${colourChooserLayout.overlay.buttons.size}px;
-  width: ${colourChooserLayout.overlay.buttons.size}px;
-  cursor: pointer;
 `
 
-export const ColourChooserSelection = styled.div.attrs({
+export const _ColourChooserSelection = styled.div.attrs({
   className: 'colour-chooser-selection',
 })`
   border-radius: 50%;
@@ -87,7 +86,7 @@ export const ColourChooserSelection = styled.div.attrs({
   width: ${colourChooserLayout.selector.diameter}px;
 `
 
-export const ColourChooserSelectionPending = styled(ColourChooserSelection)`
+export const ColourChooserSelectionPending = styled(_ColourChooserSelection)`
   height: ${colourChooserLayout.selector.diameter * 2}px;
   width: ${colourChooserLayout.selector.diameter * 2}px;
 `
