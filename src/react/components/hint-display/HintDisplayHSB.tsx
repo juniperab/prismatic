@@ -5,7 +5,7 @@ import { Hint, HintItem, HSBHint } from "../../../lib/puzzle/hint/hint";
 import { renderHintDisplayCentre } from "./hintDisplayCommon";
 import { AnyColor, toCssColour, toHSB } from "../../../lib/colour/colourConversions";
 import { bounded } from "../../../lib/math/math";
-import { rotateHue } from "../../../lib/colour/colourMath";
+import { rotateHue, toGrey } from "../../../lib/colour/colourMath";
 
 export interface HintDisplayHSBProps extends HintDisplayProps {
   hint: HSBHint,
@@ -22,12 +22,14 @@ function showValueInQuadrant(hintItem: HintItem | undefined, signPositive: boole
 
 function getCssGradiant(hint: HSBHint, top: boolean, right: boolean): string {
   const guessedColourHSB = toHSB(hint.guessedColour)
-  const centreColour = toCssColour(hint.guessedColour)
+
   const edgeHue = rotateHue(guessedColourHSB.h, (hint.hue?.diff ?? 0))
   const edgeSaturation = bounded(guessedColourHSB.s + (hint.saturation?.diff ?? 0), 0, 100)
   const edgeBrightness = bounded(guessedColourHSB.b + (hint.brightness?.diff ?? 0), 0, 100)
-  const edgeColour = toCssColour({h: edgeHue, s: edgeSaturation, b: edgeBrightness})
-  return `radial-gradient(circle at ${right ? 0 : 100}% ${top ? 100 : 0}%, ${centreColour} 10%, ${edgeColour} 75%)`
+  let edgeColour: AnyColor = {h: edgeHue, s: edgeSaturation, b: edgeBrightness}
+  if (hint.hue === undefined) edgeColour = toGrey(edgeColour)
+  const centreColour = hint.hue !== undefined ? hint.guessedColour : toGrey(hint.guessedColour)
+  return `radial-gradient(circle at ${right ? 0 : 100}% ${top ? 100 : 0}%, ${toCssColour(centreColour)} 10%, ${toCssColour(edgeColour)} 75%)`
 }
 
 function renderQuadrant(hint: HSBHint, top: boolean, right: boolean): ReactElement {

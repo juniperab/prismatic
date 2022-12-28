@@ -30,6 +30,7 @@ export interface ColourChooserProps {
   // callback triggered when the selection area is tapped
   onSelect?: () => void
   colour?: AnyColor
+  disabled?: boolean
 }
 
 const initialHelpOverlayState: HelpOverlayState = {
@@ -40,7 +41,7 @@ const initialHelpOverlayState: HelpOverlayState = {
 const defaultInitialColour: AnyColor = { h: 0, s: 50, b: 50 }
 
 export function ColourChooser(props: ColourChooserProps): ReactElement {
-  const { onChange, onChangeComplete, onSelect } = props
+  const { disabled, onChange, onChangeComplete, onSelect } = props
   const [propsColourHSB, setPropsColourHSB] = useState(toHSB(props.colour ?? defaultInitialColour))
   const [hasNewPropsColour, setHasNewPropsColour] = useState(true)
 
@@ -160,7 +161,7 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
   const helpOverlapComponent = <ColourChooserHelpOverlay style={helpOverlayStyle} visible={helpOverlay.show} />
 
   const overlayComponent = (
-    <ColourChooserOverlay data-show={!helpOverlay.show}>
+    <ColourChooserOverlay data-show={disabled !== true && !helpOverlay.show}>
       <ColourChooserHelpButton color="white" onClick={() => showHelpOverlay(true)}>
         <theme.icons.question.svg />
       </ColourChooserHelpButton>

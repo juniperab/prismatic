@@ -48,6 +48,7 @@ export function PlayingView(): ReactElement | null {
           onChangeComplete={receiveNewColour}
           onSelect={receiveColourSubmit}
           colour={currentColour}
+          disabled={answerName !== undefined}
         />
       </PlayingViewLowerSection>
     </PlayingViewOuter>

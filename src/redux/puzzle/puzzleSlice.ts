@@ -4,6 +4,7 @@ import { AnyColor, NamedColor, toHSB, toNamed } from '../../lib/colour/colourCon
 import { Hint, HintType } from '../../lib/puzzle/hint/hint'
 import { getPuzzleId, Puzzle, PuzzleId, PuzzleMode } from '../../lib/puzzle/puzzle'
 import { ClientPuzzleSpec, getNewPuzzle } from '../../lib/puzzle/puzzleServer'
+import { generateRandomColour } from "../../lib/colour/colourMath";
 
 export interface PuzzleState {
   answerName?: NamedColor
@@ -17,9 +18,11 @@ export interface PuzzleState {
   startingColour: AnyColor
 }
 
+// TODO: need a better way of creating a random puzzle
+const secretColour = toNamed(generateRandomColour()) // 'mediumseagreen'
 const initialPuzzle: Puzzle = {
-  answer: toHSB('mediumseagreen'),
-  answerName: toNamed('mediumseagreen'),
+  answer: toHSB(secretColour),
+  answerName: toNamed(secretColour),
   mode: HintType.HSB,
   precision: 3,
 }
