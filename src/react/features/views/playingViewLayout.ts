@@ -6,7 +6,7 @@ import { windowLayout } from '../../components/page/windowLayout'
 
 export const playingViewLayout = {
   border: {
-    lower: 1,
+    lower: 0,
   },
   height: {
     lower: 200,

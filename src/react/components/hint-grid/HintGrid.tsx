@@ -2,15 +2,19 @@ import { ReactElement } from 'react'
 import { HintGridMiddle2, HintGridMiddle1, HintGridOuter, HintGridInner, HintGridRow } from "./hintGridLayout";
 import { Hint } from '../../../lib/puzzle/hint/hint'
 import { HintDisplay } from "../hint-display/HintDisplay";
+import { AnyColor } from "../../../lib/colour/colourConversions";
+import { on } from "hammerjs";
 
 export interface HintGridProps {
+  answer?: AnyColor
   hints: Hint[]
   numCols: number
   numRows: number
+  onClick?: (hint: Hint) => void
 }
 
 export function HintGrid(props: HintGridProps): ReactElement {
-  const { hints, numCols, numRows } = props
+  const { answer, hints, numCols, numRows, onClick } = props
   const aspectRatio = numCols / numRows
 
   const rows: ReactElement[] = []
@@ -18,8 +22,12 @@ export function HintGrid(props: HintGridProps): ReactElement {
     const cells: ReactElement[] = []
     for (let colIdx = 0; colIdx < numCols; colIdx++) {
       const hintIdx = rowIdx * numCols + colIdx
-      const hint = hints[hintIdx]
-      cells.push(<HintDisplay hint={hint} key={colIdx}/>)
+      if (answer !== undefined && hintIdx === hints.length) {
+        cells.push(<HintDisplay answer={answer} key={colIdx} onClick={onClick}/>)
+      } else {
+        const hint = hints[hintIdx]
+        cells.push(<HintDisplay hint={hint} key={colIdx} onClick={onClick}/>)
+      }
     }
     rows.push(<HintGridRow data-cols={numCols} key={rowIdx}>{cells}</HintGridRow>)
   }

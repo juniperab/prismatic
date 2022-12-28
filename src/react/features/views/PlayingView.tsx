@@ -16,7 +16,7 @@ import { selectConfigState } from '../../../redux/config/configSlice'
 export function PlayingView(): ReactElement | null {
   const { activeView } = useAppSelector(selectAppState)
   const { guessGridShape } = useAppSelector(selectConfigState)
-  const { currentColour, hints } = useAppSelector(selectPuzzleState)
+  const { answerName, currentColour, hints } = useAppSelector(selectPuzzleState)
   const dispatch = useAppDispatch()
 
   if (activeView !== ViewType.playing) {
@@ -34,7 +34,13 @@ export function PlayingView(): ReactElement | null {
   return (
     <PlayingViewOuter>
       <PlayingViewUpperSection>
-        <HintGrid hints={hints} numCols={guessGridShape[0]} numRows={guessGridShape[1]} />
+        <HintGrid
+          answer={answerName}
+          hints={hints}
+          numCols={guessGridShape[0]}
+          numRows={guessGridShape[1]}
+          onClick={hint => dispatch(setCurrentColour(hint.guessedColour))}
+        />
       </PlayingViewUpperSection>
       <PlayingViewSectionDivider />
       <PlayingViewLowerSection>
