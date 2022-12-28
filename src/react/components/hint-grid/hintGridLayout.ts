@@ -1,62 +1,27 @@
 import styled from 'styled-components'
+import { fadeInOut } from "../theme/styles/fadeInOut";
 
 export const hintGridLayout = {
+  fadeIn: (show: any) => fadeInOut(show['data-show'], 1, 0),
   gap: 20,
 }
 
-export const HintGridOuter = styled.div.attrs({
-  className: 'hint-grid-grid-outer',
-})`
-  box-sizing: border-box;
-  height: 100%;
-  position: relative;
-  width: 100%;
-`
-
-export const HintGridMiddle1 = styled.div.attrs({
-  className: 'hint-grid-grid-middle1',
-})`
-  aspect-ratio: ${(props) => (props as any)['data-aspect-ratio']};
-  max-height: 100%;
-  max-width: 100%;
-`
-
-
-// max-height: calc(
-//   100vh - var(--extra-vh, 0px) - ${playingViewLayout.windowHeightMinusUpper}px + ${hintGridLayout.gap}px
-// );
-export const HintGridMiddle2 = styled.div.attrs({
-  className: 'hint-grid-grid-middle2',
-})`
-  aspect-ratio: ${(props) => (props as any)['data-aspect-ratio']};
-  box-sizing: border-box;
-  left: 50%;
-  position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: calc(100% + ${hintGridLayout.gap}px);
-`
-
-export const HintGridInner = styled.div.attrs({
-  className: 'hint-grid-grid-inner',
-})`
-  box-sizing: border-box;
-  height: calc(100% - ${hintGridLayout.gap}px);
-  left: 50%;
-  position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: calc(100% - ${hintGridLayout.gap}px);
-  display: grid;
-  grid-template-rows: repeat(${(props) => (props as any)['data-rows']}, 1fr);
-  row-gap: ${hintGridLayout.gap}px;
-`
-
-export const HintGridRow = styled.div.attrs({
-  className: 'hint-grid-row',
+export const _HintGrid = styled.div.attrs({
+  className: 'hint-grid',
 })`
   box-sizing: border-box;
   display: grid;
+  gap: ${hintGridLayout.gap}px;
+  grid-auto-flow: row;
   grid-template-columns: repeat(${(props) => (props as any)['data-cols']}, 1fr);
-  column-gap: ${hintGridLayout.gap}px;
+  grid-template-rows: repeat(${(props) => (props as any)['data-rows']}, 1fr);
+  height: 100%;
+  left: 50%;
+  place-content: center;
+  place-items: center;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  ${(props) => hintGridLayout.fadeIn(props)}
 `

@@ -30,6 +30,7 @@ const _PlayingViewSection = styled.div.attrs({
   border-style: solid;
   border-color: ${(props) => props.theme.colours.border};
   width: 100%;
+  position: relative;
 `
 
 export const _PlayingViewSectionUpper = styled(_PlayingViewSection)`

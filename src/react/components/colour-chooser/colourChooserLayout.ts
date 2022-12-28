@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 import { fadeInOut } from '../theme/styles/fadeInOut'
-import { windowLayout } from '../page/windowLayout'
 import { Icon } from '../theme/elements/Icon'
 
 export const colourChooserLayout = {

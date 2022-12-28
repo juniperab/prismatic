@@ -12,6 +12,7 @@ import { ColourChooser, NewColourCallback } from '../../components/colour-choose
 import { AnyColor } from '../../../lib/colour/colourConversions'
 import { selectConfigState } from '../../../redux/config/configSlice'
 import { useResizeDetector } from "react-resize-detector";
+import { hintGridLayout } from "../../components/hint-grid/hintGridLayout";
 
 export function PlayingView(): ReactElement | null {
   const { activeView } = useAppSelector(selectAppState)
@@ -35,7 +36,10 @@ export function PlayingView(): ReactElement | null {
   const h = Math.max(height ?? 1, 1)
   const w = Math.max(width ?? 1, 1)
   const aspectRatio = guessGridShape[0] / guessGridShape[1] // width / height
-  const upperHeight = Math.min(w / aspectRatio, h - playingViewLayout.lower.minHeight - playingViewLayout.gap)
+  const upperHeight = Math.min(
+    (w + hintGridLayout.gap) / aspectRatio - hintGridLayout.gap,
+    h - playingViewLayout.lower.minHeight - playingViewLayout.gap
+  )
   const lowerHeight = Math.max(playingViewLayout.lower.minHeight, h - upperHeight - playingViewLayout.gap)
   const styleUpper: CSSProperties = {
     height: upperHeight,
@@ -48,13 +52,15 @@ export function PlayingView(): ReactElement | null {
   return (
     <PlayingViewElement ref={ref}>
       <PVSectionUpper style={styleUpper}>
-        {/* <HintGrid */}
-        {/*   answer={answerName} */}
-        {/*   hints={hints} */}
-        {/*   numCols={guessGridShape[0]} */}
-        {/*   numRows={guessGridShape[1]} */}
-        {/*   onClick={hint => dispatch(setCurrentColour(hint.guessedColour))} */}
-        {/* /> */}
+         <HintGrid
+           answer={answerName}
+           hints={hints}
+           maxHeight={upperHeight}
+           maxWidth={w}
+           numCols={guessGridShape[0]}
+           numRows={guessGridShape[1]}
+           onClick={hint => dispatch(setCurrentColour(hint.guessedColour))}
+         />
       </PVSectionUpper>
       <PVSectionLower style={styleLower}>
          <ColourChooser

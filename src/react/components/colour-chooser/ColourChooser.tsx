@@ -23,10 +23,8 @@ export type NewColourCallback = (colour: HSBColor) => void
 export interface ColourChooserProps {
   // callback triggered when the colour is changed in any way, even during a gesture
   onChange?: NewColourCallback
-
   // callback triggered when a gesture completes
   onChangeComplete?: NewColourCallback
-
   // callback triggered when the selection area is tapped
   onSelect?: () => void
   colour?: AnyColor

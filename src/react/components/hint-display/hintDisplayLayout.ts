@@ -17,6 +17,7 @@ export const hintDisplayLayout = {
 export const HintDisplayOuter = styled.div.attrs({
   className: 'hint-display-outer',
 })`
+  place-self: stretch;
 `
 
 export const HintDisplayInner = styled.div.attrs({
