@@ -1,18 +1,34 @@
 {
   "files": {
-    "main.css": "/prismatic/static/css/main.e6c13ad2.css",
-    "main.js": "/prismatic/static/js/main.09b20b18.js",
+    "main.css": "/prismatic/static/css/main.f7dd0d2e.css",
+    "main.js": "/prismatic/static/js/main.c92ec6c1.js",
     "static/js/787.a039ecf8.chunk.js": "/prismatic/static/js/787.a039ecf8.chunk.js",
+    "static/media/logo.png": "/prismatic/static/media/logo.39c003d21bbc9126d3fe.png",
     "static/media/colour-picker.png": "/prismatic/static/media/colour-picker.fca037962f4ef1596646.png",
-    "static/media/logo.jpg": "/prismatic/static/media/logo.433f75e1f515122ad308.jpg",
+    "static/media/PinchZoom.png": "/prismatic/static/media/PinchZoom.33da1a1f4c36636ccb0a.png",
+    "static/media/ModifiedDrag.png": "/prismatic/static/media/ModifiedDrag.febbba185d477f0de8e4.png",
+    "static/media/Rotate.png": "/prismatic/static/media/Rotate.dbb6c6dde0141b05669e.png",
+    "static/media/Swipe.png": "/prismatic/static/media/Swipe.000299646309481a29ab.png",
     "static/media/solution.png": "/prismatic/static/media/solution.cf3122a6ff57d632a860.png",
+    "static/media/icon-settings.svg": "/prismatic/static/media/icon-settings.41e34c461f88acefa918939bbe8ed735.svg",
+    "static/media/icon-help.svg": "/prismatic/static/media/icon-help.a0437a0d1df979bb5dc62251624b8574.svg",
+    "static/media/icon-hint.svg": "/prismatic/static/media/icon-hint.aa6c2c30f539ea2c7ecbe52ed894af98.svg",
+    "static/media/icon-question.svg": "/prismatic/static/media/icon-question.dbbcae41d2bddbc151074e01a86621a9.svg",
+    "static/media/icon-key.svg": "/prismatic/static/media/icon-key.d0e89a784b5049779ac50e329befaca6.svg",
+    "static/media/icon-person.svg": "/prismatic/static/media/icon-person.0d3674e30d9a8b60c934077723a09f6b.svg",
+    "static/media/icon-minimize.svg": "/prismatic/static/media/icon-minimize.f1f4b58b2feac20f25020af518e03fc8.svg",
+    "static/media/icon-puzzle.svg": "/prismatic/static/media/icon-puzzle.fcad5cb1aebf042efe5b383f1046f7f8.svg",
+    "static/media/icon-expand.svg": "/prismatic/static/media/icon-expand.9f4da246e05e37dafb8a1314afb344d3.svg",
     "index.html": "/prismatic/index.html",
-    "main.e6c13ad2.css.map": "/prismatic/static/css/main.e6c13ad2.css.map",
-    "main.09b20b18.js.map": "/prismatic/static/js/main.09b20b18.js.map",
+    "static/media/icon-search.svg": "/prismatic/static/media/icon-search.e68dfb7fbe62eae61400bc282d2cf1e2.svg",
+    "static/media/icon-menu.svg": "/prismatic/static/media/icon-menu.72f2127dbed8a0df28654b6d9d5df46a.svg",
+    "static/media/icon-close.svg": "/prismatic/static/media/icon-close.32c18bc0e396b89781110e2034e62030.svg",
+    "main.f7dd0d2e.css.map": "/prismatic/static/css/main.f7dd0d2e.css.map",
+    "main.c92ec6c1.js.map": "/prismatic/static/js/main.c92ec6c1.js.map",
     "787.a039ecf8.chunk.js.map": "/prismatic/static/js/787.a039ecf8.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.e6c13ad2.css",
-    "static/js/main.09b20b18.js"
+    "static/css/main.f7dd0d2e.css",
+    "static/js/main.c92ec6c1.js"
   ]
 }
