@@ -1,27 +1,28 @@
-import { debounce, defaultTo, has } from 'lodash'
-import { Component, ReactElement, RefObject } from 'react'
-import Hammer from 'hammerjs'
-import { useResizeDetector } from 'react-resize-detector'
-import { useModifierKeys } from '../../hooks/useModifierKeys'
+import { debounce, defaultTo, has } from "lodash";
+import { Component, ReactElement, RefObject } from "react";
+import Hammer from "hammerjs";
+import { useResizeDetector } from "react-resize-detector";
+import { useModifierKeys } from "../../hooks/useModifierKeys";
 import {
   HammerAction,
   HammerAreaProps,
   HammerAreaValues,
   HammerOnResizeCallback,
-  HammerOnTapCallback,
-} from './hammerAreaTypes'
+  HammerOnTapCallback
+} from "./hammerAreaTypes";
 import {
-  InternalHammerOnUpdatePropValuesCallback,
-  InternalHammerOnChangeCallback,
   InternalHammerAreaProps,
-} from './hammerAreaTypesInternal'
+  InternalHammerOnChangeCallback,
+  InternalHammerOnUpdatePropValuesCallback
+} from "./hammerAreaTypesInternal";
 import {
+  internalModifiedEventValuesForScaleRotateExclusion,
   internalNewValuesForPan,
   internalNewValuesForScaleRotate,
   internalNewValuesForScaleRotateViaPan,
   internalNewValuesFromProps,
-} from './hammerAreaFunctionsInternal'
-import styled from 'styled-components'
+} from "./hammerAreaFunctionsInternal";
+import styled from "styled-components";
 
 const defaultHammerAreaValues: HammerAreaValues = {
   rotation: 0,
@@ -36,6 +37,9 @@ const defaultHammerAreaDisplayValues: HammerAreaValues = {
   x: 0,
   y: 0,
 }
+
+const rotationThreshold = 5
+const scaleThreshold = 0.2
 
 interface _InternalHammerAreaProps extends InternalHammerAreaProps {
   containerHeight: number
@@ -162,11 +166,27 @@ class _InternalHammerArea extends Component<_InternalHammerAreaProps> {
    * @param ev  the Hammer event
    */
   private readonly handleHammerProgressiveScaleRotate: (ev: HammerInput) => void = (ev) => {
-    if (this.currentAction !== HammerAction.ScaleRotate) return
+    switch(this.currentAction) {
+      case HammerAction.Rotate: break
+      case HammerAction.Scale: break
+      case HammerAction.ScaleRotate: break
+      default: return;
+    }
+
+    let [ modifiedEventValues, newAction ] = internalModifiedEventValuesForScaleRotateExclusion(
+      ev,
+      this.eventStartValues,
+      this.currentAction,
+      rotationThreshold,
+      scaleThreshold
+    )
+    if (this.props.scaleAndRotateTogether === true) modifiedEventValues = ev
+    else this.currentAction = newAction
+
     this.mostRecentEvent = ev
     this.callOnChange({
       ...internalNewValuesForScaleRotate(
-        { rotation: ev.rotation, scale: ev.scale },
+        modifiedEventValues,
         this.eventStartValues,
         this.currentValues,
         this.currentDisplayValues,
@@ -227,12 +247,27 @@ class _InternalHammerArea extends Component<_InternalHammerAreaProps> {
    * @param ev  the Hammer event
    */
   private readonly _handleHammerEndScaleRotateNotDebounced: (ev: HammerInput) => void = (ev) => {
-    if (this.currentAction !== HammerAction.ScaleRotate) return
+    switch(this.currentAction) {
+      case HammerAction.Rotate: break
+      case HammerAction.Scale: break
+      case HammerAction.ScaleRotate: break
+      default: return;
+    }
+
+    let [ modifiedEventValues ] = internalModifiedEventValuesForScaleRotateExclusion(
+      ev,
+      this.eventStartValues,
+      this.currentAction,
+      rotationThreshold,
+      scaleThreshold
+    )
+    if (this.props.scaleAndRotateTogether === true) modifiedEventValues = ev
+
     this.currentAction = HammerAction.None
     this.currentActionIsModified = false
     this.mostRecentEvent = undefined
     const newData = internalNewValuesForScaleRotate(
-      { rotation: ev.rotation, scale: ev.scale },
+      modifiedEventValues,
       this.eventStartValues,
       this.currentValues,
       this.currentDisplayValues,
@@ -307,7 +342,6 @@ class _InternalHammerArea extends Component<_InternalHammerAreaProps> {
     // attach a Hammer Manager to the container element
     this._hammer = new Hammer.Manager(this.props.containerRef.current)
     this.setupHammer(this._hammer)
-    // this.callOnChange(this.currentValues, true)
   }
 
   componentDidUpdate(prevProps: Readonly<_InternalHammerAreaProps>, prevState: Readonly<{}>, snapshot?: any): void {

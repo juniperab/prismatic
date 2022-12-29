@@ -128,7 +128,6 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
   }
 
   const handleHammerAreaTap: HammerOnTapCallback = (x, y, target: HTMLElement) => {
-    console.log(target)
     if (helpOverlay.show) {
       showHelpOverlay(false)
     } else if (target === selectorRef.current) {

@@ -3,6 +3,8 @@ import { CSSProperties, ReactNode } from 'react'
 export enum HammerAction {
   None = 'none',
   Pan = 'pan',
+  Rotate = 'rotate',
+  Scale = 'scale',
   ScaleRotate = 'scale/rotate',
 }
 
@@ -63,6 +65,8 @@ export interface HammerAreaProps {
   // one of these elements is tapped on as opposed to the main Hammer div
   // itself
   overlay?: ReactNode
+  // allow scaling and rotation to happen simultaneously
+  scaleAndRotateTogether?: boolean
   // style to apply to the container div that wraps the HammerArea's children
   style?: CSSProperties
   // elements to render beneath the div to which Hammer is attached;

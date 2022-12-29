@@ -48,8 +48,6 @@ function renderQuadrant(hint: HSBHint, top: boolean, right: boolean): ReactEleme
 export function HintCircleHSB(props: HintDisplayHSBProps): ReactElement {
   const { hint, onClick } = props
 
-  console.log(`${hint.hue?.diff ?? '_'}, ${hint.saturation?.diff ?? '_'}, ${hint.brightness?.diff ?? '_'}`)
-
   return <HintCircleElement>
     {renderQuadrant(hint, true, false)}
     {renderQuadrant(hint, true, true)}

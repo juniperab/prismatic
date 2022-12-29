@@ -7,7 +7,7 @@ export const footerLayout = {
     sides: 0,
     top: 0,
   },
-  contentHeight: 15,
+  contentHeight: 0,
   height: -999,
   padding: {
     bottom: 3,
@@ -16,7 +16,7 @@ export const footerLayout = {
   },
 }
 
-footerLayout.height = footerLayout.contentHeight
+footerLayout.height = footerLayout.contentHeight === 0 ? 0 : footerLayout.contentHeight
   + footerLayout.border.top
   + footerLayout.padding.top
   + footerLayout.padding.bottom

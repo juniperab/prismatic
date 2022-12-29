@@ -15,7 +15,8 @@ export const bodyLayout = {
   },
   padding: {
     sides: 0,
-    topBottom: 10,
+    top: 10,
+    bottom: 0,
   },
 }
 
@@ -27,10 +28,10 @@ export const _Body = styled.div.attrs({
 })`
   bottom: ${bodyLayout.offset.fromBottomOfWindow}px;
   box-sizing: border-box;
-  padding-bottom: ${bodyLayout.padding.topBottom}px;
+  padding-bottom: ${bodyLayout.padding.bottom}px;
   padding-left: ${bodyLayout.padding.sides}px;
   padding-right: ${bodyLayout.padding.sides}px;
-  padding-top: ${bodyLayout.padding.topBottom}px;
+  padding-top: ${bodyLayout.padding.top}px;
   position: absolute;
   top: ${bodyLayout.offset.fromTopOfWindow}px;
   width: calc(100% - ${windowLayout.padding.sides * 2}px);

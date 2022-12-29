@@ -3,11 +3,11 @@ import styled from 'styled-components'
 export const playingViewLayout = {
   upper: {
     padding: 0,
-    border: 1,
+    border: 0,
   },
   lower: {
     padding: 0,
-    border: 1,
+    border: 0,
     minHeight: 200,
   },
   gap: 10,

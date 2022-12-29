@@ -1,6 +1,51 @@
-import { HammerAreaProps, HammerAreaValues } from './hammerAreaTypes'
+import { HammerAction, HammerAreaProps, HammerAreaValues } from "./hammerAreaTypes";
 import { clampValue, valuesEquals, withDefaults } from './hammerAreaFunctions'
 import { euclideanDistance } from '../../../lib/math/math'
+
+/**
+ * Return the number of degree needed to rotate from a to b.
+ * The result will always be on [-180, 180]
+ *
+ * @param to      the ending-point hues
+ * @param from    the starting-point hues
+ */
+function rotationDiff(to: number, from: number): number {
+  let diff = to - from
+  while (diff > 180) diff -= 360
+  while (diff < -180) diff += 360
+  return diff
+}
+
+export function internalModifiedEventValuesForScaleRotateExclusion(
+  eventValues: { rotation: number, scale: number },
+  eventStartValues: { rotation: number, scale: number },
+  currentAction: HammerAction,
+  rotationThreshold: number,
+  scaleThreshold: number,
+): [ newEventValues: { rotation: number, scale: number }, newAction: HammerAction ] {
+  let action: HammerAction = currentAction
+  const rDiff: number = rotationDiff(eventValues.rotation, eventStartValues.rotation)
+  if (action === HammerAction.ScaleRotate) {
+    if (Math.abs(rDiff) >= rotationThreshold) {
+      action = HammerAction.Rotate
+    } else if (Math.abs(1 - eventValues.scale) >= scaleThreshold) {
+      action = HammerAction.Scale
+    }
+  }
+
+  const newEventValues = {
+    rotation: eventStartValues.rotation,
+    scale: eventStartValues.scale,
+  }
+  if (action === HammerAction.Rotate) {
+    if (Math.abs(rDiff) > rotationThreshold) {
+      newEventValues.rotation = eventStartValues.rotation + rDiff - (Math.sign(rDiff) * rotationThreshold)
+    }
+  } else if (action === HammerAction.Scale) {
+    newEventValues.scale = eventValues.scale
+  }
+  return [ newEventValues, action ]
+}
 
 /**
  * Compute what the new baseline values would be for a pan event,

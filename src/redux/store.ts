@@ -9,7 +9,14 @@ import { puzzleSaga } from './puzzle/puzzleSaga'
 import { all, call, FixedTask, SagaGenerator, spawn } from 'typed-redux-saga'
 import { AllEffect, ForkEffect } from '@redux-saga/core/effects'
 
-const logger = createLogger()
+const logger = createLogger({
+  level: {
+    prevState: false,
+    action: 'info',
+    nextState: false,
+  }
+})
+
 const saga = createSagaMiddleware({
   onError: (error: Error) => {
     throw error
