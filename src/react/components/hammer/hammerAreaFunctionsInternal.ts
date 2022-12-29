@@ -1,4 +1,4 @@
-import { HammerAction, HammerAreaProps, HammerAreaValues } from "./hammerAreaTypes";
+import { HammerAction, HammerAreaProps, HammerAreaValues } from './hammerAreaTypes'
 import { clampValue, valuesEquals, withDefaults } from './hammerAreaFunctions'
 import { euclideanDistance } from '../../../lib/math/math'
 
@@ -17,12 +17,12 @@ function rotationDiff(to: number, from: number): number {
 }
 
 export function internalModifiedEventValuesForScaleRotateExclusion(
-  eventValues: { rotation: number, scale: number },
-  eventStartValues: { rotation: number, scale: number },
+  eventValues: { rotation: number; scale: number },
+  eventStartValues: { rotation: number; scale: number },
   currentAction: HammerAction,
   rotationThreshold: number,
-  scaleThreshold: number,
-): [ newEventValues: { rotation: number, scale: number }, newAction: HammerAction ] {
+  scaleThreshold: number
+): [newEventValues: { rotation: number; scale: number }, newAction: HammerAction] {
   let action: HammerAction = currentAction
   const rDiff: number = rotationDiff(eventValues.rotation, eventStartValues.rotation)
   if (action === HammerAction.ScaleRotate) {
@@ -39,12 +39,12 @@ export function internalModifiedEventValuesForScaleRotateExclusion(
   }
   if (action === HammerAction.Rotate) {
     if (Math.abs(rDiff) > rotationThreshold) {
-      newEventValues.rotation = eventStartValues.rotation + rDiff - (Math.sign(rDiff) * rotationThreshold)
+      newEventValues.rotation = eventStartValues.rotation + rDiff - Math.sign(rDiff) * rotationThreshold
     }
   } else if (action === HammerAction.Scale) {
     newEventValues.scale = eventValues.scale
   }
-  return [ newEventValues, action ]
+  return [newEventValues, action]
 }
 
 /**

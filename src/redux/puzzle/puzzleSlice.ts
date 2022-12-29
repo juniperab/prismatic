@@ -4,7 +4,6 @@ import { AnyColor, NamedColor, toHSB, toNamed } from '../../lib/colour/colourCon
 import { Hint, HintType } from '../../lib/puzzle/hint/hint'
 import { getPuzzleId, Puzzle, PuzzleId, PuzzleMode } from '../../lib/puzzle/puzzle'
 import { ClientPuzzleSpec, getNewPuzzle } from '../../lib/puzzle/puzzleServer'
-import { generateRandomColour } from "../../lib/colour/colourMath";
 
 export interface PuzzleState {
   answerName?: NamedColor

@@ -2,7 +2,7 @@ import { HintItem, HintType, RGBHint } from './hint'
 import { RGBColor } from 'react-color'
 import { PuzzleRGB } from '../puzzle'
 import { HintConfigRGB } from './hintConfig'
-import { generateHintItem } from "./hintGenerators";
+import { generateHintItem } from './hintGenerators'
 
 export function generateHintRGB(guess: RGBColor, puzzle: PuzzleRGB, config: HintConfigRGB): RGBHint {
   const { answer, precision } = puzzle

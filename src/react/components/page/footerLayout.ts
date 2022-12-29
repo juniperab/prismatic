@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { windowLayout } from "./windowLayout";
+import { windowLayout } from './windowLayout'
 
 export const footerLayout = {
   border: {
@@ -16,11 +16,14 @@ export const footerLayout = {
   },
 }
 
-footerLayout.height = footerLayout.contentHeight === 0 ? 0 : footerLayout.contentHeight
-  + footerLayout.border.top
-  + footerLayout.padding.top
-  + footerLayout.padding.bottom
-  + footerLayout.border.bottom
+footerLayout.height =
+  footerLayout.contentHeight === 0
+    ? 0
+    : footerLayout.contentHeight +
+      footerLayout.border.top +
+      footerLayout.padding.top +
+      footerLayout.padding.bottom +
+      footerLayout.border.bottom
 
 export const _Footer = styled.div.attrs({
   className: 'footer',

@@ -1,28 +1,28 @@
-import { debounce, defaultTo, has } from "lodash";
-import { Component, ReactElement, RefObject } from "react";
-import Hammer from "hammerjs";
-import { useResizeDetector } from "react-resize-detector";
-import { useModifierKeys } from "../../hooks/useModifierKeys";
+import { debounce, defaultTo, has } from 'lodash'
+import { Component, ReactElement, RefObject } from 'react'
+import Hammer from 'hammerjs'
+import { useResizeDetector } from 'react-resize-detector'
+import { useModifierKeys } from '../../hooks/useModifierKeys'
 import {
   HammerAction,
   HammerAreaProps,
   HammerAreaValues,
   HammerOnResizeCallback,
-  HammerOnTapCallback
-} from "./hammerAreaTypes";
+  HammerOnTapCallback,
+} from './hammerAreaTypes'
 import {
   InternalHammerAreaProps,
   InternalHammerOnChangeCallback,
-  InternalHammerOnUpdatePropValuesCallback
-} from "./hammerAreaTypesInternal";
+  InternalHammerOnUpdatePropValuesCallback,
+} from './hammerAreaTypesInternal'
 import {
   internalModifiedEventValuesForScaleRotateExclusion,
   internalNewValuesForPan,
   internalNewValuesForScaleRotate,
   internalNewValuesForScaleRotateViaPan,
   internalNewValuesFromProps,
-} from "./hammerAreaFunctionsInternal";
-import styled from "styled-components";
+} from './hammerAreaFunctionsInternal'
+import styled from 'styled-components'
 
 const defaultHammerAreaValues: HammerAreaValues = {
   rotation: 0,
@@ -166,14 +166,18 @@ class _InternalHammerArea extends Component<_InternalHammerAreaProps> {
    * @param ev  the Hammer event
    */
   private readonly handleHammerProgressiveScaleRotate: (ev: HammerInput) => void = (ev) => {
-    switch(this.currentAction) {
-      case HammerAction.Rotate: break
-      case HammerAction.Scale: break
-      case HammerAction.ScaleRotate: break
-      default: return;
+    switch (this.currentAction) {
+      case HammerAction.Rotate:
+        break
+      case HammerAction.Scale:
+        break
+      case HammerAction.ScaleRotate:
+        break
+      default:
+        return
     }
 
-    let [ modifiedEventValues, newAction ] = internalModifiedEventValuesForScaleRotateExclusion(
+    let [modifiedEventValues, newAction] = internalModifiedEventValuesForScaleRotateExclusion(
       ev,
       this.eventStartValues,
       this.currentAction,
@@ -247,14 +251,18 @@ class _InternalHammerArea extends Component<_InternalHammerAreaProps> {
    * @param ev  the Hammer event
    */
   private readonly _handleHammerEndScaleRotateNotDebounced: (ev: HammerInput) => void = (ev) => {
-    switch(this.currentAction) {
-      case HammerAction.Rotate: break
-      case HammerAction.Scale: break
-      case HammerAction.ScaleRotate: break
-      default: return;
+    switch (this.currentAction) {
+      case HammerAction.Rotate:
+        break
+      case HammerAction.Scale:
+        break
+      case HammerAction.ScaleRotate:
+        break
+      default:
+        return
     }
 
-    let [ modifiedEventValues ] = internalModifiedEventValuesForScaleRotateExclusion(
+    let [modifiedEventValues] = internalModifiedEventValuesForScaleRotateExclusion(
       ev,
       this.eventStartValues,
       this.currentAction,

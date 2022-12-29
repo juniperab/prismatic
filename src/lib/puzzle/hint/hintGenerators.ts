@@ -1,12 +1,12 @@
-import { HintItem } from "./hint";
-import { bounded } from "../../math/math";
+import { HintItem } from './hint'
+import { bounded } from '../../math/math'
 
 export function generateHintItem(
   valueDiff: number,
   precision: number,
   cutoff: number,
   step: number,
-  hardStep: boolean,
+  hardStep: boolean
 ): HintItem | undefined {
   if (Math.abs(valueDiff) <= precision) {
     return { match: true, diff: valueDiff }

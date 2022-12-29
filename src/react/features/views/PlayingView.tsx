@@ -1,18 +1,19 @@
-import { CSSProperties, ReactElement } from "react";
+import { CSSProperties, ReactElement } from 'react'
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
 import { selectAppState, ViewType } from '../../../redux/app/appSlice'
 import {
   _PlayingViewSectionLower as PVSectionLower,
   _PlayingView as PlayingViewElement,
-  _PlayingViewSectionUpper as PVSectionUpper, playingViewLayout
-} from "./playingViewLayout";
+  _PlayingViewSectionUpper as PVSectionUpper,
+  playingViewLayout,
+} from './playingViewLayout'
 import { HintGrid } from '../../components/hint-grid/HintGrid'
 import { makeGuess, selectPuzzleState, setCurrentColour } from '../../../redux/puzzle/puzzleSlice'
 import { ColourChooser, NewColourCallback } from '../../components/colour-chooser/ColourChooser'
 import { AnyColor } from '../../../lib/colour/colourConversions'
 import { selectConfigState } from '../../../redux/config/configSlice'
-import { useResizeDetector } from "react-resize-detector";
-import { hintGridLayout } from "../../components/hint-grid/hintGridLayout";
+import { useResizeDetector } from 'react-resize-detector'
+import { hintGridLayout } from '../../components/hint-grid/hintGridLayout'
 
 export function PlayingView(): ReactElement | null {
   const { activeView } = useAppSelector(selectAppState)
@@ -53,23 +54,23 @@ export function PlayingView(): ReactElement | null {
   return (
     <PlayingViewElement ref={ref}>
       <PVSectionUpper style={styleUpper}>
-         <HintGrid
-           answer={answerName}
-           hints={hints}
-           maxHeight={upperHeight}
-           maxWidth={w}
-           numCols={guessGridShape[0]}
-           numRows={guessGridShape[1]}
-           onClick={hint => dispatch(setCurrentColour(hint.guessedColour))}
-         />
+        <HintGrid
+          answer={answerName}
+          hints={hints}
+          maxHeight={upperHeight}
+          maxWidth={w}
+          numCols={guessGridShape[0]}
+          numRows={guessGridShape[1]}
+          onClick={(hint) => dispatch(setCurrentColour(hint.guessedColour))}
+        />
       </PVSectionUpper>
       <PVSectionLower style={styleLower}>
-         <ColourChooser
-           onChangeComplete={receiveNewColour}
-           onSelect={receiveColourSubmit}
-           colour={currentColour}
-           disabled={answerName !== undefined || hints.length >= maxHints}
-         />
+        <ColourChooser
+          onChangeComplete={receiveNewColour}
+          onSelect={receiveColourSubmit}
+          colour={currentColour}
+          disabled={answerName !== undefined || hints.length >= maxHints}
+        />
       </PVSectionLower>
     </PlayingViewElement>
   )

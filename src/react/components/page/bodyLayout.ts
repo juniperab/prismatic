@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { headerLayout } from './headerLayout'
 import { footerLayout } from './footerLayout'
-import { windowLayout } from "./windowLayout";
+import { windowLayout } from './windowLayout'
 
 export const bodyLayout = {
   margin: {

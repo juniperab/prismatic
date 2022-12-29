@@ -66,11 +66,3 @@ export function generateRandomColour(): AnyColor {
     b: Math.random() * 256,
   }
 }
-
-export function toGrey(colour: AnyColor): AnyColor {
-  const hsb = toHSB(colour)
-  return { h: hsb.h, s: 0, b: hsb.b }
-  // const rgb = toRGB(colour)
-  // const value = 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b
-  // return { r: value, g: value, b: value }
-}

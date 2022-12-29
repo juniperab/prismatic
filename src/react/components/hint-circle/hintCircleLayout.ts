@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 export const hintCircleLayout = {
   container: {
@@ -10,8 +10,8 @@ export const hintCircleLayout = {
     diameter: 34, // percent
     border: {
       width: 1,
-    }
-  }
+    },
+  },
 }
 
 export const _HintCircle = styled.div.attrs({

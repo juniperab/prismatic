@@ -14,7 +14,7 @@ const logger = createLogger({
     prevState: false,
     action: 'info',
     nextState: false,
-  }
+  },
 })
 
 const saga = createSagaMiddleware({
