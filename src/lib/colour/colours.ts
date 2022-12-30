@@ -1,4 +1,4 @@
-import { isCMYK, isHex, isHSB, isHSL, isNamed, isRGB } from "./colourConversions";
+import { isCMYK, isHex, isHSB, isHSL, isNamed, isRGB } from './colourConversions'
 
 export interface CMYKColour {
   a?: number | undefined
@@ -33,15 +33,15 @@ export interface RGBColour {
   b: number
 }
 
-export type AnyColour = CMYKColour | HexColour | HSBColour  | HSLColour | NamedColour | RGBColour
+export type AnyColour = CMYKColour | HexColour | HSBColour | HSLColour | NamedColour | RGBColour
 
 export interface ColourVisitor<T> {
-  cmyk?: (c: CMYKColour) => T,
-  hex?: (c: HexColour) => T,
-  hsb?: (c: HSBColour) => T,
-  hsl?: (c: HSLColour) => T,
-  named?: (c: NamedColour) => T,
-  rgb?: (c: RGBColour) => T,
+  cmyk?: (c: CMYKColour) => T
+  hex?: (c: HexColour) => T
+  hsb?: (c: HSBColour) => T
+  hsl?: (c: HSLColour) => T
+  named?: (c: NamedColour) => T
+  rgb?: (c: RGBColour) => T
 }
 
 export function visitColour<T>(colour: AnyColour, visitor: ColourVisitor<T>): T | undefined {
@@ -61,11 +61,7 @@ export function visitColour<T>(colour: AnyColour, visitor: ColourVisitor<T>): T 
   throw new Error('invalid colour type')
 }
 
-export function visitColourOrThrow<T>(
-  colour: AnyColour,
-  visitor: ColourVisitor<T>,
-  error?: Error,
-): T {
+export function visitColourOrThrow<T>(colour: AnyColour, visitor: ColourVisitor<T>, error?: Error): T {
   const result = visitColour(colour, visitor)
   if (result === undefined) throw error ?? new Error('ColourVisitor produced no result')
   return result

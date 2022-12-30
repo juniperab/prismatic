@@ -1,9 +1,9 @@
 import { HintType, RGBHint } from './hint'
 import { HintGeneratorConfigRGB } from './hintGeneratorConfig'
 import { simpleHintItem } from './hintGeneratorCommon'
-import { RGBColour } from "../../colour/colours";
-import { Puzzle } from "../puzzle";
-import { toRGB } from "../../colour/colourConversions";
+import { RGBColour } from '../../colour/colours'
+import { Puzzle } from '../puzzle'
+import { toRGB } from '../../colour/colourConversions'
 
 export function generateHintRGB(guess: RGBColour, puzzle: Puzzle, config: HintGeneratorConfigRGB): RGBHint {
   const { precision } = puzzle

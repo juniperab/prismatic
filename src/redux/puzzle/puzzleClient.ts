@@ -1,7 +1,7 @@
 import { Hint } from '../../lib/puzzle/hint/hint'
 import { PuzzleId } from '../../lib/puzzle/puzzle'
 import { evaluateGuess, revealAnswer } from '../../lib/puzzle/puzzleServer'
-import { AnyColour, NamedColour } from "../../lib/colour/colours";
+import { AnyColour, NamedColour } from '../../lib/colour/colours'
 
 export async function submitGuessToServer(guess: AnyColour, puzzleId: PuzzleId): Promise<Hint | NamedColour> {
   return await new Promise<Hint | NamedColour>((resolve) => {

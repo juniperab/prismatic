@@ -1,10 +1,10 @@
-import { toHSB } from "../../colour/colourConversions";
+import { toHSB } from '../../colour/colourConversions'
 import { HintItem, HintType, HSBHint } from './hint'
 import { hueDiff } from '../../colour/colourMath'
 import { HintGeneratorConfigHSB } from './hintGeneratorConfig'
 import { simpleHintItem } from './hintGeneratorCommon'
-import { HSBColour } from "../../colour/colours";
-import { Puzzle } from "../puzzle";
+import { HSBColour } from '../../colour/colours'
+import { Puzzle } from '../puzzle'
 
 export function generateHintHSB(guess: HSBColour, puzzle: Puzzle, config: HintGeneratorConfigHSB): HSBHint {
   const { precision } = puzzle
@@ -19,7 +19,12 @@ export function generateHintHSB(guess: HSBColour, puzzle: Puzzle, config: HintGe
   }
 }
 
-function hueHint(guess: HSBColour, target: HSBColour, precision: number, config: HintGeneratorConfigHSB): HintItem | undefined {
+function hueHint(
+  guess: HSBColour,
+  target: HSBColour,
+  precision: number,
+  config: HintGeneratorConfigHSB
+): HintItem | undefined {
   return simpleHintItem(hueDiff(target.h, guess.h), precision, config.hueCutoff, config.hueStep)
 }
 

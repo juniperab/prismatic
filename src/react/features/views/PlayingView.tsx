@@ -13,7 +13,7 @@ import { ColourChooser, NewColourCallback } from '../../components/colour-choose
 import { selectConfigState } from '../../../redux/config/configSlice'
 import { useResizeDetector } from 'react-resize-detector'
 import { hintGridLayout } from '../../components/hint-grid/hintGridLayout'
-import { AnyColour } from "../../../lib/colour/colours";
+import { AnyColour } from '../../../lib/colour/colours'
 
 export function PlayingView(): ReactElement | null {
   const { activeView } = useAppSelector(selectAppState)

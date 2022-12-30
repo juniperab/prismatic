@@ -1,9 +1,9 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AppThunk, RootState } from "../store";
-import { Hint, HintType } from "../../lib/puzzle/hint/hint";
-import { getPuzzleId, PuzzleId } from "../../lib/puzzle/puzzle";
-import { getNewPuzzle } from "../../lib/puzzle/puzzleServer";
-import { AnyColour, NamedColour } from "../../lib/colour/colours";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { AppThunk, RootState } from '../store'
+import { Hint, HintType } from '../../lib/puzzle/hint/hint'
+import { getPuzzleId, PuzzleId } from '../../lib/puzzle/puzzle'
+import { getNewPuzzle } from '../../lib/puzzle/puzzleServer'
+import { AnyColour, NamedColour } from '../../lib/colour/colours'
 
 export interface PuzzleState {
   answerName?: NamedColour
@@ -67,8 +67,16 @@ export const puzzleSlice = createSlice({
   },
 })
 
-export const { giveUp, makeGuess, receiveAnswer, receiveHint, resetPuzzleState, setCurrentColour, setGuessMode, setStartingColour } =
-  puzzleSlice.actions
+export const {
+  giveUp,
+  makeGuess,
+  receiveAnswer,
+  receiveHint,
+  resetPuzzleState,
+  setCurrentColour,
+  setGuessMode,
+  setStartingColour,
+} = puzzleSlice.actions
 export const selectPuzzleState = (state: RootState): PuzzleState => state.puzzle
 export default puzzleSlice.reducer
 

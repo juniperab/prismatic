@@ -5,7 +5,7 @@ import { getPuzzleAnswerFromServer, submitGuessToServer } from './puzzleClient'
 import { PuzzleId } from '../../lib/puzzle/puzzle'
 import { Hint, isHint } from '../../lib/puzzle/hint/hint'
 import { giveUp, makeGuess, MakeGuessAction, receiveAnswer, receiveHint } from './puzzleSlice'
-import { AnyColour, NamedColour } from "../../lib/colour/colours";
+import { AnyColour, NamedColour } from '../../lib/colour/colours'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function* evaluateGuess(action: MakeGuessAction) {

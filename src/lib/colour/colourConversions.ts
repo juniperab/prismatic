@@ -8,8 +8,8 @@ import {
   HSLColour,
   NamedColour,
   RGBColour,
-  visitColourOrThrow
-} from "./colours";
+  visitColourOrThrow,
+} from './colours'
 
 type ColourTriple = [number, number, number]
 type ColourQuad = [number, number, number, number]
@@ -155,78 +155,78 @@ function namedWithAlpha(colour: NamedColour, _: number | undefined): NamedColour
 
 export function toRGB(colour: AnyColour): RGBColour {
   return visitColourOrThrow<RGBColour>(colour, {
-    cmyk: c => rgbWithAlpha(asRGB(convert.cmyk.rgb(toQuad(c))), c.a),
-    hex: c => rgbWithAlpha(asRGB(convert.hex.rgb(c.slice(1))), getHexAlpha(c)),
-    hsb: c => rgbWithAlpha(asRGB(convert.hsv.rgb(toTriple(c))), c.a),
-    hsl: c => rgbWithAlpha(asRGB(convert.hsl.rgb(toTriple(c))), c.a),
-    named: c => rgbWithAlpha(asRGB(convert.keyword.rgb(c as any)), getNamedAlpha(c)),
-    rgb: c => c,
+    cmyk: (c) => rgbWithAlpha(asRGB(convert.cmyk.rgb(toQuad(c))), c.a),
+    hex: (c) => rgbWithAlpha(asRGB(convert.hex.rgb(c.slice(1))), getHexAlpha(c)),
+    hsb: (c) => rgbWithAlpha(asRGB(convert.hsv.rgb(toTriple(c))), c.a),
+    hsl: (c) => rgbWithAlpha(asRGB(convert.hsl.rgb(toTriple(c))), c.a),
+    named: (c) => rgbWithAlpha(asRGB(convert.keyword.rgb(c as any)), getNamedAlpha(c)),
+    rgb: (c) => c,
   })
 }
 
 export function toHSL(colour: AnyColour): HSLColour {
   return visitColourOrThrow<HSLColour>(colour, {
-    cmyk: c => hslWithAlpha(asHSL(convert.cmyk.hsl(toQuad(c))), c.a),
-    hex: c => hslWithAlpha(asHSL(convert.hex.hsl(c.slice(1))), getHexAlpha(c)),
-    hsb: c => hslWithAlpha(asHSL(convert.hsv.hsl(toTriple(c))), c.a),
-    hsl: c => c,
-    named: c => hslWithAlpha(asHSL(convert.keyword.hsl(c as any)), getNamedAlpha(c)),
-    rgb: c => hslWithAlpha(asHSL(convert.rgb.hsl(toTriple(c))), c.a),
+    cmyk: (c) => hslWithAlpha(asHSL(convert.cmyk.hsl(toQuad(c))), c.a),
+    hex: (c) => hslWithAlpha(asHSL(convert.hex.hsl(c.slice(1))), getHexAlpha(c)),
+    hsb: (c) => hslWithAlpha(asHSL(convert.hsv.hsl(toTriple(c))), c.a),
+    hsl: (c) => c,
+    named: (c) => hslWithAlpha(asHSL(convert.keyword.hsl(c as any)), getNamedAlpha(c)),
+    rgb: (c) => hslWithAlpha(asHSL(convert.rgb.hsl(toTriple(c))), c.a),
   })
 }
 
 export function toHSB(colour: AnyColour): HSBColour {
   return visitColourOrThrow<HSBColour>(colour, {
-    cmyk: c => hsbWithAlpha(asHSB(convert.cmyk.hsv(toQuad(c))), c.a),
-    hex: c => hsbWithAlpha(asHSB(convert.hex.hsv(c.slice(1))), getHexAlpha(c)),
-    hsb: c => c,
-    hsl: c => hsbWithAlpha(asHSB(convert.hsl.hsv(toTriple(c))), c.a),
-    named: c => hsbWithAlpha(asHSB(convert.keyword.hsv(c as any)), getNamedAlpha(c)),
-    rgb: c => hsbWithAlpha(asHSB(convert.rgb.hsv(toTriple(c))), c.a),
+    cmyk: (c) => hsbWithAlpha(asHSB(convert.cmyk.hsv(toQuad(c))), c.a),
+    hex: (c) => hsbWithAlpha(asHSB(convert.hex.hsv(c.slice(1))), getHexAlpha(c)),
+    hsb: (c) => c,
+    hsl: (c) => hsbWithAlpha(asHSB(convert.hsl.hsv(toTriple(c))), c.a),
+    named: (c) => hsbWithAlpha(asHSB(convert.keyword.hsv(c as any)), getNamedAlpha(c)),
+    rgb: (c) => hsbWithAlpha(asHSB(convert.rgb.hsv(toTriple(c))), c.a),
   })
 }
 
 export function toCMYK(colour: AnyColour): CMYKColour {
   return visitColourOrThrow<CMYKColour>(colour, {
-    cmyk: c => c,
-    hex: c => cmykWithAlpha(asCMYK(convert.hex.cmyk(c.slice(1))), getHexAlpha(c)),
-    hsb: c => cmykWithAlpha(asCMYK(convert.hsv.cmyk(toTriple(c))), c.a),
-    hsl: c => cmykWithAlpha(asCMYK(convert.hsl.cmyk(toTriple(c))), c.a),
-    named: c => cmykWithAlpha(asCMYK(convert.keyword.cmyk(c as any)), getNamedAlpha(c)),
-    rgb: c => cmykWithAlpha(asCMYK(convert.rgb.cmyk(toTriple(c))), c.a),
+    cmyk: (c) => c,
+    hex: (c) => cmykWithAlpha(asCMYK(convert.hex.cmyk(c.slice(1))), getHexAlpha(c)),
+    hsb: (c) => cmykWithAlpha(asCMYK(convert.hsv.cmyk(toTriple(c))), c.a),
+    hsl: (c) => cmykWithAlpha(asCMYK(convert.hsl.cmyk(toTriple(c))), c.a),
+    named: (c) => cmykWithAlpha(asCMYK(convert.keyword.cmyk(c as any)), getNamedAlpha(c)),
+    rgb: (c) => cmykWithAlpha(asCMYK(convert.rgb.cmyk(toTriple(c))), c.a),
   })
 }
 
 export function toHex(colour: AnyColour): HexColour {
   return visitColourOrThrow<HexColour>(colour, {
-    cmyk: c => hexWithAlpha(asHex(convert.cmyk.hex(toQuad(c))), c.a),
-    hex: c => c,
-    hsb: c => hexWithAlpha(asHex(convert.hsv.hex(toTriple(c))), c.a),
-    hsl: c => hexWithAlpha(asHex(convert.hsl.hex(toTriple(c))), c.a),
-    named: c => hexWithAlpha(asHex(convert.keyword.hex(c as any)), getNamedAlpha(c)),
-    rgb: c => hexWithAlpha(asHex(convert.rgb.hex(toTriple(c))), c.a),
+    cmyk: (c) => hexWithAlpha(asHex(convert.cmyk.hex(toQuad(c))), c.a),
+    hex: (c) => c,
+    hsb: (c) => hexWithAlpha(asHex(convert.hsv.hex(toTriple(c))), c.a),
+    hsl: (c) => hexWithAlpha(asHex(convert.hsl.hex(toTriple(c))), c.a),
+    named: (c) => hexWithAlpha(asHex(convert.keyword.hex(c as any)), getNamedAlpha(c)),
+    rgb: (c) => hexWithAlpha(asHex(convert.rgb.hex(toTriple(c))), c.a),
   })
 }
 
 export function toNamed(colour: AnyColour): NamedColour {
   return visitColourOrThrow<NamedColour>(colour, {
-    cmyk: c => namedWithAlpha(asNamed(convert.cmyk.keyword(toQuad(c))), c.a),
-    hex: c => namedWithAlpha(asNamed(convert.hex.keyword(c.slice(1))), getHexAlpha(c)),
-    hsb: c => namedWithAlpha(asNamed(convert.hsv.keyword(toTriple(c))), c.a),
-    hsl: c => namedWithAlpha(asNamed(convert.hsl.keyword(toTriple(c))), c.a),
-    named: c => c,
-    rgb: c => namedWithAlpha(asNamed(convert.rgb.keyword(toTriple(c))), c.a),
+    cmyk: (c) => namedWithAlpha(asNamed(convert.cmyk.keyword(toQuad(c))), c.a),
+    hex: (c) => namedWithAlpha(asNamed(convert.hex.keyword(c.slice(1))), getHexAlpha(c)),
+    hsb: (c) => namedWithAlpha(asNamed(convert.hsv.keyword(toTriple(c))), c.a),
+    hsl: (c) => namedWithAlpha(asNamed(convert.hsl.keyword(toTriple(c))), c.a),
+    named: (c) => c,
+    rgb: (c) => namedWithAlpha(asNamed(convert.rgb.keyword(toTriple(c))), c.a),
   })
 }
 
 export function toCssColour(colour: AnyColour): string {
   return visitColourOrThrow<string>(colour, {
-    cmyk: c => toCssColour(toRGB(c)),
-    hex: c => c,
-    hsb: c => toCssColour(toHSL(c)),
-    hsl: c => c.a !== undefined ? `hsla(${c.h}, ${c.s}%, ${c.l}%, ${c.a}%)` : `hsl(${c.h}, ${c.s}%, ${c.l}%)`,
-    named: c => c,
-    rgb: c => c.a !== undefined ? `rgba(${c.r}, ${c.g}, ${c.b}, ${c.a}%)` : `rgb(${c.r}, ${c.g}, ${c.b})`,
+    cmyk: (c) => toCssColour(toRGB(c)),
+    hex: (c) => c,
+    hsb: (c) => toCssColour(toHSL(c)),
+    hsl: (c) => (c.a !== undefined ? `hsla(${c.h}, ${c.s}%, ${c.l}%, ${c.a}%)` : `hsl(${c.h}, ${c.s}%, ${c.l}%)`),
+    named: (c) => c,
+    rgb: (c) => (c.a !== undefined ? `rgba(${c.r}, ${c.g}, ${c.b}, ${c.a}%)` : `rgb(${c.r}, ${c.g}, ${c.b})`),
   })
 }
 

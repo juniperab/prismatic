@@ -1,8 +1,8 @@
 import { CSSProperties, ReactElement } from 'react'
 import { toCssColour } from '../../../lib/colour/colourConversions'
 import { _HintCircleCentre as HCCentre } from './hintCircleLayout'
-import { HintItem } from "../../../lib/puzzle/hint/hint";
-import { AnyColour } from "../../../lib/colour/colours";
+import { HintItem } from '../../../lib/puzzle/hint/hint'
+import { AnyColour } from '../../../lib/colour/colours'
 
 export enum HintCircleDirection {
   N = 0,

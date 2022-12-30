@@ -5,7 +5,7 @@ export function simpleHintItem(
   valueDiff: number,
   precision: number,
   cutoff: number,
-  range?: number,
+  range?: number
 ): HintItem | undefined {
   if (Math.abs(valueDiff) <= precision) {
     return { match: true, error: valueDiff }

@@ -1,11 +1,11 @@
-import { CSSProperties, ReactElement } from "react";
-import { _HintCircle as HintCircleElement, _HintCircleQuadrant as HCQuadrant } from "./hintCircleLayout";
-import { HintDisplayProps } from "./HintCircle";
-import { HSBHint } from "../../../lib/puzzle/hint/hint";
-import { HintCircleDirection, hintIndicatorMagnitude, renderHintDisplayCentre } from "./hintCircleCommon";
-import { toCssColour, toHSB } from "../../../lib/colour/colourConversions";
-import { rotateHue } from "../../../lib/colour/colourMath";
-import { AnyColour, HSBColour } from "../../../lib/colour/colours";
+import { CSSProperties, ReactElement } from 'react'
+import { _HintCircle as HintCircleElement, _HintCircleQuadrant as HCQuadrant } from './hintCircleLayout'
+import { HintDisplayProps } from './HintCircle'
+import { HSBHint } from '../../../lib/puzzle/hint/hint'
+import { HintCircleDirection, hintIndicatorMagnitude, renderHintDisplayCentre } from './hintCircleCommon'
+import { toCssColour, toHSB } from '../../../lib/colour/colourConversions'
+import { rotateHue } from '../../../lib/colour/colourMath'
+import { AnyColour, HSBColour } from '../../../lib/colour/colours'
 
 export interface HintDisplayHSBProps extends HintDisplayProps {
   hint: HSBHint
@@ -20,32 +20,55 @@ export interface HintDisplayHSBProps extends HintDisplayProps {
 //   return show
 // }
 
-function cssGradiant(
-  innerColour: AnyColour,
-  outerColour: AnyColour,
-  dir: HintCircleDirection,
-): string {
+function cssGradiant(innerColour: AnyColour, outerColour: AnyColour, dir: HintCircleDirection): string {
   let startAtLeft = true
   let startAtTop = true
-  switch(dir) {
-    case HintCircleDirection.N: startAtLeft = false; startAtTop = false; break
-    case HintCircleDirection.NE: startAtLeft = false; startAtTop = false; break
-    case HintCircleDirection.E: startAtLeft = true; startAtTop = false; break
-    case HintCircleDirection.SE: startAtLeft = true; startAtTop = false; break
-    case HintCircleDirection.S: startAtLeft = true; startAtTop = true; break
-    case HintCircleDirection.SW: startAtLeft = true; startAtTop = true; break
-    case HintCircleDirection.W: startAtLeft = false; startAtTop = true; break
-    case HintCircleDirection.NW: startAtLeft = false; startAtTop = true; break
-    default: throw new Error('invalid direction')
+  switch (dir) {
+    case HintCircleDirection.N:
+      startAtLeft = false
+      startAtTop = false
+      break
+    case HintCircleDirection.NE:
+      startAtLeft = false
+      startAtTop = false
+      break
+    case HintCircleDirection.E:
+      startAtLeft = true
+      startAtTop = false
+      break
+    case HintCircleDirection.SE:
+      startAtLeft = true
+      startAtTop = false
+      break
+    case HintCircleDirection.S:
+      startAtLeft = true
+      startAtTop = true
+      break
+    case HintCircleDirection.SW:
+      startAtLeft = true
+      startAtTop = true
+      break
+    case HintCircleDirection.W:
+      startAtLeft = false
+      startAtTop = true
+      break
+    case HintCircleDirection.NW:
+      startAtLeft = false
+      startAtTop = true
+      break
+    default:
+      throw new Error('invalid direction')
   }
-  return `radial-gradient(` +
+  return (
+    `radial-gradient(` +
     `circle at ${startAtLeft ? 0 : 100}% ${startAtTop ? 0 : 100}%, ` +
     `${toCssColour(innerColour)} 10%, ` +
     `${toCssColour(outerColour)} 75%)`
+  )
 }
 
 function renderQuadrant(dir: HintCircleDirection, hint?: HSBHint): ReactElement {
-  if (hint === undefined) return <HCQuadrant key={dir}/>
+  if (hint === undefined) return <HCQuadrant key={dir} />
 
   let innerColour: HSBColour = toHSB(hint?.guessedColour)
   let outerColour: HSBColour = innerColour
@@ -55,7 +78,7 @@ function renderQuadrant(dir: HintCircleDirection, hint?: HSBHint): ReactElement 
     outerColour = {
       h: rotateHue(outerColour.h, hint.hue.error),
       s: outerColour.s + (hint.saturation?.error ?? 0),
-      b: outerColour.b + (hint.brightness?.error ?? 0)
+      b: outerColour.b + (hint.brightness?.error ?? 0),
     }
     // switch(dir) {
     //   case HintCircleDirection.N:
@@ -75,7 +98,7 @@ function renderQuadrant(dir: HintCircleDirection, hint?: HSBHint): ReactElement 
     // }
   } else {
     // TODO: WTF AM I DOING HERE?
-    switch(dir) {
+    switch (dir) {
       case HintCircleDirection.E:
       case HintCircleDirection.W:
         innerColour = {
@@ -84,7 +107,7 @@ function renderQuadrant(dir: HintCircleDirection, hint?: HSBHint): ReactElement 
         }
         outerColour = {
           ...outerColour,
-          b: innerColour.b - (hint.saturation?.error ?? 0)
+          b: innerColour.b - (hint.saturation?.error ?? 0),
         }
         break
       default:
@@ -93,24 +116,24 @@ function renderQuadrant(dir: HintCircleDirection, hint?: HSBHint): ReactElement 
     outerColour = {
       ...outerColour,
       s: 0,
-      b: outerColour.b + (hint.brightness?.error ?? 0)
+      b: outerColour.b + (hint.brightness?.error ?? 0),
     }
   }
 
   console.log(
     `${dir}   :   ` +
-    `${innerColour.h.toFixed(0)} -> ${outerColour.h.toFixed(0)}   :   ` +
-    `${innerColour.s.toFixed(0)} -> ${outerColour.s.toFixed(0)}   :   ` +
-    `${innerColour.b.toFixed(0)} -> ${outerColour.b.toFixed(0)}`
+      `${innerColour.h.toFixed(0)} -> ${outerColour.h.toFixed(0)}   :   ` +
+      `${innerColour.s.toFixed(0)} -> ${outerColour.s.toFixed(0)}   :   ` +
+      `${innerColour.b.toFixed(0)} -> ${outerColour.b.toFixed(0)}`
   )
 
   const style: CSSProperties = {
-    backgroundImage: cssGradiant(innerColour, outerColour, dir)
+    backgroundImage: cssGradiant(innerColour, outerColour, dir),
   }
-  return <HCQuadrant key={dir} style={style}/>
+  return <HCQuadrant key={dir} style={style} />
 }
 
-function renderQuadrants(hint: HSBHint): { quadrants: ReactElement, rotateQuadrants: boolean } {
+function renderQuadrants(hint: HSBHint): { quadrants: ReactElement; rotateQuadrants: boolean } {
   const quadrants = []
   let rotate
 
@@ -229,7 +252,8 @@ function renderQuadrants(hint: HSBHint): { quadrants: ReactElement, rotateQuadra
     case 'xx':
       rotate = false
       break
-    default: throw new Error('invalid hint magnitudes for saturation and brightness')
+    default:
+      throw new Error('invalid hint magnitudes for saturation and brightness')
   }
 
   return {
@@ -251,7 +275,7 @@ export function HintCircleHSB(props: HintDisplayHSBProps): ReactElement {
   const { quadrants, rotateQuadrants } = renderQuadrants(hint)
 
   const hintCircleStyle: CSSProperties = {
-    transform: `rotate(${rotateQuadrants ? 90 : 45}deg)`
+    transform: `rotate(${rotateQuadrants ? 90 : 45}deg)`,
   }
 
   return (

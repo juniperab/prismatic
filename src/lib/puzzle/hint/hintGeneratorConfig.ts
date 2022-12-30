@@ -1,4 +1,3 @@
-
 export interface HintGeneratorConfigCMYK {
   cyanCutoff: number
   cyanRange: number
