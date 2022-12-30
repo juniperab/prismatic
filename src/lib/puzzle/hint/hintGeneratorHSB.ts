@@ -13,16 +13,14 @@ export function generateHintHSB(guess: HSBColour, puzzle: Puzzle, config: HintGe
   const saturation = saturationHint(guess, answer, precision, config)
   const brightness = brightnessHint(guess, answer, precision, config)
 
-  console.log(brightness)
-
   let innerColour = guess
   let outerColour = guess
 
   if (hue !== undefined) {
     outerColour = {
       h: rotateHue(guess.h, Math.sign(hue.error) * config.hueRange),
-      s: Math.sign(saturation?.error ?? 0) * config.saturationRange,
-      b: Math.sign(brightness?.error ?? 0) * config.brightnessRange,
+      s: outerColour.s + Math.sign(saturation?.error ?? 0) * config.saturationRange,
+      b: outerColour.b + Math.sign(brightness?.error ?? 0) * config.brightnessRange,
     }
   } else {
     innerColour = { ...innerColour, s: 0 }
@@ -55,8 +53,6 @@ export function generateHintHSB(guess: HSBColour, puzzle: Puzzle, config: HintGe
       innerColour = { ...innerColour, b: innerColour.b - extra / 2 }
     }
   }
-
-  console.log(`${innerColour.b} -> ${outerColour.b}`)
 
   return {
     type: HintType.HSB,
