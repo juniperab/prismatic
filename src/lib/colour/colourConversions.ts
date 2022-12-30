@@ -3,13 +3,12 @@ import { euclideanDistance } from '../math/math'
 import {
   AnyColour,
   CMYKColour,
-  ColourVisitor,
   HexColour,
   HSBColour,
   HSLColour,
   NamedColour,
   RGBColour,
-  visitColour, visitColourOrThrow
+  visitColourOrThrow
 } from "./colours";
 
 type ColourTriple = [number, number, number]

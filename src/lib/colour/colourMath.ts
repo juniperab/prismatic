@@ -1,5 +1,4 @@
 import { isHex, isHSB, isHSL, isRGB, toHSB, toHSL, toRGB } from './colourConversions'
-import { euclideanDistance } from "../math/math";
 import { AnyColour } from "./colours";
 
 /**

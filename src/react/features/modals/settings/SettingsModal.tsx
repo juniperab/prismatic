@@ -1,15 +1,15 @@
-import React, { ReactElement } from 'react'
-import { ModalType, selectAppState, setActiveModal } from '../../../../redux/app/appSlice'
-import { Modal } from '../../../components/modal/Modal'
-import { useAppDispatch, useAppSelector } from '../../../../redux/hooks'
-import { OptionsOneLine } from '../../../components/options/OptionsOneLine'
-import { ModalBodySection } from '../../../components/modal/modalLayout'
-import { allPuzzleModes } from '../../../../lib/puzzle/puzzle'
-import { selectPuzzleState } from '../../../../redux/puzzle/puzzleSlice'
+import React, { ReactElement } from "react";
+import { ModalType, selectAppState, setActiveModal } from "../../../../redux/app/appSlice";
+import { Modal } from "../../../components/modal/Modal";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import { OptionsOneLine } from "../../../components/options/OptionsOneLine";
+import { ModalBodySection } from "../../../components/modal/modalLayout";
+import { selectPuzzleState, setGuessMode } from "../../../../redux/puzzle/puzzleSlice";
+import { HintType } from "../../../../lib/puzzle/hint/hint";
 
 export function SettingsModal(): ReactElement | null {
   const { activeModal } = useAppSelector(selectAppState)
-  const { mode } = useAppSelector(selectPuzzleState)
+  const { guessMode } = useAppSelector(selectPuzzleState)
   const dispatch = useAppDispatch()
 
   if (activeModal !== ModalType.settings) {
@@ -21,10 +21,10 @@ export function SettingsModal(): ReactElement | null {
       <ModalBodySection>
         <OptionsOneLine
           label={'Puzzle Mode'}
-          onSelect={(selectedOption) => console.log(selectedOption)}
-          options={allPuzzleModes}
+          onSelect={(selectedOption) => dispatch(setGuessMode(selectedOption))}
+          options={[HintType.CMYK, HintType.HSB, HintType.RGB]}
           optionFormatter={(opt) => opt.toString().toUpperCase()}
-          selected={mode}
+          selected={guessMode}
         />
         <p>The puzzle mode determines the type of hints that you will receive.</p>
         <p>

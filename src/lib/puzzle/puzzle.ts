@@ -1,7 +1,8 @@
-import { NamedColour } from "../colour/colourConversions";
+
 import base64 from 'base-64'
 import utf8 from 'utf8'
 import { HintGeneratorConfig } from './hint/hintGeneratorConfig'
+import { NamedColour } from "../colour/colours";
 
 export type PuzzleId = string
 

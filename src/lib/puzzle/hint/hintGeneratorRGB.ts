@@ -1,11 +1,13 @@
 import { HintType, RGBHint } from './hint'
-import { RGBColor } from 'react-color'
-import { PuzzleRGB } from '../puzzle'
 import { HintGeneratorConfigRGB } from './hintGeneratorConfig'
 import { simpleHintItem } from './hintGeneratorCommon'
+import { RGBColour } from "../../colour/colours";
+import { Puzzle } from "../puzzle";
+import { toRGB } from "../../colour/colourConversions";
 
-export function generateHintRGB(guess: RGBColor, puzzle: PuzzleRGB, config: HintGeneratorConfigRGB): RGBHint {
-  const { answer, precision } = puzzle
+export function generateHintRGB(guess: RGBColour, puzzle: Puzzle, config: HintGeneratorConfigRGB): RGBHint {
+  const { precision } = puzzle
+  const answer = toRGB(puzzle.answer)
   return {
     type: HintType.RGB,
     guessedColour: guess,

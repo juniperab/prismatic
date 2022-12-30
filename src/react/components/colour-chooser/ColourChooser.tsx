@@ -10,13 +10,14 @@ import {
   ColourChooserSelectionPending as CCSelectionPending,
 } from './colourChooserLayout'
 import { InfiniteHammerArea } from '../hammer/InfiniteHammerArea'
-import { AnyColour, HSBColour, toCssColour, toHSB } from '../../../lib/colour/colourConversions'
+import { toCssColour, toHSB } from '../../../lib/colour/colourConversions'
 import { rotateHue } from '../../../lib/colour/colourMath'
 import { ColourChooserHelpOverlay, HelpOverlayState, useHelpOverlayState } from './ColourChooserHelpOverlay'
 import { defaultTo } from 'lodash'
 import { HammerOnChangeCallback, HammerOnResizeCallback, HammerOnTapCallback } from '../hammer/hammerAreaTypes'
 import { useTheme } from 'styled-components'
 import { Theme } from '../theme/theme'
+import { AnyColour, HSBColour } from "../../../lib/colour/colours";
 
 export type NewColourCallback = (colour: HSBColour) => void
 

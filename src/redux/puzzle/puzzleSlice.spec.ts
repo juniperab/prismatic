@@ -1,22 +1,19 @@
-import reducer, { PuzzleState, setCurrentColour, setStartingColour } from './puzzleSlice'
-import { AnyColour, toHSB, toNamed } from '../../lib/colour/colourConversions'
-import { getPuzzleId, Puzzle } from '../../lib/puzzle/puzzle'
-import { HintType } from '../../lib/puzzle/hint/hint'
+import reducer, { PuzzleState, setCurrentColour, setStartingColour } from "./puzzleSlice";
+import { getPuzzleId, Puzzle } from "../../lib/puzzle/puzzle";
+import { HintType } from "../../lib/puzzle/hint/hint";
+import { NamedColour } from "../../lib/colour/colours";
 
 const testInitialPuzzle: Puzzle = {
-  answer: toHSB('brickred'),
-  answerName: toNamed('brickred'),
-  mode: HintType.HSB,
+  answer: 'brickred',
   precision: 3,
 }
-const testStartingColour: AnyColour = 'yellow'
+const testStartingColour: NamedColour = 'yellow'
 const testInitialState: PuzzleState = {
   currentColour: testStartingColour,
   gaveUp: false,
   guesses: [],
   hints: [],
-  mode: testInitialPuzzle.mode,
-  precision: testInitialPuzzle.precision,
+  guessMode: HintType.HSB,
   puzzleId: getPuzzleId(testInitialPuzzle),
   startingColour: testStartingColour,
 }
@@ -24,19 +21,16 @@ const testInitialState: PuzzleState = {
 describe('puzzle reducer', () => {
   it('should handle initial state', () => {
     const realInitialPuzzle: Puzzle = {
-      answer: toHSB('mediumseagreen'),
-      answerName: toNamed('mediumseagreen'),
-      mode: HintType.HSB,
+      answer: 'mediumseagreen',
       precision: 3,
     }
-    const realStartingColour: AnyColour = 'slateblue'
+    const realStartingColour: NamedColour = 'slateblue'
     const realInitialState: PuzzleState = {
       currentColour: realStartingColour,
       gaveUp: false,
       guesses: [],
       hints: [],
-      mode: realInitialPuzzle.mode,
-      precision: realInitialPuzzle.precision,
+      guessMode: HintType.HSB,
       puzzleId: getPuzzleId(realInitialPuzzle),
       startingColour: realStartingColour,
     }

@@ -1,4 +1,4 @@
-import { AnyColour, CMYKColour, HSBColour, RGBColour } from "../../colour/colourConversions";
+import { AnyColour, CMYKColour, HSBColour, RGBColour } from "../../colour/colours";
 
 export type Hint = HSBHint | RGBHint | CMYKHint
 
@@ -80,6 +80,16 @@ export function visitHint<T>(hint: Hint, visitor: HintVisitor<T>): T | undefined
   throw new Error('invalid hint type')
 }
 
+export function visitHintOrThrow<T>(
+  hint: Hint,
+  visitor: HintVisitor<T>,
+  error?: Error,
+): T {
+  const result = visitHint(hint, visitor)
+  if (result === undefined) throw error ?? new Error('HintVisitor produced no result')
+  return result
+}
+
 export function visitHintItems<T>(hint: Hint, visitor: (hintItem: HintItem) => T): Array<T | undefined> {
   const items = visitHint(hint, {
     rgb: (hint) => [hint.red, hint.green, hint.blue],
@@ -88,3 +98,4 @@ export function visitHintItems<T>(hint: Hint, visitor: (hintItem: HintItem) => T
   }) ?? []
   return items.map((item) => (item != null ? visitor(item) : undefined))
 }
+

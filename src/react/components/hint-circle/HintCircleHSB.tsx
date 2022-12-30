@@ -3,8 +3,9 @@ import { _HintCircle as HintCircleElement, _HintCircleQuadrant as HCQuadrant } f
 import { HintDisplayProps } from "./HintCircle";
 import { HSBHint } from "../../../lib/puzzle/hint/hint";
 import { HintCircleDirection, hintIndicatorMagnitude, renderHintDisplayCentre } from "./hintCircleCommon";
-import { AnyColour, HSBColour, toCssColour, toHSB } from "../../../lib/colour/colourConversions";
+import { toCssColour, toHSB } from "../../../lib/colour/colourConversions";
 import { rotateHue } from "../../../lib/colour/colourMath";
+import { AnyColour, HSBColour } from "../../../lib/colour/colours";
 
 export interface HintDisplayHSBProps extends HintDisplayProps {
   hint: HSBHint

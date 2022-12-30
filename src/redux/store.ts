@@ -1,7 +1,6 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit'
 import app from './app/appSlice'
 import config from './config/configSlice'
-import debug from './debug/debugSlice'
 import puzzle from './puzzle/puzzleSlice'
 import createSagaMiddleware from '@redux-saga/core'
 import { createLogger } from 'redux-logger'
@@ -27,7 +26,6 @@ export const store = configureStore({
   reducer: {
     app,
     config,
-    debug,
     puzzle,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger, saga),

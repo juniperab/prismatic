@@ -61,8 +61,12 @@ export function visitColour<T>(colour: AnyColour, visitor: ColourVisitor<T>): T 
   throw new Error('invalid colour type')
 }
 
-export function visitColourOrThrow<T>(colour: AnyColour, visitor: ColourVisitor<T>): T {
+export function visitColourOrThrow<T>(
+  colour: AnyColour,
+  visitor: ColourVisitor<T>,
+  error?: Error,
+): T {
   const result = visitColour(colour, visitor)
-  if (result === undefined) throw new Error('ColourVisitor produced no result')
+  if (result === undefined) throw error ?? new Error('ColourVisitor produced no result')
   return result
 }
