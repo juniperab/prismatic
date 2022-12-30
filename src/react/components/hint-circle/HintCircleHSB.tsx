@@ -20,7 +20,7 @@ export interface HintDisplayHSBProps extends HintDisplayProps {
 //   return show
 // }
 
-function cssGradiant(innerColour: AnyColour, outerColour: AnyColour, dir: HintCircleDirection): string {
+function cssGradiantForQuadrant(innerColour: AnyColour, outerColour: AnyColour, dir: HintCircleDirection): string {
   let startAtLeft = true
   let startAtTop = true
   switch (dir) {
@@ -62,6 +62,15 @@ function cssGradiant(innerColour: AnyColour, outerColour: AnyColour, dir: HintCi
   return (
     `radial-gradient(` +
     `circle at ${startAtLeft ? 0 : 100}% ${startAtTop ? 0 : 100}%, ` +
+    `${toCssColour(innerColour)} 10%, ` +
+    `${toCssColour(outerColour)} 75%)`
+  )
+}
+
+function cssGradiant(innerColour: AnyColour, outerColour: AnyColour, left: number, top: number, ): string {
+  return (
+    `radial-gradient(` +
+    `circle at ${left}% ${top}%, ` +
     `${toCssColour(innerColour)} 10%, ` +
     `${toCssColour(outerColour)} 75%)`
   )
@@ -128,7 +137,7 @@ function renderQuadrant(dir: HintCircleDirection, hint?: HSBHint): ReactElement 
   )
 
   const style: CSSProperties = {
-    backgroundImage: cssGradiant(innerColour, outerColour, dir),
+    backgroundImage: cssGradiantForQuadrant(innerColour, outerColour, dir),
   }
   return <HCQuadrant key={dir} style={style} />
 }
@@ -270,17 +279,15 @@ function renderQuadrants(hint: HSBHint): { quadrants: ReactElement; rotateQuadra
 export function HintCircleHSB(props: HintDisplayHSBProps): ReactElement {
   const { hint, onClick } = props
 
-  console.log('-------------')
-
-  const { quadrants, rotateQuadrants } = renderQuadrants(hint)
+  // const { quadrants, rotateQuadrants } = renderQuadrants(hint)
 
   const hintCircleStyle: CSSProperties = {
-    transform: `rotate(${rotateQuadrants ? 90 : 45}deg)`,
+    // transform: `rotate(${rotateQuadrants ? 90 : 45}deg)`,
+    backgroundImage: cssGradiant(hint.innerColour, hint.outerColour, 50, 50)
   }
 
   return (
     <HintCircleElement style={hintCircleStyle}>
-      {quadrants}
       {renderHintDisplayCentre(hint.guessedColour, () => onClick?.(hint))}
     </HintCircleElement>
   )

@@ -4,6 +4,7 @@ import { Hint, HintType } from '../../lib/puzzle/hint/hint'
 import { getPuzzleId, PuzzleId } from '../../lib/puzzle/puzzle'
 import { getNewPuzzle } from '../../lib/puzzle/puzzleServer'
 import { AnyColour, NamedColour } from '../../lib/colour/colours'
+import { toCMYK, toHSB, toRGB } from "../../lib/colour/colourConversions";
 
 export interface PuzzleState {
   answerName?: NamedColour
@@ -17,14 +18,14 @@ export interface PuzzleState {
 }
 
 // TODO: need a better way of creating a random puzzle
-const startingColour: AnyColour = 'slateblue'
+const startingColour: AnyColour = toHSB('slateblue')
 const initialState: PuzzleState = {
   currentColour: startingColour,
   gaveUp: false,
   guessMode: HintType.HSB,
   guesses: [],
   hints: [],
-  puzzleId: getPuzzleId({ answer: 'mediumseagreen', precision: 3 }),
+  puzzleId: getPuzzleId({ answer: 'aliceblue', precision: 3 }), // mediumseagreen
   startingColour,
 }
 
@@ -56,10 +57,16 @@ export const puzzleSlice = createSlice({
       state.startingColour = state.currentColour
     },
     setCurrentColour: (state, action: PayloadAction<AnyColour>) => {
-      state.currentColour = action.payload
+      if (state.guessMode === HintType.CMYK) state.currentColour = toCMYK(action.payload)
+      else if (state.guessMode === HintType.HSB) state.currentColour = toHSB(action.payload)
+      else if (state.guessMode === HintType.RGB) state.currentColour = toRGB(action.payload)
+      else throw new Error('invalid colour type')
     },
     setGuessMode: (state, action: PayloadAction<HintType>) => {
       state.guessMode = action.payload
+      if (state.guessMode === HintType.CMYK) state.currentColour = toCMYK(state.currentColour)
+      else if (state.guessMode === HintType.HSB) state.currentColour = toHSB(state.currentColour)
+      else if (state.guessMode === HintType.RGB) state.currentColour = toRGB(state.currentColour)
     },
     setStartingColour: (state, action: PayloadAction<AnyColour>) => {
       state.startingColour = action.payload

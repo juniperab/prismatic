@@ -1,6 +1,6 @@
 import { toHSB } from '../../colour/colourConversions'
 import { HintItem, HintType, HSBHint } from './hint'
-import { hueDiff } from '../../colour/colourMath'
+import { hueDiff, rotateHue } from "../../colour/colourMath";
 import { HintGeneratorConfigHSB } from './hintGeneratorConfig'
 import { simpleHintItem } from './hintGeneratorCommon'
 import { HSBColour } from '../../colour/colours'
@@ -9,13 +9,63 @@ import { Puzzle } from '../puzzle'
 export function generateHintHSB(guess: HSBColour, puzzle: Puzzle, config: HintGeneratorConfigHSB): HSBHint {
   const { precision } = puzzle
   const answer = toHSB(puzzle.answer)
+  const hue = hueHint(guess, answer, precision, config)
+  const saturation = saturationHint(guess, answer, precision, config)
+  const brightness = brightnessHint(guess, answer, precision, config)
+
+  console.log(brightness)
+
+  let innerColour = guess
+  let outerColour = guess
+
+  if (hue !== undefined) {
+    outerColour = {
+      h: rotateHue(guess.h, Math.sign(hue.error) * config.hueRange),
+      s: Math.sign(saturation?.error ?? 0) * config.saturationRange,
+      b: Math.sign(brightness?.error ?? 0) * config.brightnessRange,
+    }
+  } else {
+    innerColour = { ...innerColour, s: 0 }
+    outerColour = {
+      ...outerColour,
+      s: 0,
+      b: outerColour.b + Math.sign(brightness?.error ?? 0) * config.brightnessRange,
+    }
+  }
+
+  if (saturation?.match !== true) {
+    if (outerColour.s > 100) {
+      const extra = outerColour.s - 100
+      outerColour = { ...outerColour, s: 100 }
+      innerColour = { ...innerColour, s: innerColour.s - extra / 2 }
+    } else if (outerColour.s < 0) {
+      const extra = outerColour.s
+      outerColour = { ...outerColour, s: 0 }
+      innerColour = { ...innerColour, s: innerColour.s - extra / 2 }
+    }
+  }
+  if (brightness?.match !== true) {
+    if (outerColour.b > 100) {
+      const extra = outerColour.b - 100
+      outerColour = { ...outerColour, b: 100 }
+      innerColour = { ...innerColour, b: innerColour.b - extra / 2 }
+    } else if (outerColour.b < 0) {
+      const extra = outerColour.b
+      outerColour = { ...outerColour, b: 0 }
+      innerColour = { ...innerColour, b: innerColour.b - extra / 2 }
+    }
+  }
+
+  console.log(`${innerColour.b} -> ${outerColour.b}`)
+
   return {
     type: HintType.HSB,
     guessedColour: guess,
-    hintColour: toHSB('white'),
-    hue: hueHint(guess, answer, precision, config),
-    saturation: saturationHint(guess, answer, precision, config),
-    brightness: brightnessHint(guess, answer, precision, config),
+    innerColour,
+    outerColour,
+    hue,
+    saturation,
+    brightness,
   }
 }
 
@@ -25,7 +75,7 @@ function hueHint(
   precision: number,
   config: HintGeneratorConfigHSB
 ): HintItem | undefined {
-  return simpleHintItem(hueDiff(target.h, guess.h), precision, config.hueCutoff, config.hueStep)
+  return simpleHintItem(hueDiff(target.h, guess.h), precision, config.hueCutoff, config.hueRange)
 }
 
 function saturationHint(

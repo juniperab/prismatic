@@ -14,7 +14,7 @@ const hintGeneratorConfig: HintGeneratorConfig = {
   },
   hsb: {
     hueCutoff: 90,
-    hueStep: 60,
+    hueRange: 60,
     saturationCutoff: 33,
     saturationRange: 50,
     brightnessCutoff: 33,

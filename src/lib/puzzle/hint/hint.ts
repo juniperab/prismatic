@@ -28,7 +28,8 @@ export interface RGBHint extends BaseHint {
 
 export interface HSBHint extends BaseHint {
   guessedColour: HSBColour
-  hintColour: HSBColour
+  innerColour: HSBColour
+  outerColour: HSBColour
   type: HintType.HSB
   hue?: HintItem
   saturation?: HintItem

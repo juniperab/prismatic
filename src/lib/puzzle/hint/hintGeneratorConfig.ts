@@ -11,7 +11,7 @@ export interface HintGeneratorConfigCMYK {
 
 export interface HintGeneratorConfigHSB {
   hueCutoff: number
-  hueStep: number
+  hueRange: number
   saturationCutoff: number
   saturationRange: number
   brightnessCutoff: number
