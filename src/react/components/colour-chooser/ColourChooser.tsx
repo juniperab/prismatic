@@ -10,7 +10,7 @@ import {
   ColourChooserSelectionPending as CCSelectionPending,
 } from './colourChooserLayout'
 import { InfiniteHammerArea } from '../hammer/InfiniteHammerArea'
-import { AnyColor, HSBColor, toCssColour, toHSB } from '../../../lib/colour/colourConversions'
+import { AnyColour, HSBColour, toCssColour, toHSB } from '../../../lib/colour/colourConversions'
 import { rotateHue } from '../../../lib/colour/colourMath'
 import { ColourChooserHelpOverlay, HelpOverlayState, useHelpOverlayState } from './ColourChooserHelpOverlay'
 import { defaultTo } from 'lodash'
@@ -18,7 +18,7 @@ import { HammerOnChangeCallback, HammerOnResizeCallback, HammerOnTapCallback } f
 import { useTheme } from 'styled-components'
 import { Theme } from '../theme/theme'
 
-export type NewColourCallback = (colour: HSBColor) => void
+export type NewColourCallback = (colour: HSBColour) => void
 
 export interface ColourChooserProps {
   // callback triggered when the colour is changed in any way, even during a gesture
@@ -27,7 +27,7 @@ export interface ColourChooserProps {
   onChangeComplete?: NewColourCallback
   // callback triggered when the selection area is tapped
   onSelect?: () => void
-  colour?: AnyColor
+  colour?: AnyColour
   disabled?: boolean
 }
 
@@ -36,7 +36,7 @@ const initialHelpOverlayState: HelpOverlayState = {
   ticksBeforeHide: 20,
 }
 
-const defaultInitialColour: AnyColor = { h: 0, s: 50, b: 50 }
+const defaultInitialColour: AnyColour = { h: 0, s: 50, b: 50 }
 
 export function ColourChooser(props: ColourChooserProps): ReactElement {
   const { disabled, onChange, onChangeComplete, onSelect } = props
@@ -94,7 +94,7 @@ export function ColourChooser(props: ColourChooserProps): ReactElement {
 
   useEffect(() => {
     if (props.colour !== undefined) {
-      const newPropsColourHSB: HSBColor = toHSB(props.colour)
+      const newPropsColourHSB: HSBColour = toHSB(props.colour)
       if (propsColourHSB !== newPropsColourHSB) {
         setHue(newPropsColourHSB.h)
         setSaturation(newPropsColourHSB.s)

@@ -1,60 +1,51 @@
-import { HSLColor, RGBColor } from 'react-color'
 import convert from 'color-convert'
 import { euclideanDistance } from '../math/math'
-
-// N.B. using the American spelling for these for consistency with the types from react-color
-export interface HSBColor {
-  a?: number | undefined
-  h: number
-  s: number
-  b: number
-}
-export interface CMYKColor {
-  a?: number | undefined
-  c: number
-  m: number
-  y: number
-  k: number
-}
-export type HexColor = string
-export type NamedColor = string
-export type AnyColor = RGBColor | HSLColor | HSBColor | CMYKColor | HexColor | NamedColor
+import {
+  AnyColour,
+  CMYKColour,
+  ColourVisitor,
+  HexColour,
+  HSBColour,
+  HSLColour,
+  NamedColour,
+  RGBColour,
+  visitColour, visitColourOrThrow
+} from "./colours";
 
 type ColourTriple = [number, number, number]
 type ColourQuad = [number, number, number, number]
-type ColourQuint = [number, number, number, number, number]
 
-export function isRGB(colour: any): colour is RGBColor {
-  const rgb = colour as RGBColor
+export function isRGB(colour: any): colour is RGBColour {
+  const rgb = colour as RGBColour
   return rgb.r !== undefined && rgb.g !== undefined && rgb.b !== undefined
 }
 
-export function isHSL(colour: any): colour is HSLColor {
-  const hsl = colour as HSLColor
+export function isHSL(colour: any): colour is HSLColour {
+  const hsl = colour as HSLColour
   return hsl.h !== undefined && hsl.s !== undefined && hsl.l !== undefined
 }
 
-export function isHSB(colour: any): colour is HSBColor {
-  const hsb = colour as HSBColor
+export function isHSB(colour: any): colour is HSBColour {
+  const hsb = colour as HSBColour
   return hsb.h !== undefined && hsb.s !== undefined && hsb.b !== undefined
 }
 
-export function isCMYK(colour: any): colour is CMYKColor {
-  const cmyk = colour as CMYKColor
+export function isCMYK(colour: any): colour is CMYKColour {
+  const cmyk = colour as CMYKColour
   return cmyk.c !== undefined && cmyk.m !== undefined && cmyk.y !== undefined && cmyk.k !== undefined
 }
 
-export function isHex(colour: any): colour is HexColor {
-  const hex = colour as HexColor
+export function isHex(colour: any): colour is HexColour {
+  const hex = colour as HexColour
   return (hex.length === 7 || hex.length === 9) && hex.charAt(0) === '#' && hex.toUpperCase() === hex
 }
 
-export function isNamed(colour: any): colour is NamedColor {
-  const named = colour as NamedColor
+export function isNamed(colour: any): colour is NamedColour {
+  const named = colour as NamedColour
   return !isHex(colour) && named.length > 0 && named === named.toLowerCase()
 }
 
-function toTriple(colour: AnyColor): ColourTriple {
+function toTriple(colour: AnyColour): ColourTriple {
   if (isRGB(colour)) {
     return [colour.r, colour.g, colour.b]
   } else if (isHSL(colour)) {
@@ -71,7 +62,7 @@ function toTriple(colour: AnyColor): ColourTriple {
   throw new Error('invalid colour type')
 }
 
-function toQuad(colour: AnyColor): ColourQuad {
+function toQuad(colour: AnyColour): ColourQuad {
   if (isRGB(colour)) {
     return [colour.r, colour.g, colour.b, colour.a !== undefined ? colour.a : 100]
   } else if (isHSL(colour)) {
@@ -88,238 +79,159 @@ function toQuad(colour: AnyColor): ColourQuad {
   throw new Error('invalid colour type')
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function toQuint(colour: AnyColor): ColourQuint {
-  if (isRGB(colour)) {
-    throw new Error('cannot convert RGB colour to five-element vector')
-  } else if (isHSL(colour)) {
-    throw new Error('cannot convert HSL colour to five-element vector')
-  } else if (isHSB(colour)) {
-    throw new Error('cannot convert HSB colour to five-element vector')
-  } else if (isCMYK(colour)) {
-    return [colour.c, colour.m, colour.y, colour.k, colour.a !== undefined ? colour.a : 100]
-  } else if (isHex(colour)) {
-    throw new Error('cannot convert Hex colour to five-element vector')
-  } else if (isNamed(colour)) {
-    throw new Error('cannot convert named colour to vector')
-  }
-  throw new Error('invalid colour type')
-}
-
-function asRGB(colour: ColourTriple): RGBColor {
+function asRGB(colour: ColourTriple): RGBColour {
   return { r: colour[0], g: colour[1], b: colour[2] }
 }
 
-function asHSL(colour: ColourTriple): HSLColor {
+function asHSL(colour: ColourTriple): HSLColour {
   return { h: colour[0], s: colour[1], l: colour[2] }
 }
 
-function asHSB(colour: ColourTriple): HSBColor {
+function asHSB(colour: ColourTriple): HSBColour {
   return { h: colour[0], s: colour[1], b: colour[2] }
 }
 
-function asCMYK(colour: ColourQuad): CMYKColor {
+function asCMYK(colour: ColourQuad): CMYKColour {
   return { c: colour[0], m: colour[1], y: colour[2], k: colour[3] }
 }
 
-function asHex(colour: string): HexColor {
+function asHex(colour: string): HexColour {
   return `#${colour.toUpperCase()}`
 }
 
-function asNamed(colour: string): NamedColor {
+function asNamed(colour: string): NamedColour {
   return colour.toLowerCase()
 }
 
-function getHexAlpha(colour: HexColor): number | undefined {
+function getHexAlpha(colour: HexColour): number | undefined {
   if (colour.length !== 9) {
     return undefined
   }
   return (parseInt(colour.slice(-2), 16) / 255) * 100
 }
 
-function getNamedAlpha(_: NamedColor): number | undefined {
+function getNamedAlpha(_: NamedColour): number | undefined {
   return undefined
 }
 
-function rgbWithAlpha(colour: RGBColor, alpha: number | undefined): RGBColor {
+function rgbWithAlpha(colour: RGBColour, alpha: number | undefined): RGBColour {
   return {
     ...colour,
     a: alpha,
   }
 }
 
-function hslWithAlpha(colour: HSLColor, alpha: number | undefined): HSLColor {
+function hslWithAlpha(colour: HSLColour, alpha: number | undefined): HSLColour {
   return {
     ...colour,
     a: alpha,
   }
 }
 
-function hsbWithAlpha(colour: HSBColor, alpha: number | undefined): HSBColor {
+function hsbWithAlpha(colour: HSBColour, alpha: number | undefined): HSBColour {
   return {
     ...colour,
     a: alpha,
   }
 }
 
-function cmykWithAlpha(colour: CMYKColor, alpha: number | undefined): CMYKColor {
+function cmykWithAlpha(colour: CMYKColour, alpha: number | undefined): CMYKColour {
   return {
     ...colour,
     a: alpha,
   }
 }
 
-function hexWithAlpha(colour: HexColor, alpha: number | undefined): HexColor {
+function hexWithAlpha(colour: HexColour, alpha: number | undefined): HexColour {
   const hexWithoutAlpha = colour.slice(0, 7)
   if (alpha === undefined) return asHex(hexWithoutAlpha)
   const alphaString = Math.round((alpha * 255) / 100).toString(16)
   return asHex(`${hexWithoutAlpha}${alphaString}`)
 }
 
-function namedWithAlpha(colour: NamedColor, _: number | undefined): NamedColor {
+function namedWithAlpha(colour: NamedColour, _: number | undefined): NamedColour {
   // cannot specify alpha for a named colour
   return colour
 }
 
-export function withAlpha(colour: AnyColor, alpha: number | undefined): AnyColor {
-  if (isRGB(colour)) {
-    return rgbWithAlpha(colour, alpha)
-  } else if (isHSL(colour)) {
-    return hslWithAlpha(colour, alpha)
-  } else if (isHSB(colour)) {
-    return hsbWithAlpha(colour, alpha)
-  } else if (isCMYK(colour)) {
-    return cmykWithAlpha(colour, alpha)
-  } else if (isHex(colour)) {
-    return hexWithAlpha(colour, alpha)
-  } else if (isNamed(colour)) {
-    return hexWithAlpha(toHex(colour), alpha)
-  }
-  throw new Error('invalid colour type')
+export function toRGB(colour: AnyColour): RGBColour {
+  return visitColourOrThrow<RGBColour>(colour, {
+    cmyk: c => rgbWithAlpha(asRGB(convert.cmyk.rgb(toQuad(c))), c.a),
+    hex: c => rgbWithAlpha(asRGB(convert.hex.rgb(c.slice(1))), getHexAlpha(c)),
+    hsb: c => rgbWithAlpha(asRGB(convert.hsv.rgb(toTriple(c))), c.a),
+    hsl: c => rgbWithAlpha(asRGB(convert.hsl.rgb(toTriple(c))), c.a),
+    named: c => rgbWithAlpha(asRGB(convert.keyword.rgb(c as any)), getNamedAlpha(c)),
+    rgb: c => c,
+  })
 }
 
-export function toRGB(colour: AnyColor): RGBColor {
-  if (isRGB(colour)) {
-    return colour
-  } else if (isHSL(colour)) {
-    return rgbWithAlpha(asRGB(convert.hsl.rgb(toTriple(colour))), colour.a)
-  } else if (isHSB(colour)) {
-    return rgbWithAlpha(asRGB(convert.hsv.rgb(toTriple(colour))), colour.a)
-  } else if (isCMYK(colour)) {
-    return rgbWithAlpha(asRGB(convert.cmyk.rgb(toQuad(colour))), colour.a)
-  } else if (isHex(colour)) {
-    return rgbWithAlpha(asRGB(convert.hex.rgb(colour.slice(1))), getHexAlpha(colour))
-  } else if (isNamed(colour)) {
-    return rgbWithAlpha(asRGB(convert.keyword.rgb(colour)), getNamedAlpha(colour))
-  }
-  throw new Error('invalid colour type')
+export function toHSL(colour: AnyColour): HSLColour {
+  return visitColourOrThrow<HSLColour>(colour, {
+    cmyk: c => hslWithAlpha(asHSL(convert.cmyk.hsl(toQuad(c))), c.a),
+    hex: c => hslWithAlpha(asHSL(convert.hex.hsl(c.slice(1))), getHexAlpha(c)),
+    hsb: c => hslWithAlpha(asHSL(convert.hsv.hsl(toTriple(c))), c.a),
+    hsl: c => c,
+    named: c => hslWithAlpha(asHSL(convert.keyword.hsl(c as any)), getNamedAlpha(c)),
+    rgb: c => hslWithAlpha(asHSL(convert.rgb.hsl(toTriple(c))), c.a),
+  })
 }
 
-export function toHSL(colour: AnyColor): HSLColor {
-  if (isRGB(colour)) {
-    return hslWithAlpha(asHSL(convert.rgb.hsl(toTriple(colour))), colour.a)
-  } else if (isHSL(colour)) {
-    return colour
-  } else if (isHSB(colour)) {
-    return hslWithAlpha(asHSL(convert.hsv.hsl(toTriple(colour))), colour.a)
-  } else if (isCMYK(colour)) {
-    return hslWithAlpha(asHSL(convert.cmyk.hsl(toQuad(colour))), colour.a)
-  } else if (isHex(colour)) {
-    return hslWithAlpha(asHSL(convert.hex.hsl(colour.slice(1))), getHexAlpha(colour))
-  } else if (isNamed(colour)) {
-    return hslWithAlpha(asHSL(convert.keyword.hsl(colour)), getNamedAlpha(colour))
-  }
-  throw new Error('invalid colour type')
+export function toHSB(colour: AnyColour): HSBColour {
+  return visitColourOrThrow<HSBColour>(colour, {
+    cmyk: c => hsbWithAlpha(asHSB(convert.cmyk.hsv(toQuad(c))), c.a),
+    hex: c => hsbWithAlpha(asHSB(convert.hex.hsv(c.slice(1))), getHexAlpha(c)),
+    hsb: c => c,
+    hsl: c => hsbWithAlpha(asHSB(convert.hsl.hsv(toTriple(c))), c.a),
+    named: c => hsbWithAlpha(asHSB(convert.keyword.hsv(c as any)), getNamedAlpha(c)),
+    rgb: c => hsbWithAlpha(asHSB(convert.rgb.hsv(toTriple(c))), c.a),
+  })
 }
 
-export function toHSB(colour: AnyColor): HSBColor {
-  if (isRGB(colour)) {
-    return hsbWithAlpha(asHSB(convert.rgb.hsv(toTriple(colour))), colour.a)
-  } else if (isHSL(colour)) {
-    return hsbWithAlpha(asHSB(convert.hsl.hsv(toTriple(colour))), colour.a)
-  } else if (isHSB(colour)) {
-    return colour
-  } else if (isCMYK(colour)) {
-    return hsbWithAlpha(asHSB(convert.cmyk.hsv(toQuad(colour))), colour.a)
-  } else if (isHex(colour)) {
-    return hsbWithAlpha(asHSB(convert.hex.hsv(colour.slice(1))), getHexAlpha(colour))
-  } else if (isNamed(colour)) {
-    return hsbWithAlpha(asHSB(convert.keyword.hsv(colour)), getNamedAlpha(colour))
-  }
-  throw new Error('invalid colour type')
+export function toCMYK(colour: AnyColour): CMYKColour {
+  return visitColourOrThrow<CMYKColour>(colour, {
+    cmyk: c => c,
+    hex: c => cmykWithAlpha(asCMYK(convert.hex.cmyk(c.slice(1))), getHexAlpha(c)),
+    hsb: c => cmykWithAlpha(asCMYK(convert.hsv.cmyk(toTriple(c))), c.a),
+    hsl: c => cmykWithAlpha(asCMYK(convert.hsl.cmyk(toTriple(c))), c.a),
+    named: c => cmykWithAlpha(asCMYK(convert.keyword.cmyk(c as any)), getNamedAlpha(c)),
+    rgb: c => cmykWithAlpha(asCMYK(convert.rgb.cmyk(toTriple(c))), c.a),
+  })
 }
 
-export function toCMYK(colour: AnyColor): CMYKColor {
-  if (isRGB(colour)) {
-    return cmykWithAlpha(asCMYK(convert.rgb.cmyk(toTriple(colour))), colour.a)
-  } else if (isHSL(colour)) {
-    return cmykWithAlpha(asCMYK(convert.hsl.cmyk(toTriple(colour))), colour.a)
-  } else if (isHSB(colour)) {
-    return cmykWithAlpha(asCMYK(convert.hsv.cmyk(toTriple(colour))), colour.a)
-  } else if (isCMYK(colour)) {
-    return colour
-  } else if (isHex(colour)) {
-    return cmykWithAlpha(asCMYK(convert.hex.cmyk(colour.slice(1))), getHexAlpha(colour))
-  } else if (isNamed(colour)) {
-    return cmykWithAlpha(asCMYK(convert.keyword.cmyk(colour)), getNamedAlpha(colour))
-  }
-  throw new Error('invalid colour type')
+export function toHex(colour: AnyColour): HexColour {
+  return visitColourOrThrow<HexColour>(colour, {
+    cmyk: c => hexWithAlpha(asHex(convert.cmyk.hex(toQuad(c))), c.a),
+    hex: c => c,
+    hsb: c => hexWithAlpha(asHex(convert.hsv.hex(toTriple(c))), c.a),
+    hsl: c => hexWithAlpha(asHex(convert.hsl.hex(toTriple(c))), c.a),
+    named: c => hexWithAlpha(asHex(convert.keyword.hex(c as any)), getNamedAlpha(c)),
+    rgb: c => hexWithAlpha(asHex(convert.rgb.hex(toTriple(c))), c.a),
+  })
 }
 
-export function toHex(colour: AnyColor): HexColor {
-  if (isRGB(colour)) {
-    return hexWithAlpha(asHex(convert.rgb.hex(toTriple(colour))), colour.a)
-  } else if (isHSL(colour)) {
-    return hexWithAlpha(asHex(convert.hsl.hex(toTriple(colour))), colour.a)
-  } else if (isHSB(colour)) {
-    return hexWithAlpha(asHex(convert.hsv.hex(toTriple(colour))), colour.a)
-  } else if (isCMYK(colour)) {
-    return hexWithAlpha(asHex(convert.cmyk.hex(toQuad(colour))), colour.a)
-  } else if (isHex(colour)) {
-    return colour
-  } else if (isNamed(colour)) {
-    return hexWithAlpha(asHex(convert.keyword.hex(colour)), getNamedAlpha(colour))
-  }
-  throw new Error('invalid colour type')
+export function toNamed(colour: AnyColour): NamedColour {
+  return visitColourOrThrow<NamedColour>(colour, {
+    cmyk: c => namedWithAlpha(asNamed(convert.cmyk.keyword(toQuad(c))), c.a),
+    hex: c => namedWithAlpha(asNamed(convert.hex.keyword(c.slice(1))), getHexAlpha(c)),
+    hsb: c => namedWithAlpha(asNamed(convert.hsv.keyword(toTriple(c))), c.a),
+    hsl: c => namedWithAlpha(asNamed(convert.hsl.keyword(toTriple(c))), c.a),
+    named: c => c,
+    rgb: c => namedWithAlpha(asNamed(convert.rgb.keyword(toTriple(c))), c.a),
+  })
 }
 
-export function toNamed(colour: AnyColor): NamedColor {
-  if (isRGB(colour)) {
-    return namedWithAlpha(asNamed(convert.rgb.keyword(toTriple(colour))), colour.a)
-  } else if (isHSL(colour)) {
-    return namedWithAlpha(asNamed(convert.hsl.keyword(toTriple(colour))), colour.a)
-  } else if (isHSB(colour)) {
-    return namedWithAlpha(asNamed(convert.hsv.keyword(toTriple(colour))), colour.a)
-  } else if (isCMYK(colour)) {
-    return namedWithAlpha(asNamed(convert.cmyk.keyword(toQuad(colour))), colour.a)
-  } else if (isHex(colour)) {
-    return namedWithAlpha(asNamed(convert.hex.keyword(colour.slice(1))), getHexAlpha(colour))
-  } else if (isNamed(colour)) {
-    return colour
-  }
-  throw new Error('invalid colour type')
+export function toCssColour(colour: AnyColour): string {
+  return visitColourOrThrow<string>(colour, {
+    cmyk: c => toCssColour(toRGB(c)),
+    hex: c => c,
+    hsb: c => toCssColour(toHSL(c)),
+    hsl: c => c.a !== undefined ? `hsla(${c.h}, ${c.s}%, ${c.l}%, ${c.a}%)` : `hsl(${c.h}, ${c.s}%, ${c.l}%)`,
+    named: c => c,
+    rgb: c => c.a !== undefined ? `rgba(${c.r}, ${c.g}, ${c.b}, ${c.a}%)` : `rgb(${c.r}, ${c.g}, ${c.b})`,
+  })
 }
 
-export function toCssColour(colour: AnyColor): string {
-  if (isRGB(colour)) {
-    if (colour.a !== undefined) return `rgba(${colour.r}, ${colour.g}, ${colour.b}, ${colour.a}%)`
-    return `rgb(${colour.r}, ${colour.g}, ${colour.b})`
-  } else if (isHSL(colour)) {
-    if (colour.a !== undefined) return `hsla(${colour.h}, ${colour.s}%, ${colour.l}%, ${colour.a}%)`
-    return `hsl(${colour.h}, ${colour.s}%, ${colour.l}%)`
-  } else if (isHSB(colour)) {
-    return toCssColour(toHSL(colour))
-  } else if (isCMYK(colour)) {
-    return toCssColour(toRGB(colour))
-  } else if (isHex(colour)) {
-    return colour
-  } else if (isNamed(colour)) {
-    return colour
-  }
-  throw new Error('invalid colour type')
-}
-
-export function chooseMostContrastingColour(baseColour: AnyColor, ...otherColours: AnyColor[]): AnyColor {
+export function mostContrasting(baseColour: AnyColour, ...otherColours: AnyColour[]): AnyColour {
   const baseColourHSBQuad = toQuad(toHSB(baseColour))
   const distances = otherColours
     .map((c) => toQuad(toHSB(c)))

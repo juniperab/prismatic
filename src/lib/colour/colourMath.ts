@@ -1,4 +1,6 @@
-import { AnyColor, isHex, isHSB, isHSL, isRGB, toHSB, toHSL, toRGB } from './colourConversions'
+import { isHex, isHSB, isHSL, isRGB, toHSB, toHSL, toRGB } from './colourConversions'
+import { euclideanDistance } from "../math/math";
+import { AnyColour } from "./colours";
 
 /**
  * Rotate a hue around the colour wheel by some number of degrees. The result will be in [0, 360).
@@ -35,7 +37,7 @@ export function hueDiff(to: number, from: number): number {
  * @param b             the second colour to compare
  * @param precision     the maximum amount by which any component of the colours may differ yet be considered a match
  */
-export function isSameColour(a: AnyColor, b: AnyColor, precision: number): boolean {
+export function isSameColour(a: AnyColour, b: AnyColour, precision: number): boolean {
   let diffs = [0, 0, 0]
   if (isRGB(a)) {
     const b2 = toRGB(b)
@@ -59,7 +61,7 @@ export function isSameColour(a: AnyColor, b: AnyColor, precision: number): boole
 /**
  * Generate a random colour.
  */
-export function generateRandomColour(): AnyColor {
+export function generateRandomColour(): AnyColour {
   return {
     r: Math.random() * 256,
     g: Math.random() * 256,

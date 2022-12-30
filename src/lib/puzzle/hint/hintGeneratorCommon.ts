@@ -1,21 +1,20 @@
 import { HintItem } from './hint'
 import { bounded } from '../../math/math'
 
-export function generateHintItem(
+export function simpleHintItem(
   valueDiff: number,
   precision: number,
   cutoff: number,
-  step: number,
-  hardStep: boolean
+  range?: number,
 ): HintItem | undefined {
   if (Math.abs(valueDiff) <= precision) {
-    return { match: true, diff: valueDiff }
+    return { match: true, error: valueDiff }
   } else if (Math.abs(valueDiff) > cutoff) {
     return undefined
   }
-  if (hardStep) {
-    return { match: false, diff: step * Math.sign(valueDiff) }
+  if (range === undefined) {
+    return { match: false, error: Math.sign(valueDiff) }
   } else {
-    return { match: false, diff: bounded(valueDiff / step, -1, 1) * step }
+    return { match: false, error: bounded(valueDiff / range, -1, 1) }
   }
 }

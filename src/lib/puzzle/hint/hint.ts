@@ -1,4 +1,4 @@
-import { AnyColor } from '../../colour/colourConversions'
+import { AnyColour, CMYKColour, HSBColour, RGBColour } from "../../colour/colourConversions";
 
 export type Hint = HSBHint | RGBHint | CMYKHint
 
@@ -10,15 +10,16 @@ export enum HintType {
 
 export interface HintItem {
   match: boolean
-  diff: number
+  error: number
 }
 
 export interface BaseHint {
-  guessedColour: AnyColor
+  guessedColour: AnyColour
   type: HintType
 }
 
 export interface RGBHint extends BaseHint {
+  guessedColour: RGBColour
   type: HintType.RGB
   red?: HintItem
   green?: HintItem
@@ -26,6 +27,8 @@ export interface RGBHint extends BaseHint {
 }
 
 export interface HSBHint extends BaseHint {
+  guessedColour: HSBColour
+  hintColour: HSBColour
   type: HintType.HSB
   hue?: HintItem
   saturation?: HintItem
@@ -33,6 +36,7 @@ export interface HSBHint extends BaseHint {
 }
 
 export interface CMYKHint extends BaseHint {
+  guessedColour: CMYKColour
   type: HintType.CMYK
   cyan?: HintItem
   magenta?: HintItem
@@ -60,29 +64,27 @@ export function isHint(hint: any): hint is Hint {
 }
 
 export interface HintVisitor<T> {
-  rgb: (hint: RGBHint) => T
-  hsb: (hint: HSBHint) => T
-  cmyk: (hint: CMYKHint) => T
+  rgb?: (hint: RGBHint) => T
+  hsb?: (hint: HSBHint) => T
+  cmyk?: (hint: CMYKHint) => T
 }
 
-export function visitHint<T>(hint: Hint, visitor: HintVisitor<T>): T {
+export function visitHint<T>(hint: Hint, visitor: HintVisitor<T>): T | undefined {
   if (isRGBHint(hint)) {
-    return visitor.rgb(hint)
+    return visitor.rgb?.(hint)
   } else if (isHSBHint(hint)) {
-    return visitor.hsb(hint)
+    return visitor.hsb?.(hint)
   } else if (isCMYKHint(hint)) {
-    return visitor.cmyk(hint)
+    return visitor.cmyk?.(hint)
   }
-  throw new Error('invalid hint-grid type')
-}
-
-const getHintItemsAsArrayVisitor: HintVisitor<Array<HintItem | undefined>> = {
-  rgb: (hint) => [hint.red, hint.green, hint.blue],
-  hsb: (hint) => [hint.hue, hint.saturation, hint.brightness],
-  cmyk: (hint) => [hint.cyan, hint.magenta, hint.yellow, hint.black],
+  throw new Error('invalid hint type')
 }
 
 export function visitHintItems<T>(hint: Hint, visitor: (hintItem: HintItem) => T): Array<T | undefined> {
-  const items = visitHint(hint, getHintItemsAsArrayVisitor)
+  const items = visitHint(hint, {
+    rgb: (hint) => [hint.red, hint.green, hint.blue],
+    hsb: (hint) => [hint.hue, hint.saturation, hint.brightness],
+    cmyk: (hint) => [hint.cyan, hint.magenta, hint.yellow, hint.black],
+  }) ?? []
   return items.map((item) => (item != null ? visitor(item) : undefined))
 }

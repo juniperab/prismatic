@@ -1,39 +1,40 @@
-import { HSBColor } from '../../colour/colourConversions'
+import { HSBColour, toHSB } from "../../colour/colourConversions";
 import { HintItem, HintType, HSBHint } from './hint'
 import { hueDiff } from '../../colour/colourMath'
 import { PuzzleHSB } from '../puzzle'
-import { HintConfigHSB } from './hintConfig'
-import { generateHintItem } from './hintGenerators'
+import { HintGeneratorConfigHSB } from './hintGeneratorConfig'
+import { simpleHintItem } from './hintGeneratorCommon'
 
-export function generateHintHSB(guess: HSBColor, puzzle: PuzzleHSB, config: HintConfigHSB): HSBHint {
+export function generateHintHSB(guess: HSBColour, puzzle: PuzzleHSB, config: HintGeneratorConfigHSB): HSBHint {
   const { answer, precision } = puzzle
   return {
     type: HintType.HSB,
     guessedColour: guess,
-    hue: getHueHint(guess, answer, precision, config),
-    saturation: getSaturationHint(guess, answer, precision, config),
-    brightness: getBrightnessHint(guess, answer, precision, config),
+    hintColour: toHSB('white'),
+    hue: hueHint(guess, answer, precision, config),
+    saturation: saturationHint(guess, answer, precision, config),
+    brightness: brightnessHint(guess, answer, precision, config),
   }
 }
 
-function getHueHint(guess: HSBColor, target: HSBColor, precision: number, config: HintConfigHSB): HintItem | undefined {
-  return generateHintItem(hueDiff(target.h, guess.h), precision, config.hueCutoff, config.hueStep, true)
+function hueHint(guess: HSBColour, target: HSBColour, precision: number, config: HintGeneratorConfigHSB): HintItem | undefined {
+  return simpleHintItem(hueDiff(target.h, guess.h), precision, config.hueCutoff, config.hueStep, true)
 }
 
-function getSaturationHint(
-  guess: HSBColor,
-  target: HSBColor,
+function saturationHint(
+  guess: HSBColour,
+  target: HSBColour,
   precision: number,
-  config: HintConfigHSB
+  config: HintGeneratorConfigHSB
 ): HintItem | undefined {
-  return generateHintItem(target.s - guess.s, precision, config.saturationCutoff, config.saturationMaxStep, true)
+  return simpleHintItem(target.s - guess.s, precision, config.saturationCutoff, config.saturationRange, true)
 }
 
-function getBrightnessHint(
-  guess: HSBColor,
-  target: HSBColor,
+function brightnessHint(
+  guess: HSBColour,
+  target: HSBColour,
   precision: number,
-  config: HintConfigHSB
+  config: HintGeneratorConfigHSB
 ): HintItem | undefined {
-  return generateHintItem(target.b - guess.b, precision, config.brightnessCutoff, config.brightnessMaxStep, true)
+  return simpleHintItem(target.b - guess.b, precision, config.brightnessCutoff, config.brightnessRange, true)
 }

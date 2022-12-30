@@ -1,17 +1,17 @@
-import { AnyColor, NamedColor } from '../../lib/colour/colourConversions'
+import { AnyColour, NamedColour } from '../../lib/colour/colourConversions'
 import { Hint } from '../../lib/puzzle/hint/hint'
 import { PuzzleId } from '../../lib/puzzle/puzzle'
 import { evaluateGuess, revealAnswer } from '../../lib/puzzle/puzzleServer'
 
-export async function submitGuessToServer(guess: AnyColor, puzzleId: PuzzleId): Promise<Hint | NamedColor> {
-  return await new Promise<Hint | NamedColor>((resolve) => {
+export async function submitGuessToServer(guess: AnyColour, puzzleId: PuzzleId): Promise<Hint | NamedColour> {
+  return await new Promise<Hint | NamedColour>((resolve) => {
     // a mock call to a server-side puzzle controller
     resolve(evaluateGuess(guess, puzzleId))
   })
 }
 
-export async function getPuzzleAnswerFromServer(puzzleId: PuzzleId): Promise<NamedColor> {
-  return await new Promise<NamedColor>((resolve) => {
+export async function getPuzzleAnswerFromServer(puzzleId: PuzzleId): Promise<NamedColour> {
+  return await new Promise<NamedColour>((resolve) => {
     // a mock call to a server-side puzzle controller
     resolve(revealAnswer(puzzleId))
   })

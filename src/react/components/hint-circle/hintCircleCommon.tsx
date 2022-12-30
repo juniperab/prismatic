@@ -1,5 +1,5 @@
 import { CSSProperties, ReactElement } from 'react'
-import { AnyColor, toCssColour } from '../../../lib/colour/colourConversions'
+import { AnyColour, toCssColour } from '../../../lib/colour/colourConversions'
 import { _HintCircleCentre as HCCentre } from './hintCircleLayout'
 import { HintItem } from "../../../lib/puzzle/hint/hint";
 
@@ -24,12 +24,12 @@ export enum HintIndicatorMagnitude {
 export function hintIndicatorMagnitude(hintItem?: HintItem): HintIndicatorMagnitude {
   if (hintItem === undefined) return HintIndicatorMagnitude.NONE
   if (hintItem.match) return HintIndicatorMagnitude.EQUAL
-  if (hintItem.diff > 0) return HintIndicatorMagnitude.POS
-  if (hintItem.diff < 0) return HintIndicatorMagnitude.NEG
+  if (hintItem.error > 0) return HintIndicatorMagnitude.POS
+  if (hintItem.error < 0) return HintIndicatorMagnitude.NEG
   throw new Error('malformed hint item') // should never get here
 }
 
-export function renderHintDisplayCentre(colour?: AnyColor, onClick?: () => void): ReactElement {
+export function renderHintDisplayCentre(colour?: AnyColour, onClick?: () => void): ReactElement {
   const style: CSSProperties = {
     backgroundColor: colour !== undefined ? toCssColour(colour) : undefined,
     cursor: onClick !== undefined ? 'pointer' : undefined,

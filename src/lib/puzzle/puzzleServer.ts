@@ -1,36 +1,24 @@
-import { AnyColor, NamedColor, toCMYK, toHSB, toNamed, toRGB } from '../colour/colourConversions'
+import { AnyColour, NamedColour, toCMYK, toHSB, toNamed, toRGB } from '../colour/colourConversions'
 import { generateRandomColour } from '../colour/colourMath'
-import { getPuzzleId, loadPuzzleById, Puzzle, PuzzleId, PuzzleMode } from './puzzle'
-import { Hint, HintType, visitHintItems } from './hint/hint'
+import { getPuzzleId, loadPuzzleById, Puzzle, PuzzleId } from './puzzle'
+import { Hint, HintType, visitHintItems } from "./hint/hint";
 import { puzzleConfig } from './puzzleConfig'
 import { generateHintRGB } from './hint/hintGeneratorRGB'
 import { generateHintHSB } from './hint/hintGeneratorHSB'
 import { generateHintCMYK } from './hint/hintGeneratorCMYK'
 
-export interface ClientPuzzleSpec {
-  puzzleId: PuzzleId
-  mode: PuzzleMode
-  precision: number
-}
-
-export function getNewPuzzle(): ClientPuzzleSpec {
+export function getNewPuzzle(): PuzzleId {
   const answer = toNamed(generateRandomColour())
   const newPuzzleSpec: Puzzle = {
     answer: toHSB(answer),
-    answerName: toNamed(answer),
-    mode: HintType.HSB,
     precision: 3,
   }
-  return {
-    puzzleId: getPuzzleId(newPuzzleSpec),
-    mode: newPuzzleSpec.mode,
-    precision: newPuzzleSpec.precision,
-  }
+  return getPuzzleId(newPuzzleSpec)
 }
 
-export function evaluateGuess(guess: AnyColor, puzzleId: PuzzleId): Hint | NamedColor {
+export function evaluateGuess(guess: AnyColour, puzzleId: PuzzleId): Hint | NamedColour {
   const puzzle = loadPuzzleById(puzzleId)
-  const hintConfig = puzzleConfig.hint
+  const hintConfig = puzzleConfig.hintGenerators
   let hint
   switch (puzzle.mode) {
     case HintType.RGB:
@@ -51,7 +39,7 @@ export function evaluateGuess(guess: AnyColor, puzzleId: PuzzleId): Hint | Named
   return hint
 }
 
-export function revealAnswer(puzzleId: PuzzleId): NamedColor {
+export function revealAnswer(puzzleId: PuzzleId): NamedColour {
   const puzzle = loadPuzzleById(puzzleId)
   return puzzle.answerName
 }

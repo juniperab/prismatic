@@ -1,41 +1,17 @@
-import { AnyColor, CMYKColor, HSBColor } from '../colour/colourConversions'
-import { RGBColor } from 'react-color'
+import { NamedColour } from "../colour/colourConversions";
 import base64 from 'base-64'
 import utf8 from 'utf8'
-import { HintConfig } from './hint/hintConfig'
-import { HintType } from './hint/hint'
+import { HintGeneratorConfig } from './hint/hintGeneratorConfig'
 
 export type PuzzleId = string
 
-export type PuzzleMode = HintType.RGB | HintType.HSB | HintType.CMYK
-
-export type Puzzle = PuzzleRGB | PuzzleHSB | PuzzleCMYK
-
-export const allPuzzleModes: PuzzleMode[] = [HintType.RGB, HintType.HSB, HintType.CMYK]
-
-interface PuzzleBase {
-  answer: AnyColor
-  answerName: string
-  mode: PuzzleMode
+export interface Puzzle {
+  answer: NamedColour
   precision: number
-}
-export interface PuzzleRGB extends PuzzleBase {
-  mode: HintType.RGB
-  answer: RGBColor
-}
-
-export interface PuzzleHSB extends PuzzleBase {
-  mode: HintType.HSB
-  answer: HSBColor
-}
-
-export interface PuzzleCMYK extends PuzzleBase {
-  mode: HintType.CMYK
-  answer: CMYKColor
 }
 
 export interface PuzzleConfig {
-  hint: HintConfig
+  hintGenerators: HintGeneratorConfig
 }
 
 export function getPuzzleId(puzzle: Puzzle): PuzzleId {

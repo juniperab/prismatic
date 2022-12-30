@@ -10,7 +10,7 @@ import {
 import { HintGrid } from '../../components/hint-grid/HintGrid'
 import { makeGuess, selectPuzzleState, setCurrentColour } from '../../../redux/puzzle/puzzleSlice'
 import { ColourChooser, NewColourCallback } from '../../components/colour-chooser/ColourChooser'
-import { AnyColor } from '../../../lib/colour/colourConversions'
+import { AnyColour } from '../../../lib/colour/colourConversions'
 import { selectConfigState } from '../../../redux/config/configSlice'
 import { useResizeDetector } from 'react-resize-detector'
 import { hintGridLayout } from '../../components/hint-grid/hintGridLayout'
@@ -26,7 +26,7 @@ export function PlayingView(): ReactElement | null {
     return null
   }
 
-  const receiveNewColour: NewColourCallback = (colour: AnyColor) => {
+  const receiveNewColour: NewColourCallback = (colour: AnyColour) => {
     dispatch(setCurrentColour(colour))
   }
 

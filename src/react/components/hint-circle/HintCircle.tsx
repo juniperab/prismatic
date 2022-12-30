@@ -3,10 +3,10 @@ import { _HintCircle as HintCircleElement } from './hintCircleLayout'
 import { Hint, HintType } from '../../../lib/puzzle/hint/hint'
 import { renderHintDisplayCentre } from './hintCircleCommon'
 import { HintCircleHSB } from './HintCircleHSB'
-import { AnyColor, toCssColour } from '../../../lib/colour/colourConversions'
+import { AnyColour, toCssColour } from '../../../lib/colour/colourConversions'
 
 export interface HintDisplayProps {
-  answer?: AnyColor
+  answer?: AnyColour
   hint?: Hint
   onClick?: (hint: Hint) => void
 }

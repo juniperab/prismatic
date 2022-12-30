@@ -1,21 +1,21 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { AppThunk, RootState } from '../store'
-import { AnyColor, NamedColor, toHSB, toNamed } from '../../lib/colour/colourConversions'
+import { AnyColour, NamedColour, toHSB, toNamed } from '../../lib/colour/colourConversions'
 import { Hint, HintType } from '../../lib/puzzle/hint/hint'
 import { getPuzzleId, Puzzle, PuzzleId, PuzzleMode } from '../../lib/puzzle/puzzle'
 import { ClientPuzzleSpec, getNewPuzzle } from '../../lib/puzzle/puzzleServer'
 import { generateRandomColour } from '../../lib/colour/colourMath'
 
 export interface PuzzleState {
-  answerName?: NamedColor
-  currentColour: AnyColor
+  answerName?: NamedColour
+  currentColour: AnyColour
   gaveUp: boolean
-  guesses: AnyColor[]
+  guesses: AnyColour[]
   hints: Hint[]
   mode: PuzzleMode
   precision: number
   puzzleId: PuzzleId
-  startingColour: AnyColor
+  startingColour: AnyColour
 }
 
 // TODO: need a better way of creating a random puzzle
@@ -26,7 +26,7 @@ const initialPuzzle: Puzzle = {
   mode: HintType.HSB,
   precision: 3,
 }
-const startingColour: AnyColor = 'slateblue'
+const startingColour: AnyColour = 'slateblue'
 const initialState: PuzzleState = {
   currentColour: startingColour,
   gaveUp: false,
@@ -38,8 +38,8 @@ const initialState: PuzzleState = {
   startingColour,
 }
 
-export type MakeGuessAction = PayloadAction<AnyColor>
-export type ReceiveAnswerAction = PayloadAction<NamedColor>
+export type MakeGuessAction = PayloadAction<AnyColour>
+export type ReceiveAnswerAction = PayloadAction<NamedColour>
 export type ReceiveHintAction = PayloadAction<Hint>
 
 export const puzzleSlice = createSlice({
@@ -67,10 +67,10 @@ export const puzzleSlice = createSlice({
       state.puzzleId = action.payload.puzzleId
       state.startingColour = state.currentColour
     },
-    setCurrentColour: (state, action: PayloadAction<AnyColor>) => {
+    setCurrentColour: (state, action: PayloadAction<AnyColour>) => {
       state.currentColour = action.payload
     },
-    setStartingColour: (state, action: PayloadAction<AnyColor>) => {
+    setStartingColour: (state, action: PayloadAction<AnyColour>) => {
       state.startingColour = action.payload
     },
   },
