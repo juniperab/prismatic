@@ -1,7 +1,7 @@
 import { CSSProperties, ReactElement } from 'react'
 import { _HintCircle as HintCircleElement, _HintCircleQuadrant as HCQuadrant } from './hintCircleLayout'
 import { HintDisplayProps } from './HintCircle'
-import { HSBHint } from '../../../lib/puzzle/hint/hint'
+import { HintItem, HSBHint } from "../../../lib/puzzle/hint/hint";
 import { HintCircleDirection, hintIndicatorMagnitude, renderHintDisplayCentre } from './hintCircleCommon'
 import { toCssColour, toHSB, withAlpha } from "../../../lib/colour/colourConversions";
 import { rotateHue } from '../../../lib/colour/colourMath'
@@ -13,30 +13,42 @@ export interface HintDisplayHSBProps extends HintDisplayProps {
   hint: HSBHint
 }
 
-function radialGradiant(innerColour: AnyColour, outerColour: AnyColour, left: number, top: number, ): string {
-  return (
-    `radial-gradient(` +
-    `circle at ${left}% ${top}%, ` +
-    `${toCssColour(innerColour)} 10%, ` +
-    `${toCssColour(outerColour)} 75%)`
-  )
-}
+function conicGradiantMask(mask: AnyColour, saturation?: HintItem, brightness?: HintItem): string {
+  if (saturation === undefined && brightness === undefined) {
+    return `conic-gradient(from 0deg, ${toCssColour(mask)}, ${toCssColour(mask)})`
+  } else if (saturation !== undefined) {
+    if (saturation?.match) {
+      return `conic-gradient(from 0deg, ` +
+        `${toCssColour(mask)} 45deg, transparent 45deg, ` +
+        `transparent 135deg, ${toCssColour(mask)} 135deg, ` +
+        `${toCssColour(mask)} 225deg, transparent 225deg, ` +
+        `transparent 315deg, ${toCssColour(mask)} 315deg)`
+    } else {
+      return `conic-gradient(from ${saturation.error > 0 ? 0 : 180}deg, ` +
+        `${toCssColour(mask)} 45deg, transparent 45deg, ` +
+        `transparent 135deg, ${toCssColour(mask)} 135deg)`
+    }
+  } else if (brightness !== undefined) {
+    return '' // FIXME
+  } else {
+    return '' // FIXME
+  }
+  return `conic-gradient(from 15deg, red 45deg, blue 180deg, yellow 270deg)`
 
-function conicGradiantMask(start: number, end: number, mask: AnyColour, sideBuffer: number = 0): string {
-  const maskCss = toCssColour(mask)
-  const points = [
-    start - sideBuffer,
-    sideBuffer,
-    end - start + sideBuffer,
-    end - start + sideBuffer * 2,
-  ]
-  return (
-    `conic-gradient(from ${points[0]}deg, ${maskCss},` +
-    `transparent ${points[1]}deg,` +
-    `transparent ${points[2]}deg, ` +
-    `${maskCss} ${points[3]}deg, ` +
-    `${maskCss})`
-  )
+  // const maskCss = toCssColour(mask)
+  // const points = [
+  //   start - sideBuffer,
+  //   sideBuffer,
+  //   end - start + sideBuffer,
+  //   end - start + sideBuffer * 2,
+  // ]
+  // return (
+  //   `conic-gradient(from ${points[0]}deg, ${maskCss},` +
+  //   `transparent ${points[1]}deg,` +
+  //   `transparent ${points[2]}deg, ` +
+  //   `${maskCss} ${points[3]}deg, ` +
+  //   `${maskCss})`
+  // )
 }
 
 export function HintCircleHSB(props: HintDisplayHSBProps): ReactElement {
@@ -44,14 +56,11 @@ export function HintCircleHSB(props: HintDisplayHSBProps): ReactElement {
   const theme = useTheme() as Theme
 
   const hintCircleStyle: CSSProperties = {
-    // backgroundColor: toCssColour({ h: hint.guessedColour.h, s: 100, b: 100 }),
-    backgroundImage: hint.cssGradients.join(', ')
-    // backgroundImage: [
-    //   // conicGradiantMask(15, 345, theme.colours.background),
-    //   // radialGradiant(hint.innerColour, hint.outerColour, 50, 50),
-    //   `linear-gradient(to top, black, ${toCssColour({h: 0, s: 0, b: 0, a: 100 - hint.guessedColour.b})}, transparent)`,
-    //   `linear-gradient(to right, white, ${toCssColour({h: 0, s: 0, b: 100, a: 100 - hint.guessedColour.s})}, transparent)`
-    // ].join(', ')
+    backgroundColor: 'white',
+    backgroundImage: [
+      conicGradiantMask(theme.colours.background, hint.saturation, hint.brightness),
+      ...hint.cssGradients,
+    ].join(', '),
   }
 
   return (
