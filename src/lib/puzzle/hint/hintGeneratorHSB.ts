@@ -6,6 +6,7 @@ import { simpleHintItem } from './hintGeneratorCommon'
 import { AnyColour, HSBColour } from "../../colour/colours";
 import { Puzzle } from '../puzzle'
 import { start } from "repl";
+import { hintCircleLayout } from "../../../react/components/hint-circle/hintCircleLayout";
 
 export function generateHintHSB(guess: HSBColour, puzzle: Puzzle, config: HintGeneratorConfigHSB): HSBHint {
   const { precision } = puzzle
@@ -61,7 +62,7 @@ export function generateHintHSB(guess: HSBColour, puzzle: Puzzle, config: HintGe
     cssGradients: [
       // brightnessGradient(innerColour, 0),
       // saturationGradient(innerColour, 0),
-      hueGradiant(innerColour, outerColour,hue?.error ?? 0),
+      hueGradiant(innerColour, outerColour,hue?.error ?? 1),
     ],
     innerColour,
     outerColour,
@@ -72,7 +73,7 @@ export function generateHintHSB(guess: HSBColour, puzzle: Puzzle, config: HintGe
 }
 
 function hueGradiant(innerColour: HSBColour, outerColour: HSBColour, error: number): string {
-  const visibleStartRadius = 10
+  const visibleStartRadius = hintCircleLayout.centre.diameter * 0.8
   const visibleEndRadius = 75
   const startRadius = visibleStartRadius + (1 - Math.abs(error)) * (visibleEndRadius - visibleStartRadius) * 0.8
   console.log(`error: ${error}, startRadius: ${startRadius}`)
@@ -80,8 +81,8 @@ function hueGradiant(innerColour: HSBColour, outerColour: HSBColour, error: numb
   return (
     `radial-gradient(` +
     `circle at 50% 50%, ` +
-    `${toCssColour(innerColour)} ${startRadius}%, ` +
-    `${toCssColour(outerColour)} ${visibleEndRadius}%)`
+    `${toCssColour({ ...innerColour, s: innerColour.s === 0 ? 0 : 100, b: 100 })} ${startRadius}%, ` +
+    `${toCssColour({ ...outerColour, s: innerColour.s === 0 ? 0 : 100, b: 100 })} ${visibleEndRadius}%)`
   )
 }
 
