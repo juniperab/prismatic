@@ -3,6 +3,7 @@ import { headerLayout } from '../page/headerLayout'
 import { windowLayout } from '../page/windowLayout'
 import { footerLayout } from '../page/footerLayout'
 import { Icon } from '../theme/elements/Icon'
+import { H2 } from "../theme/elements/H1";
 
 export const modalLayout = {
   margin: {
@@ -38,7 +39,7 @@ export const modalLayout = {
 modalLayout.margin.fromTopOfScreen = headerLayout.height + modalLayout.margin.top
 modalLayout.margin.fromBottomOfScreen = footerLayout.height + modalLayout.margin.bottom
 
-export const ModalBackground = styled.div.attrs({
+export const _ModalBackground = styled.div.attrs({
   className: 'modal-background',
 })`
   bottom: 0;
@@ -49,8 +50,8 @@ export const ModalBackground = styled.div.attrs({
   z-index: 9999;
 `
 
-export const ModalOuter = styled.div.attrs({
-  className: 'modal-outer',
+export const _ModalContainer = styled.div.attrs({
+  className: 'modal-container',
 })`
   bottom: ${modalLayout.margin.fromBottomOfScreen}px;
   box-sizing: border-box;
@@ -61,8 +62,8 @@ export const ModalOuter = styled.div.attrs({
   width: clamp(${windowLayout.width.min}px, 100vw, ${windowLayout.width.max}px);
 `
 
-export const ModalInner = styled.div.attrs({
-  className: 'modal-inner',
+export const _ModalContainerInner = styled.div.attrs({
+  className: 'modal-container-inner',
 })`
   bottom: 0;
   left: ${modalLayout.margin.side}px;
@@ -71,7 +72,7 @@ export const ModalInner = styled.div.attrs({
   top: 0;
 `
 
-export const ModalWindow = styled.div.attrs({
+export const _ModalWindow = styled.div.attrs({
   className: 'modal-window',
 })`
   box-sizing: border-box;
@@ -91,8 +92,8 @@ export const ModalWindow = styled.div.attrs({
   box-shadow: 0 4px 23px 0 ${(props) => props.theme.colours.modalBoxShadow};
 `
 
-export const ModalHeaderOuter = styled.div.attrs({
-  className: 'modal-header-outer',
+export const _ModalHeader = styled.div.attrs({
+  className: 'modal-header',
 })`
   display: flex;
   justify-content: space-between;
@@ -100,22 +101,22 @@ export const ModalHeaderOuter = styled.div.attrs({
   gap: 3px;
 `
 
-const ModalHeaderSection = styled.div.attrs({
+const _ModalHeaderSection = styled.div.attrs({
   className: 'modal-header-section',
 })`
   font-size: ${modalLayout.header.height / 2}px;
   font-weight: 700;
 `
 
-export const ModalHeaderSectionCentre = styled(ModalHeaderSection)`
+export const _ModalHeaderSectionCentre = styled(_ModalHeaderSection)`
   text-align: center;
 `
 
-export const ModalHeaderSectionEdge = styled(ModalHeaderSection)`
+export const _ModalHeaderSectionEdge = styled(_ModalHeaderSection)`
   text-align: right;
 `
 
-export const ModalBody = styled.div.attrs({
+export const _ModalBody = styled.div.attrs({
   className: 'modal-body',
 })`
   .modal-body-section {
@@ -128,17 +129,17 @@ export const ModalBody = styled.div.attrs({
   }
 `
 
-export const ModalIcon = styled(Icon)`
+export const _ModalIcon = styled(Icon)`
   height: ${modalLayout.header.height}px;
 `
 
-export const ModalBodySection = styled.div.attrs({
+export const _ModalBodySection = styled.div.attrs({
   className: 'modal-body-section',
 })`
   box-sizing: border-box;
   margin: ${modalLayout.body.section.margin.topBottom}px 0;
+`
 
-  // p {
-  //   margin: ${modalLayout.body.paragraph.margin.topBottom}px 0;
-  // }
+export const _ModalBodySectionTitle = styled(H2)`
+  font-size: inherit;
 `

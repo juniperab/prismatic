@@ -1,14 +1,14 @@
 import React, { ReactElement, ReactNode } from 'react'
 import {
-  ModalBackground,
-  ModalWindow,
-  ModalInner,
-  ModalOuter,
-  ModalBody,
-  ModalHeaderOuter,
-  ModalHeaderSectionEdge,
-  ModalHeaderSectionCentre,
-  ModalIcon,
+  _ModalBackground as ModalElement,
+  _ModalWindow as MWindow,
+  _ModalContainerInner as MCInner,
+  _ModalContainer as MContainer,
+  _ModalBody as MBody,
+  _ModalHeader as MHeader,
+  _ModalHeaderSectionEdge as MHSectionEdge,
+  _ModalHeaderSectionCentre as MHSectionCentre,
+  _ModalIcon as MIcon,
 } from './modalLayout'
 import { useTheme } from 'styled-components'
 import { Theme } from '../theme/theme'
@@ -28,32 +28,32 @@ function ModalHeader(props: ModalHeaderProps): ReactElement {
   // N.B. we set the right content on both sides, so that the centre content
   // lines up perfectly between them, and hide the left copy of it.
   return (
-    <ModalHeaderOuter>
-      <ModalHeaderSectionEdge style={{ visibility: 'hidden' }}>{props.rightContent}</ModalHeaderSectionEdge>
-      <ModalHeaderSectionCentre>{props.centreContent}</ModalHeaderSectionCentre>
-      <ModalHeaderSectionEdge>{props.rightContent}</ModalHeaderSectionEdge>
-    </ModalHeaderOuter>
+    <MHeader>
+      <MHSectionEdge style={{ visibility: 'hidden' }}>{props.rightContent}</MHSectionEdge>
+      <MHSectionCentre>{props.centreContent}</MHSectionCentre>
+      <MHSectionEdge>{props.rightContent}</MHSectionEdge>
+    </MHeader>
   )
 }
 
 export function Modal(props: ModalProps): ReactElement {
   const theme = useTheme() as Theme
   const closeButton = (
-    <ModalIcon onClick={props.onClickClose}>
+    <MIcon onClick={props.onClickClose}>
       <theme.icons.close.svg />
-    </ModalIcon>
+    </MIcon>
   )
 
   return (
-    <ModalBackground onClick={props.onClickClose}>
-      <ModalOuter>
-        <ModalInner onClick={(e) => e.stopPropagation()}>
-          <ModalWindow>
+    <ModalElement onClick={props.onClickClose}>
+      <MContainer>
+        <MCInner onClick={(e) => e.stopPropagation()}>
+          <MWindow>
             <ModalHeader centreContent={props.title} rightContent={closeButton} />
-            <ModalBody>{props.children}</ModalBody>
-          </ModalWindow>
-        </ModalInner>
-      </ModalOuter>
-    </ModalBackground>
+            <MBody>{props.children}</MBody>
+          </MWindow>
+        </MCInner>
+      </MContainer>
+    </ModalElement>
   )
 }
