@@ -11,7 +11,7 @@ import { filter } from "lodash";
 import { css } from "styled-components";
 
 const innerVisibleRadius = hintCircleLayout.centre.diameter * 0.8
-const outerVisibleRadius = 80
+const outerVisibleRadius = 75
 const innerVisibleLine = 40
 const outerVisibleLine = 90
 

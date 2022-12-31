@@ -16,50 +16,50 @@ export interface HintDisplayHSBProps extends HintDisplayProps {
 function conicGradiantMask(mask: AnyColour, saturation?: HintItem, brightness?: HintItem): string {
   function singleQuarterMask(start: number): string {
     return `conic-gradient(from ${start}deg, ` +
-      `${toCssColour(mask)} 45deg, transparent 45deg, ` +
-      `transparent 135deg, ${toCssColour(mask)} 135deg)`
+      `${toCssColour(mask)} 0deg, transparent 0deg, ` +
+      `transparent 90deg, ${toCssColour(mask)} 90deg)`
   }
   function doubleQuarterMark(start: number): string {
     return `conic-gradient(from ${start}deg, ` +
-      `${toCssColour(mask)} 45deg, transparent 45deg, ` +
-      `transparent 135deg, ${toCssColour(mask)} 135deg, ` +
-      `${toCssColour(mask)} 225deg, transparent 225deg, ` +
-      `transparent 315deg, ${toCssColour(mask)} 315deg)`
+      `${toCssColour(mask)} 0deg, transparent 0deg, ` +
+      `transparent 90deg, ${toCssColour(mask)} 90deg, ` +
+      `${toCssColour(mask)} 180deg, transparent 180deg, ` +
+      `transparent 270deg, ${toCssColour(mask)} 270deg)`
+  }
+  function halfMask(start: number): string {
+    return `conic-gradient(from ${start}deg, ` +
+      `${toCssColour(mask)} 0deg, transparent 0deg, ` +
+      `transparent 180deg, ${toCssColour(mask)} 180deg)`
   }
 
   if (saturation !== undefined && brightness !== undefined) {
-    return '' // FIXME
+    if (saturation.match && brightness.match) {
+      return `conic-gradient(from 0deg, transparent, transparent)`
+    }
+    if (saturation.error >= 0 && brightness.error >= 0) {
+      return halfMask(-45)
+    } else if (saturation.error >= 0 && brightness.error < 0) {
+      return halfMask(45)
+    } else if (saturation.error < 0 && brightness.error >= 0) {
+      return halfMask(-135)
+    } else {
+      return halfMask(135)
+    }
   } else if (saturation !== undefined) {
     if (saturation?.match) {
-      return doubleQuarterMark(0)
+      return doubleQuarterMark(45)
     } else {
-      return singleQuarterMask(saturation.error > 0 ? 0 : 180)
+      return singleQuarterMask(saturation.error > 0 ? 45 : 225)
     }
   } else if (brightness !== undefined) {
     if (brightness?.match) {
-      return doubleQuarterMark(-90)
+      return doubleQuarterMark(-45)
     } else {
-      return singleQuarterMask(brightness.error > 0 ? -90 : 90)
+      return singleQuarterMask(brightness.error > 0 ? -45 : 135)
     }
   } else {
     return `conic-gradient(from 0deg, ${toCssColour(mask)}, ${toCssColour(mask)})`
   }
-  return `conic-gradient(from 15deg, red 45deg, blue 180deg, yellow 270deg)`
-
-  // const maskCss = toCssColour(mask)
-  // const points = [
-  //   start - sideBuffer,
-  //   sideBuffer,
-  //   end - start + sideBuffer,
-  //   end - start + sideBuffer * 2,
-  // ]
-  // return (
-  //   `conic-gradient(from ${points[0]}deg, ${maskCss},` +
-  //   `transparent ${points[1]}deg,` +
-  //   `transparent ${points[2]}deg, ` +
-  //   `${maskCss} ${points[3]}deg, ` +
-  //   `${maskCss})`
-  // )
 }
 
 export function HintCircleHSB(props: HintDisplayHSBProps): ReactElement {
