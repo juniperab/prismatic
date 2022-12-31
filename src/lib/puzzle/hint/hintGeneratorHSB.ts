@@ -15,8 +15,25 @@ const outerVisibleLine = 90
 export function generateHintHSB(guess: HSBColour, puzzle: Puzzle, config: HintGeneratorConfigHSB): HSBHint {
   const { precision } = puzzle
   const answer = toHSB(puzzle.answer)
-  const hue = hueHint(guess, answer, precision, config)
-  const saturation = saturationHint(guess, answer, precision, config)
+
+  let huePrecision = precision
+  let saturationPrecision = precision
+  const saturationPrecisionMultiplier = Math.pow(
+    config.brightnessPrecisionMultiplier,
+    (100 - answer.s) / (100 - config.saturationPrecisionThreshold))
+  const brightnessPrecisionMultiplier = Math.pow(
+    config.brightnessPrecisionMultiplier,
+    (100 - answer.b) / (100 - config.brightnessPrecisionThreshold))
+  huePrecision *= saturationPrecisionMultiplier * brightnessPrecisionMultiplier
+  saturationPrecision *= brightnessPrecisionMultiplier
+  if (answer.s < config.saturationPrecisionThreshold) huePrecision = 360
+  if (answer.b < config.brightnessPrecisionThreshold) huePrecision = 360
+
+
+
+
+  const hue = hueHint(guess, answer, huePrecision, config)
+  const saturation = saturationHint(guess, answer, saturationPrecision, config)
   const brightness = brightnessHint(guess, answer, precision, config)
 
   let innerColour = guess
@@ -27,6 +44,9 @@ export function generateHintHSB(guess: HSBColour, puzzle: Puzzle, config: HintGe
       h: rotateHue(guess.h, Math.sign(hue.error) * config.hueRange),
       s: outerColour.s + (saturation?.error ?? 0) * config.saturationRange * 2,
       b: outerColour.b + (brightness?.error ?? 0) * config.brightnessRange * 2,
+    }
+    if (outerColour.s < config.saturationVisibilityThreshold) {
+      outerColour = { ...outerColour, s: config.saturationVisibilityThreshold }
     }
   } else {
     innerColour = { ...innerColour, s: 0 }
@@ -95,8 +115,9 @@ function saturationGradient(innerColour: HSBColour, outerColour: HSBColour, hint
   }
   const startLine = innerVisibleLine + (1 - Math.abs(hint.error)) * (outerVisibleLine - innerVisibleLine) * 0.8
   if (hint.match) {
-    const cssColour = toCssColour({ h: 0, s: 0, b: 100, a: 100 - innerColour.s })
-    return `linear-gradient(to right, ${cssColour}, ${cssColour})`
+    return `radial-gradient(circle at 50% 50%, ` +
+      `${toCssColour({ h: 0, s: 0, b: 100, a: 100 - innerColour.s })} ${cssPct(innerVisibleRadius)}, ` +
+      `${toCssColour({ h: 0, s: 0, b: 100, a: 100 - outerColour.s })} ${cssPct(outerVisibleRadius)})`
   }
   return (
     `linear-gradient(to ${outerColour.s >= innerColour.s ? 'right' : 'left'}, ` +

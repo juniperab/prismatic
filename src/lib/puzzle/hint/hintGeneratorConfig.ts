@@ -12,9 +12,15 @@ export interface HintGeneratorConfigCMYK {
 export interface HintGeneratorConfigHSB {
   hueCutoff: number
   hueRange: number
+
   saturationCutoff: number
+  saturationPrecisionMultiplier: number
+  saturationPrecisionThreshold: number
   saturationRange: number
+  saturationVisibilityThreshold: number
   brightnessCutoff: number
+  brightnessPrecisionMultiplier: number
+  brightnessPrecisionThreshold: number
   brightnessRange: number
 }
 
