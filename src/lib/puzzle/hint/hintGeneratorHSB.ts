@@ -28,7 +28,7 @@ export function generateHintHSB(guess: HSBColour, puzzle: Puzzle, config: HintGe
   if (hue !== undefined) {
     outerColour = {
       h: rotateHue(guess.h, Math.sign(hue.error) * config.hueRange),
-      s: outerColour.s + Math.sign(saturation?.error ?? 0) * config.saturationRange,
+      s: outerColour.s + (saturation?.error ?? 0) * config.saturationRange * 2,
       b: outerColour.b + (brightness?.error ?? 0) * config.brightnessRange * 2,
     }
   } else {
@@ -68,8 +68,8 @@ export function generateHintHSB(guess: HSBColour, puzzle: Puzzle, config: HintGe
     guessedColour: guess,
     cssGradients: [
       brightnessGradient(innerColour, outerColour, brightness),
-      // saturation !== undefined && saturationGradient(innerColour, 0),
-      hueGradiant(innerColour, outerColour,hue?.error ?? 1),
+      saturationGradient(innerColour, outerColour, saturation),
+      hueGradiant(innerColour, outerColour, hue),
     ].filter(g => typeof g === 'string') as string[],
     innerColour,
     outerColour,
@@ -79,9 +79,13 @@ export function generateHintHSB(guess: HSBColour, puzzle: Puzzle, config: HintGe
   }
 }
 
-function hueGradiant(innerColour: HSBColour, outerColour: HSBColour, error: number): string {
-  const startRadius = innerVisibleRadius + (1 - Math.abs(error)) * (outerVisibleRadius - innerVisibleRadius) * 0.8
-
+function hueGradiant(innerColour: HSBColour, outerColour: HSBColour, hint?: HintItem): string | undefined {
+  if (hint === undefined) return undefined
+  const startRadius = innerVisibleRadius + (1 - Math.abs(hint.error)) * (outerVisibleRadius - innerVisibleRadius) * 0.8
+  if (hint.match) {
+    const cssColour = toCssColour({ ...innerColour, s: 100, b: 100 })
+    return `radial-gradient(circle at 50% 50%, ${cssColour}, ${cssColour})`
+  }
   return (
     `radial-gradient(` +
     `circle at 50% 50%, ` +
@@ -90,12 +94,18 @@ function hueGradiant(innerColour: HSBColour, outerColour: HSBColour, error: numb
   )
 }
 
-function saturationGradient(innerColour: HSBColour, centreBuffer: number = 0): string {
-  return `linear-gradient(to right, ` +
-    `white, ` +
-    `${toCssColour({h: 0, s: 0, b: 100, a: 100 - innerColour.s})} ${cssPct(50 - centreBuffer)}, ` +
-    `${toCssColour({h: 0, s: 0, b: 100, a: 100 - innerColour.s})} ${cssPct(50 + centreBuffer)}, ` +
-    `transparent)`
+function saturationGradient(innerColour: HSBColour, outerColour: HSBColour, hint?: HintItem): string | undefined {
+  if (hint === undefined) {
+    return `linear-gradient(to right, white, white)`
+  }
+  const startLine = innerVisibleLine + (1 - Math.abs(hint.error)) * (outerVisibleLine - innerVisibleLine) * 0.8
+  if (hint.match) {
+    const cssColour = toCssColour({ h: 0, s: 0, b: 100, a: 100 - innerColour.s })
+    return `linear-gradient(to right, ${cssColour}, ${cssColour})`
+  }
+  return `linear-gradient(to ${outerColour.s >= innerColour.s ? 'right' : 'left'}, ` +
+    `${toCssColour({h: 0, s: 0, b: 100, a: 100 - innerColour.s})} ${cssPct(startLine)}, ` +
+    `${toCssColour({h: 0, s: 0, b: 100, a: 100 - outerColour.s})} ${cssPct(outerVisibleLine)})`
 }
 
 function brightnessGradient(innerColour: HSBColour, outerColour: HSBColour, hint?: HintItem): string | undefined {
@@ -104,11 +114,10 @@ function brightnessGradient(innerColour: HSBColour, outerColour: HSBColour, hint
   if (hint.match) {
     const cssColour = toCssColour({ h: 0, s: 0, b: 0, a: 100 - innerColour.b })
     return `linear-gradient(to top, ${cssColour}, ${cssColour})`
-  } else {
-    return `linear-gradient(to ${outerColour.b >= innerColour.b ? 'top' : 'bottom'}, ` +
-      `${toCssColour({h: 0, s: 0, b: 0, a: 100 - innerColour.b})} ${cssPct(startLine)}, ` +
-      `${toCssColour({h: 0, s: 0, b: 0, a: 100 - outerColour.b})} ${cssPct(outerVisibleLine)})`
   }
+  return `linear-gradient(to ${outerColour.b >= innerColour.b ? 'top' : 'bottom'}, ` +
+    `${toCssColour({h: 0, s: 0, b: 0, a: 100 - innerColour.b})} ${cssPct(startLine)}, ` +
+    `${toCssColour({h: 0, s: 0, b: 0, a: 100 - outerColour.b})} ${cssPct(outerVisibleLine)})`
 }
 
 function hueHint(
