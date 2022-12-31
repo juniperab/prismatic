@@ -44,7 +44,7 @@ export function HintCircleHSB(props: HintDisplayHSBProps): ReactElement {
   const theme = useTheme() as Theme
 
   const hintCircleStyle: CSSProperties = {
-    backgroundColor: toCssColour({ h: hint.guessedColour.h, s: 100, b: 100 }),
+    // backgroundColor: toCssColour({ h: hint.guessedColour.h, s: 100, b: 100 }),
     backgroundImage: hint.cssGradients.join(', ')
     // backgroundImage: [
     //   // conicGradiantMask(15, 345, theme.colours.background),
@@ -53,8 +53,6 @@ export function HintCircleHSB(props: HintDisplayHSBProps): ReactElement {
     //   `linear-gradient(to right, white, ${toCssColour({h: 0, s: 0, b: 100, a: 100 - hint.guessedColour.s})}, transparent)`
     // ].join(', ')
   }
-
-  console.log(hintCircleStyle.backgroundImage)
 
   return (
     <HintCircleElement style={hintCircleStyle}>
