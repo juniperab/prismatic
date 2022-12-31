@@ -40,8 +40,15 @@ function conicGradiantMask(mask: AnyColour, saturation?: HintItem, brightness?: 
   if (saturation !== undefined && brightness !== undefined) {
     if (saturation.match && brightness.match) {
       return `conic-gradient(from 0deg, transparent, transparent)`
-    }
-    if (saturation.error >= 0 && brightness.error >= 0) {
+    } else if (saturation.match && brightness.error >= 0) {
+      return halfMask(-90)
+    } else if (saturation.match && brightness.error < 0) {
+      return halfMask(90)
+    } else if (brightness.match && saturation.error >= 0) {
+      return halfMask(0)
+    } else if (brightness.match && saturation.error < 0) {
+      return halfMask(180)
+    } else if (saturation.error >= 0 && brightness.error >= 0) {
       return halfMask(-45)
     } else if (saturation.error >= 0 && brightness.error < 0) {
       return halfMask(45)
