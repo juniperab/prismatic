@@ -14,24 +14,35 @@ export interface HintDisplayHSBProps extends HintDisplayProps {
 }
 
 function conicGradiantMask(mask: AnyColour, saturation?: HintItem, brightness?: HintItem): string {
-  if (saturation === undefined && brightness === undefined) {
-    return `conic-gradient(from 0deg, ${toCssColour(mask)}, ${toCssColour(mask)})`
+  function singleQuarterMask(start: number): string {
+    return `conic-gradient(from ${start}deg, ` +
+      `${toCssColour(mask)} 45deg, transparent 45deg, ` +
+      `transparent 135deg, ${toCssColour(mask)} 135deg)`
+  }
+  function doubleQuarterMark(start: number): string {
+    return `conic-gradient(from ${start}deg, ` +
+      `${toCssColour(mask)} 45deg, transparent 45deg, ` +
+      `transparent 135deg, ${toCssColour(mask)} 135deg, ` +
+      `${toCssColour(mask)} 225deg, transparent 225deg, ` +
+      `transparent 315deg, ${toCssColour(mask)} 315deg)`
+  }
+
+  if (saturation !== undefined && brightness !== undefined) {
+    return '' // FIXME
   } else if (saturation !== undefined) {
     if (saturation?.match) {
-      return `conic-gradient(from 0deg, ` +
-        `${toCssColour(mask)} 45deg, transparent 45deg, ` +
-        `transparent 135deg, ${toCssColour(mask)} 135deg, ` +
-        `${toCssColour(mask)} 225deg, transparent 225deg, ` +
-        `transparent 315deg, ${toCssColour(mask)} 315deg)`
+      return doubleQuarterMark(0)
     } else {
-      return `conic-gradient(from ${saturation.error > 0 ? 0 : 180}deg, ` +
-        `${toCssColour(mask)} 45deg, transparent 45deg, ` +
-        `transparent 135deg, ${toCssColour(mask)} 135deg)`
+      return singleQuarterMask(saturation.error > 0 ? 0 : 180)
     }
   } else if (brightness !== undefined) {
-    return '' // FIXME
+    if (brightness?.match) {
+      return doubleQuarterMark(-90)
+    } else {
+      return singleQuarterMask(brightness.error > 0 ? -90 : 90)
+    }
   } else {
-    return '' // FIXME
+    return `conic-gradient(from 0deg, ${toCssColour(mask)}, ${toCssColour(mask)})`
   }
   return `conic-gradient(from 15deg, red 45deg, blue 180deg, yellow 270deg)`
 
