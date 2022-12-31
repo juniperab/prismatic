@@ -43,7 +43,7 @@ export const _ColourChooserFullscreen = styled(_ColourChooser)`
 export const _ColourChooserArea = styled.div.attrs({
   className: 'colour-chooser-area',
 })`
-  background-image: linear-gradient(0deg, #000, transparent), linear-gradient(90deg, #fff, hsla(0, 0%, 100%, 0));
+  background-image: linear-gradient(to top, black, transparent), linear-gradient(to right, white, transparent);
   height: 100%;
   position: relative;
   width: 100%;

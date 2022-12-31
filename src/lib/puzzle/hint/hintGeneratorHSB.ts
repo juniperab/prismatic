@@ -1,10 +1,11 @@
-import { toHSB } from '../../colour/colourConversions'
+import { toCssColour, toHSB } from "../../colour/colourConversions";
 import { HintItem, HintType, HSBHint } from './hint'
 import { hueDiff, rotateHue } from "../../colour/colourMath";
 import { HintGeneratorConfigHSB } from './hintGeneratorConfig'
 import { simpleHintItem } from './hintGeneratorCommon'
-import { HSBColour } from '../../colour/colours'
+import { AnyColour, HSBColour } from "../../colour/colours";
 import { Puzzle } from '../puzzle'
+import { start } from "repl";
 
 export function generateHintHSB(guess: HSBColour, puzzle: Puzzle, config: HintGeneratorConfigHSB): HSBHint {
   const { precision } = puzzle
@@ -57,12 +58,47 @@ export function generateHintHSB(guess: HSBColour, puzzle: Puzzle, config: HintGe
   return {
     type: HintType.HSB,
     guessedColour: guess,
+    cssGradients: [
+      // brightnessGradient(innerColour, 0),
+      // saturationGradient(innerColour, 0),
+      hueGradiant(innerColour, outerColour,hue?.error ?? 0),
+    ],
     innerColour,
     outerColour,
     hue,
     saturation,
     brightness,
   }
+}
+
+function hueGradiant(innerColour: HSBColour, outerColour: HSBColour, error: number): string {
+  const visibleStartRadius = 10
+  const visibleEndRadius = 75
+  const startRadius = visibleStartRadius + (1 - Math.abs(error)) * (visibleEndRadius - visibleStartRadius) * 0.8
+  console.log(`error: ${error}, startRadius: ${startRadius}`)
+
+  return (
+    `radial-gradient(` +
+    `circle at 50% 50%, ` +
+    `${toCssColour(innerColour)} ${startRadius}%, ` +
+    `${toCssColour(outerColour)} ${visibleEndRadius}%)`
+  )
+}
+
+function saturationGradient(innerColour: HSBColour, centerRadius: number): string {
+  return `linear-gradient(to right, ` +
+    `white, ` +
+    `${toCssColour({h: 0, s: 0, b: 100, a: 100 - innerColour.s})} ${50 - centerRadius}%, ` +
+    `${toCssColour({h: 0, s: 0, b: 100, a: 100 - innerColour.s})} ${50 + centerRadius}%, ` +
+    `transparent)`
+}
+
+function brightnessGradient(innerColour: HSBColour, centerRadius: number): string {
+  return `linear-gradient(to top, ` +
+    `black, ` +
+    `${toCssColour({h: 0, s: 0, b: 0, a: 100 - innerColour.b})} ${50 - centerRadius}%, ` +
+    `${toCssColour({h: 0, s: 0, b: 0, a: 100 - innerColour.b})} ${50 + centerRadius}%, ` +
+    `transparent)`
 }
 
 function hueHint(

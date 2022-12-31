@@ -153,6 +153,17 @@ function namedWithAlpha(colour: NamedColour, _: number | undefined): NamedColour
   return colour
 }
 
+export function withAlpha(colour: AnyColour, alpha?: number): AnyColour {
+  return visitColourOrThrow<AnyColour>(colour, {
+    cmyk: (c) => cmykWithAlpha(c, alpha),
+    hex: (c) => hexWithAlpha(c, alpha),
+    hsb: (c) => hsbWithAlpha(c, alpha),
+    hsl: (c) => hslWithAlpha(c, alpha),
+    named: (c) => rgbWithAlpha(toRGB(c), alpha),
+    rgb: (c) => rgbWithAlpha(c, alpha),
+  })
+}
+
 export function toRGB(colour: AnyColour): RGBColour {
   return visitColourOrThrow<RGBColour>(colour, {
     cmyk: (c) => rgbWithAlpha(asRGB(convert.cmyk.rgb(toQuad(c))), c.a),
