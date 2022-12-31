@@ -1,13 +1,12 @@
 import { CSSProperties, ReactElement } from 'react'
-import { _HintCircle as HintCircleElement, _HintCircleQuadrant as HCQuadrant } from './hintCircleLayout'
+import { _HintCircle as HintCircleElement } from './hintCircleLayout'
 import { HintDisplayProps } from './HintCircle'
-import { HintItem, HSBHint } from "../../../lib/puzzle/hint/hint";
-import { HintCircleDirection, hintIndicatorMagnitude, renderHintDisplayCentre } from './hintCircleCommon'
-import { toCssColour, toHSB, withAlpha } from "../../../lib/colour/colourConversions";
-import { rotateHue } from '../../../lib/colour/colourMath'
-import { AnyColour, HSBColour } from '../../../lib/colour/colours'
-import { useTheme } from "styled-components";
-import { Theme } from "../theme/theme";
+import { HintItem, HSBHint } from '../../../lib/puzzle/hint/hint'
+import { renderHintDisplayCentre } from './hintCircleCommon'
+import { toCssColour } from '../../../lib/colour/colourConversions'
+import { AnyColour } from '../../../lib/colour/colours'
+import { useTheme } from 'styled-components'
+import { Theme } from '../theme/theme'
 
 export interface HintDisplayHSBProps extends HintDisplayProps {
   hint: HSBHint
@@ -15,21 +14,27 @@ export interface HintDisplayHSBProps extends HintDisplayProps {
 
 function conicGradiantMask(mask: AnyColour, saturation?: HintItem, brightness?: HintItem): string {
   function singleQuarterMask(start: number): string {
-    return `conic-gradient(from ${start}deg, ` +
+    return (
+      `conic-gradient(from ${start}deg, ` +
       `${toCssColour(mask)} 0deg, transparent 0deg, ` +
       `transparent 90deg, ${toCssColour(mask)} 90deg)`
+    )
   }
   function doubleQuarterMark(start: number): string {
-    return `conic-gradient(from ${start}deg, ` +
+    return (
+      `conic-gradient(from ${start}deg, ` +
       `${toCssColour(mask)} 0deg, transparent 0deg, ` +
       `transparent 90deg, ${toCssColour(mask)} 90deg, ` +
       `${toCssColour(mask)} 180deg, transparent 180deg, ` +
       `transparent 270deg, ${toCssColour(mask)} 270deg)`
+    )
   }
   function halfMask(start: number): string {
-    return `conic-gradient(from ${start}deg, ` +
+    return (
+      `conic-gradient(from ${start}deg, ` +
       `${toCssColour(mask)} 0deg, transparent 0deg, ` +
       `transparent 180deg, ${toCssColour(mask)} 180deg)`
+    )
   }
 
   if (saturation !== undefined && brightness !== undefined) {

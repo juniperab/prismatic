@@ -1,14 +1,11 @@
-import { toCssColour, toHSB } from "../../colour/colourConversions";
+import { toCssColour, toHSB } from '../../colour/colourConversions'
 import { HintItem, HintType, HSBHint } from './hint'
-import { hueDiff, rotateHue } from "../../colour/colourMath";
+import { hueDiff, rotateHue } from '../../colour/colourMath'
 import { HintGeneratorConfigHSB } from './hintGeneratorConfig'
 import { simpleHintItem } from './hintGeneratorCommon'
-import { AnyColour, HSBColour } from "../../colour/colours";
+import { HSBColour } from '../../colour/colours'
 import { Puzzle } from '../puzzle'
-import { start } from "repl";
-import { hintCircleLayout } from "../../../react/components/hint-circle/hintCircleLayout";
-import { filter } from "lodash";
-import { css } from "styled-components";
+import { hintCircleLayout } from '../../../react/components/hint-circle/hintCircleLayout'
 
 const innerVisibleRadius = hintCircleLayout.centre.diameter * 0.8
 const outerVisibleRadius = 75
@@ -70,9 +67,7 @@ export function generateHintHSB(guess: HSBColour, puzzle: Puzzle, config: HintGe
       brightnessGradient(innerColour, outerColour, brightness),
       saturationGradient(innerColour, outerColour, saturation),
       hueGradiant(innerColour, outerColour, hue),
-    ].filter(g => typeof g === 'string') as string[],
-    innerColour,
-    outerColour,
+    ].filter((g) => typeof g === 'string') as string[],
     hue,
     saturation,
     brightness,
@@ -103,9 +98,11 @@ function saturationGradient(innerColour: HSBColour, outerColour: HSBColour, hint
     const cssColour = toCssColour({ h: 0, s: 0, b: 100, a: 100 - innerColour.s })
     return `linear-gradient(to right, ${cssColour}, ${cssColour})`
   }
-  return `linear-gradient(to ${outerColour.s >= innerColour.s ? 'right' : 'left'}, ` +
-    `${toCssColour({h: 0, s: 0, b: 100, a: 100 - innerColour.s})} ${cssPct(startLine)}, ` +
-    `${toCssColour({h: 0, s: 0, b: 100, a: 100 - outerColour.s})} ${cssPct(outerVisibleLine)})`
+  return (
+    `linear-gradient(to ${outerColour.s >= innerColour.s ? 'right' : 'left'}, ` +
+    `${toCssColour({ h: 0, s: 0, b: 100, a: 100 - innerColour.s })} ${cssPct(startLine)}, ` +
+    `${toCssColour({ h: 0, s: 0, b: 100, a: 100 - outerColour.s })} ${cssPct(outerVisibleLine)})`
+  )
 }
 
 function brightnessGradient(innerColour: HSBColour, outerColour: HSBColour, hint?: HintItem): string | undefined {
@@ -115,9 +112,11 @@ function brightnessGradient(innerColour: HSBColour, outerColour: HSBColour, hint
     const cssColour = toCssColour({ h: 0, s: 0, b: 0, a: 100 - innerColour.b })
     return `linear-gradient(to top, ${cssColour}, ${cssColour})`
   }
-  return `linear-gradient(to ${outerColour.b >= innerColour.b ? 'top' : 'bottom'}, ` +
-    `${toCssColour({h: 0, s: 0, b: 0, a: 100 - innerColour.b})} ${cssPct(startLine)}, ` +
-    `${toCssColour({h: 0, s: 0, b: 0, a: 100 - outerColour.b})} ${cssPct(outerVisibleLine)})`
+  return (
+    `linear-gradient(to ${outerColour.b >= innerColour.b ? 'top' : 'bottom'}, ` +
+    `${toCssColour({ h: 0, s: 0, b: 0, a: 100 - innerColour.b })} ${cssPct(startLine)}, ` +
+    `${toCssColour({ h: 0, s: 0, b: 0, a: 100 - outerColour.b })} ${cssPct(outerVisibleLine)})`
+  )
 }
 
 function hueHint(

@@ -235,13 +235,15 @@ export function toCssColour(colour: AnyColour): string {
     cmyk: (c) => toCssColour(toRGB(c)),
     hex: (c) => c,
     hsb: (c) => toCssColour(toHSL(c)),
-    hsl: (c) => (c.a !== undefined
-      ? `hsla(${c.h.toFixed(1)}, ${c.s.toFixed(1)}%, ${c.l.toFixed(1)}%, ${c.a.toFixed(1)}%)`
-      : `hsl(${c.h.toFixed(1)}, ${c.s.toFixed(1)}%, ${c.l.toFixed(1)}%)`),
+    hsl: (c) =>
+      c.a !== undefined
+        ? `hsla(${c.h.toFixed(1)}, ${c.s.toFixed(1)}%, ${c.l.toFixed(1)}%, ${c.a.toFixed(1)}%)`
+        : `hsl(${c.h.toFixed(1)}, ${c.s.toFixed(1)}%, ${c.l.toFixed(1)}%)`,
     named: (c) => c,
-    rgb: (c) => (c.a !== undefined
-      ? `rgba(${c.r.toFixed(1)}, ${c.g.toFixed(1)}, ${c.b.toFixed(1)}, ${c.a.toFixed(1)}%)`
-      : `rgb(${c.r.toFixed(1)}, ${c.g.toFixed(1)}, ${c.b.toFixed(1)})`),
+    rgb: (c) =>
+      c.a !== undefined
+        ? `rgba(${c.r.toFixed(1)}, ${c.g.toFixed(1)}, ${c.b.toFixed(1)}, ${c.a.toFixed(1)}%)`
+        : `rgb(${c.r.toFixed(1)}, ${c.g.toFixed(1)}, ${c.b.toFixed(1)})`,
   })
 }
 

@@ -4,7 +4,7 @@ import { Hint, HintType } from '../../lib/puzzle/hint/hint'
 import { getPuzzleId, PuzzleId } from '../../lib/puzzle/puzzle'
 import { getNewPuzzle } from '../../lib/puzzle/puzzleServer'
 import { AnyColour, NamedColour } from '../../lib/colour/colours'
-import { toCMYK, toHSB, toRGB } from "../../lib/colour/colourConversions";
+import { toCMYK, toHSB, toRGB } from '../../lib/colour/colourConversions'
 
 export interface PuzzleState {
   answerName?: NamedColour
