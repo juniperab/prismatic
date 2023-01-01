@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import { fadeInOut } from '../theme/styles/fadeInOut'
 import { Icon } from '../theme/elements/Icon'
+import { windowLayout } from "../page/windowLayout";
 
 export const colourChooserLayout = {
   container: {
@@ -37,7 +38,7 @@ export const _ColourChooserFullscreen = styled(_ColourChooser)`
   top: 0;
   left: 0;
   height: calc(100vh - var(--extra-vh, 0px));
-  width: 100vw;
+  width: min(100vw, ${windowLayout.width.max}px);
 `
 
 export const _ColourChooserArea = styled.div.attrs({
