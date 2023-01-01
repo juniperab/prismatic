@@ -13,9 +13,7 @@ export function UserModal(): ReactElement | null {
 
   return (
     <Modal title="Player Info and Statistics" onClickClose={() => dispatch(setActiveModal(undefined))}>
-      <p>
-        Information about your games, scores, etc. will go here once I start tabulating and calculating it.
-      </p>
+      <p>Information about your games, scores, etc. will go here once I start tabulating and calculating it.</p>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec rutrum elit ac est semper pretium. Integer
         molestie massa ac massa rutrum scelerisque. Proin vitae magna maximus, porta tortor quis, ultrices orci. Donec

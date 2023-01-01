@@ -28,8 +28,8 @@ export function SettingsModal(): ReactElement | null {
         />
         <p>The puzzle mode determines the type of hints that you will receive.</p>
         <p>
-          HSB hints will give you information about the Hue, Saturation, and Brightness of the secret colour.
-          These are also the colour dimensions used by the colour chooser you use to select your guesses.
+          HSB hints will give you information about the Hue, Saturation, and Brightness of the secret colour. These are
+          also the colour dimensions used by the colour chooser you use to select your guesses.
         </p>
       </MBodySection>
       <MBodySection>

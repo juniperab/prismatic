@@ -1,8 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { AppThunk, RootState } from '../store'
+import { RootState } from '../store'
 import { Hint, HintType } from '../../lib/puzzle/hint/hint'
 import { getPuzzleId, PuzzleId } from '../../lib/puzzle/puzzle'
-import { getNewPuzzle } from '../../lib/puzzle/puzzleServer'
 import { AnyColour, NamedColour } from '../../lib/colour/colours'
 import { toCMYK, toHSB, toRGB } from '../../lib/colour/colourConversions'
 
@@ -17,15 +16,14 @@ export interface PuzzleState {
   startingColour: AnyColour
 }
 
-const startingColour: AnyColour = toHSB('slateblue')
 const initialState: PuzzleState = {
-  currentColour: startingColour,
+  currentColour: 'white',
   gaveUp: false,
   guessMode: HintType.HSB,
   guesses: [],
   hints: [],
-  puzzleId: getPuzzleId({ answer: 'mediumseagreen', precision: 3 }),
-  startingColour,
+  puzzleId: getPuzzleId({ answer: 'white', precision: 3 }),
+  startingColour: 'white',
 }
 
 export type MakeGuessAction = PayloadAction<AnyColour>
@@ -85,7 +83,3 @@ export const {
 } = puzzleSlice.actions
 export const selectPuzzleState = (state: RootState): PuzzleState => state.puzzle
 export default puzzleSlice.reducer
-
-export const startNewGame = (): AppThunk => (dispatch) => {
-  dispatch(resetPuzzleState(getNewPuzzle()))
-}

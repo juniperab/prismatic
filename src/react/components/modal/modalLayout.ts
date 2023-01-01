@@ -3,7 +3,7 @@ import { headerLayout } from '../page/headerLayout'
 import { windowLayout } from '../page/windowLayout'
 import { footerLayout } from '../page/footerLayout'
 import { Icon } from '../theme/elements/Icon'
-import { H2 } from "../theme/elements/H1";
+import { H2 } from '../theme/elements/H1'
 
 export const modalLayout = {
   margin: {

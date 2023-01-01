@@ -1,5 +1,4 @@
 import { call, put, takeEvery } from 'typed-redux-saga'
-import { ForkEffect } from '@redux-saga/core/effects'
 import { appSelect } from '../hooks'
 import { getPuzzleAnswerFromServer, submitGuessToServer } from './puzzleClient'
 import { PuzzleId } from '../../lib/puzzle/puzzle'
@@ -11,12 +10,13 @@ import {
   receiveAnswer,
   receiveHint,
   resetPuzzleState,
-  setCurrentColour, setStartingColour
-} from "./puzzleSlice";
+  setCurrentColour,
+  setStartingColour,
+} from './puzzleSlice'
 import { AnyColour, NamedColour } from '../../lib/colour/colours'
-import { getNewPuzzle } from "../../lib/puzzle/puzzleServer";
-import { toNamed } from "../../lib/colour/colourConversions";
-import { generateRandomColour } from "../../lib/colour/colourMath";
+import { getNewPuzzle } from '../../lib/puzzle/puzzleServer'
+import { toNamed } from '../../lib/colour/colourConversions'
+import { generateRandomColour } from '../../lib/colour/colourMath'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function* evaluateGuess(action: MakeGuessAction) {

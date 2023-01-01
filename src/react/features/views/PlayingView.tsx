@@ -5,8 +5,9 @@ import {
   _PlayingViewSectionLower as PVSectionLower,
   _PlayingView as PlayingViewElement,
   _PlayingViewSectionUpper as PVSectionUpper,
-  playingViewLayout, _PlayingViewSectionLowerOverlay as PVSectionLowerOverlay
-} from "./playingViewLayout";
+  playingViewLayout,
+  _PlayingViewSectionLowerOverlay as PVSectionLowerOverlay,
+} from './playingViewLayout'
 import { HintGrid } from '../../components/hint-grid/HintGrid'
 import { makeGuess, selectPuzzleState, setCurrentColour } from '../../../redux/puzzle/puzzleSlice'
 import { ColourChooser, NewColourCallback } from '../../components/colour-chooser/ColourChooser'
@@ -14,7 +15,7 @@ import { selectConfigState } from '../../../redux/config/configSlice'
 import { useResizeDetector } from 'react-resize-detector'
 import { hintGridLayout } from '../../components/hint-grid/hintGridLayout'
 import { AnyColour } from '../../../lib/colour/colours'
-import { toCssColour } from "../../../lib/colour/colourConversions";
+import { toCssColour } from '../../../lib/colour/colourConversions'
 
 export function PlayingView(): ReactElement | null {
   const { activeView } = useAppSelector(selectAppState)
@@ -55,21 +56,21 @@ export function PlayingView(): ReactElement | null {
   const answerView: ReactElement | undefined = ((): ReactElement | undefined => {
     if (answer === undefined) return undefined
     const style: CSSProperties = {
-      backgroundColor: toCssColour(answer)
+      backgroundColor: toCssColour(answer),
     }
-    return <PVSectionLowerOverlay style={style}>
-      {answer}
-    </PVSectionLowerOverlay>
+    return <PVSectionLowerOverlay style={style}>{answer} | {gaveUp}</PVSectionLowerOverlay>
   })()
 
   const colourChooser: ReactElement | undefined = ((): ReactElement | undefined => {
     if (answerView !== undefined) return undefined
-    return <ColourChooser
-      onChangeComplete={receiveNewColour}
-      onSelect={receiveColourSubmit}
-      colour={currentColour}
-      disabled={answer !== undefined || hints.length >= maxHints}
-    />
+    return (
+      <ColourChooser
+        onChangeComplete={receiveNewColour}
+        onSelect={receiveColourSubmit}
+        colour={currentColour}
+        disabled={answer !== undefined || hints.length >= maxHints}
+      />
+    )
   })()
 
   return (

@@ -2,8 +2,6 @@ import React, { ReactElement, useEffect } from 'react'
 import { ThemeProvider } from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
 import { ModalType, selectAppState, setActiveModal } from '../../../redux/app/appSlice'
-import { toNamed } from '../../../lib/colour/colourConversions'
-import { setCurrentColour, setStartingColour } from '../../../redux/puzzle/puzzleSlice'
 import { handleKeyDown, handleKeyUp } from './keyPressHandlers'
 import { getTheme } from '../../components/theme/themeRegistry'
 import { Window } from '../../components/page/Window'
@@ -15,7 +13,6 @@ import { UserModal } from '../modals/user/UserModal'
 import { SettingsModal } from '../modals/settings/SettingsModal'
 import { PlayingView } from '../views/PlayingView'
 import { handleWindowResize } from './resizeHandlers'
-import { generateRandomColour } from '../../../lib/colour/colourMath'
 
 export function App(): ReactElement {
   const { theme } = useAppSelector(selectAppState)
