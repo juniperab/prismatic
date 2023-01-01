@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/prismatic/static/css/main.f7dd0d2e.css",
-    "main.js": "/prismatic/static/js/main.c92ec6c1.js",
+    "main.js": "/prismatic/static/js/main.ef899cd2.js",
     "static/js/787.a039ecf8.chunk.js": "/prismatic/static/js/787.a039ecf8.chunk.js",
     "static/media/logo.png": "/prismatic/static/media/logo.39c003d21bbc9126d3fe.png",
-    "static/media/colour-picker.png": "/prismatic/static/media/colour-picker.fca037962f4ef1596646.png",
     "static/media/PinchZoom.png": "/prismatic/static/media/PinchZoom.33da1a1f4c36636ccb0a.png",
     "static/media/ModifiedDrag.png": "/prismatic/static/media/ModifiedDrag.febbba185d477f0de8e4.png",
     "static/media/Rotate.png": "/prismatic/static/media/Rotate.dbb6c6dde0141b05669e.png",
     "static/media/Swipe.png": "/prismatic/static/media/Swipe.000299646309481a29ab.png",
-    "static/media/solution.png": "/prismatic/static/media/solution.cf3122a6ff57d632a860.png",
     "static/media/icon-settings.svg": "/prismatic/static/media/icon-settings.41e34c461f88acefa918939bbe8ed735.svg",
+    "static/media/icon-tada.svg": "/prismatic/static/media/icon-tada.b706b373553d0e4d25c6b9f892742099.svg",
+    "static/media/icon-potted-plant.svg": "/prismatic/static/media/icon-potted-plant.1ad012f71b714b8ceb15a4d8e2585a08.svg",
     "static/media/icon-help.svg": "/prismatic/static/media/icon-help.a0437a0d1df979bb5dc62251624b8574.svg",
     "static/media/icon-hint.svg": "/prismatic/static/media/icon-hint.aa6c2c30f539ea2c7ecbe52ed894af98.svg",
     "static/media/icon-question.svg": "/prismatic/static/media/icon-question.dbbcae41d2bddbc151074e01a86621a9.svg",
@@ -24,11 +24,11 @@
     "static/media/icon-menu.svg": "/prismatic/static/media/icon-menu.72f2127dbed8a0df28654b6d9d5df46a.svg",
     "static/media/icon-close.svg": "/prismatic/static/media/icon-close.32c18bc0e396b89781110e2034e62030.svg",
     "main.f7dd0d2e.css.map": "/prismatic/static/css/main.f7dd0d2e.css.map",
-    "main.c92ec6c1.js.map": "/prismatic/static/js/main.c92ec6c1.js.map",
+    "main.ef899cd2.js.map": "/prismatic/static/js/main.ef899cd2.js.map",
     "787.a039ecf8.chunk.js.map": "/prismatic/static/js/787.a039ecf8.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.f7dd0d2e.css",
-    "static/js/main.c92ec6c1.js"
+    "static/js/main.ef899cd2.js"
   ]
 }
