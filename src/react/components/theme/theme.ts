@@ -38,10 +38,12 @@ export interface ThemeIcons {
   menu: SVGIcon
   minimize: SVGIcon
   person: SVGIcon
+  pottedPlant: SVGIcon
   puzzle: SVGIcon
   question: SVGIcon
   search: SVGIcon
   settings: SVGIcon
+  tada: SVGIcon
 }
 
 export interface ThemeImages {

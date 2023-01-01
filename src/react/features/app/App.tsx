@@ -21,14 +21,6 @@ export function App(): ReactElement {
   const { theme } = useAppSelector(selectAppState)
   const dispatch = useAppDispatch()
 
-  // initialize the colour picker with a random starting colour
-  useEffect(() => {
-    const startingColour = toNamed(generateRandomColour())
-    dispatch(setStartingColour(startingColour))
-    dispatch(setCurrentColour(startingColour))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
   // listen for keyboard events
   const receiveKeyDown = (event: KeyboardEvent): void => {
     handleKeyDown(event, dispatch)

@@ -7,7 +7,7 @@ import { AnyColour, NamedColour } from '../../lib/colour/colours'
 import { toCMYK, toHSB, toRGB } from '../../lib/colour/colourConversions'
 
 export interface PuzzleState {
-  answerName?: NamedColour
+  answer?: NamedColour
   currentColour: AnyColour
   gaveUp: boolean
   guessMode: HintType
@@ -17,7 +17,6 @@ export interface PuzzleState {
   startingColour: AnyColour
 }
 
-// TODO: need a better way of creating a random puzzle
 const startingColour: AnyColour = toHSB('slateblue')
 const initialState: PuzzleState = {
   currentColour: startingColour,
@@ -25,7 +24,7 @@ const initialState: PuzzleState = {
   guessMode: HintType.HSB,
   guesses: [],
   hints: [],
-  puzzleId: getNewPuzzle(), // getPuzzleId({ answer: 'mediumseagreen', precision: 3 }), // mediumseagreen
+  puzzleId: getPuzzleId({ answer: 'mediumseagreen', precision: 3 }),
   startingColour,
 }
 
@@ -44,13 +43,13 @@ export const puzzleSlice = createSlice({
       state.guesses.push(action.payload)
     },
     receiveAnswer: (state, action: ReceiveAnswerAction) => {
-      state.answerName = action.payload
+      state.answer = action.payload
     },
     receiveHint: (state, action: ReceiveHintAction) => {
       state.hints.push(action.payload)
     },
     resetPuzzleState: (state, action: PayloadAction<PuzzleId>) => {
-      state.answerName = undefined
+      state.answer = undefined
       state.gaveUp = false
       state.hints = []
       state.puzzleId = action.payload

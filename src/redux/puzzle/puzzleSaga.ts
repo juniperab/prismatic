@@ -4,8 +4,19 @@ import { appSelect } from '../hooks'
 import { getPuzzleAnswerFromServer, submitGuessToServer } from './puzzleClient'
 import { PuzzleId } from '../../lib/puzzle/puzzle'
 import { Hint, isHint } from '../../lib/puzzle/hint/hint'
-import { giveUp, makeGuess, MakeGuessAction, receiveAnswer, receiveHint, setCurrentColour } from './puzzleSlice'
+import {
+  giveUp,
+  makeGuess,
+  MakeGuessAction,
+  receiveAnswer,
+  receiveHint,
+  resetPuzzleState,
+  setCurrentColour, setStartingColour
+} from "./puzzleSlice";
 import { AnyColour, NamedColour } from '../../lib/colour/colours'
+import { getNewPuzzle } from "../../lib/puzzle/puzzleServer";
+import { toNamed } from "../../lib/colour/colourConversions";
+import { generateRandomColour } from "../../lib/colour/colourMath";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function* evaluateGuess(action: MakeGuessAction) {
@@ -33,7 +44,17 @@ function* getAnswer() {
   yield* put(setCurrentColour(response))
 }
 
-export function* puzzleSaga(): Generator<ForkEffect<never>> {
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+function* initializePuzzle() {
+  const startingColour = toNamed(generateRandomColour())
+  yield* put(setStartingColour(startingColour))
+  yield* put(setCurrentColour(startingColour))
+  yield* put(resetPuzzleState(getNewPuzzle()))
+}
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export function* puzzleSaga() {
   yield* takeEvery(makeGuess, evaluateGuess)
   yield* takeEvery(giveUp, getAnswer)
+  yield* initializePuzzle()
 }

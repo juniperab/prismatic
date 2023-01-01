@@ -19,7 +19,7 @@ import { toCssColour } from "../../../lib/colour/colourConversions";
 export function PlayingView(): ReactElement | null {
   const { activeView } = useAppSelector(selectAppState)
   const { guessGridShape } = useAppSelector(selectConfigState)
-  const { answerName, currentColour, hints } = useAppSelector(selectPuzzleState)
+  const { answer, currentColour, gaveUp, hints } = useAppSelector(selectPuzzleState)
   const { width, height, ref } = useResizeDetector()
   const dispatch = useAppDispatch()
 
@@ -52,21 +52,31 @@ export function PlayingView(): ReactElement | null {
     marginTop: playingViewLayout.gap,
   }
 
-  const lowerOverlay: ReactElement | undefined = ((): ReactElement | undefined => {
-    if (answerName === undefined) return undefined
+  const answerView: ReactElement | undefined = ((): ReactElement | undefined => {
+    if (answer === undefined) return undefined
     const style: CSSProperties = {
-      backgroundColor: toCssColour(answerName)
+      backgroundColor: toCssColour(answer)
     }
     return <PVSectionLowerOverlay style={style}>
-      {answerName}
+      {answer}
     </PVSectionLowerOverlay>
+  })()
+
+  const colourChooser: ReactElement | undefined = ((): ReactElement | undefined => {
+    if (answerView !== undefined) return undefined
+    return <ColourChooser
+      onChangeComplete={receiveNewColour}
+      onSelect={receiveColourSubmit}
+      colour={currentColour}
+      disabled={answer !== undefined || hints.length >= maxHints}
+    />
   })()
 
   return (
     <PlayingViewElement ref={ref}>
       <PVSectionUpper style={styleUpper}>
         <HintGrid
-          answer={answerName}
+          answer={answer}
           hints={hints}
           maxHeight={upperHeight}
           maxWidth={w}
@@ -76,13 +86,8 @@ export function PlayingView(): ReactElement | null {
         />
       </PVSectionUpper>
       <PVSectionLower style={styleLower}>
-        <ColourChooser
-          onChangeComplete={receiveNewColour}
-          onSelect={receiveColourSubmit}
-          colour={currentColour}
-          disabled={answerName !== undefined || hints.length >= maxHints}
-        />
-        {lowerOverlay}
+        {colourChooser}
+        {answerView}
       </PVSectionLower>
     </PlayingViewElement>
   )
