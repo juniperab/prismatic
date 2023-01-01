@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { CSSProperties, ReactElement } from 'react'
 import { OptionsItem, OptionsLabel, OptionsOneLineOuter } from './optionsOneLineLayout'
 
 export interface OptionsOneLineProps<T> {
@@ -14,9 +14,20 @@ function renderOptionsItemContents<T>(
   selected: T | undefined,
   formatter?: (opt: T) => string
 ): ReactElement {
-  const optionString = formatter !== undefined ? formatter(option) : (option as any).toString()
-  if (option === selected) return <b>[{optionString}]</b>
-  return <span>{optionString}</span>
+  const sel = option === selected
+  const pre = sel ? '[ ' : ''
+  const post = sel ? ' ]' : ''
+  const style: CSSProperties = {
+    fontWeight: sel ? 700 : undefined,
+  }
+  const text = formatter?.(option) ?? (option as any).toString()
+  return (
+    <span style={style}>
+      {pre}
+      {text}
+      {post}
+    </span>
+  )
 }
 
 export function OptionsOneLine<T>(props: OptionsOneLineProps<T>): ReactElement {
@@ -32,7 +43,7 @@ export function OptionsOneLine<T>(props: OptionsOneLineProps<T>): ReactElement {
 
   return (
     <OptionsOneLineOuter>
-      <OptionsLabel>{label}</OptionsLabel>
+      <OptionsLabel>{label}:</OptionsLabel>
       {items}
     </OptionsOneLineOuter>
   )

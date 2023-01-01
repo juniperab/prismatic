@@ -4,13 +4,14 @@ import { Modal } from '../../../react/components/modal/Modal'
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
 import { OptionsOneLine } from '../../../react/components/options/OptionsOneLine'
 import { _ModalBodySection as MBodySection } from '../../../react/components/modal/modalLayout'
-import { selectPuzzleState, setGuessMode } from '../../../redux/puzzle/puzzleSlice'
-import { HintType } from '../../../lib/puzzle/hint'
 import { ThemeName } from '../../../react/components/theme/theme'
+import { titleCase } from 'title-case'
+import { HintStyle, selectConfigState, setHintStyle } from '../../../redux/config/configSlice'
+import { enumKeys } from '../../../lib/util/enumKeys'
 
 export function SettingsModal(): ReactElement | null {
   const { activeModal, theme: themeName } = useAppSelector(selectAppState)
-  const { guessMode } = useAppSelector(selectPuzzleState)
+  const { hintStyle } = useAppSelector(selectConfigState)
   const dispatch = useAppDispatch()
 
   if (activeModal !== ModalType.settings) {
@@ -23,8 +24,8 @@ export function SettingsModal(): ReactElement | null {
         <OptionsOneLine
           label={'Theme'}
           onSelect={(selectedOption) => dispatch(setTheme(selectedOption))}
-          options={[ThemeName.light, ThemeName.dark]}
-          optionFormatter={(opt) => opt.toString().toUpperCase()}
+          options={enumKeys(ThemeName).map((k) => ThemeName[k])}
+          optionFormatter={(opt) => titleCase(opt.toString())}
           selected={themeName}
         />
         <p>The puzzle mode determines the type of hints that you will receive.</p>
@@ -32,11 +33,11 @@ export function SettingsModal(): ReactElement | null {
 
       <MBodySection>
         <OptionsOneLine
-          label={'Puzzle Mode'}
-          onSelect={(selectedOption) => dispatch(setGuessMode(selectedOption))}
-          options={[HintType.HSB]}
+          label={'Hint Style'}
+          onSelect={(selectedOption) => dispatch(setHintStyle(selectedOption))}
+          options={enumKeys(HintStyle).map((k) => HintStyle[k])}
           optionFormatter={(opt) => opt.toString().toUpperCase()}
-          selected={guessMode}
+          selected={hintStyle}
         />
         <p>The puzzle mode determines the type of hints that you will receive.</p>
         <p>
@@ -44,6 +45,7 @@ export function SettingsModal(): ReactElement | null {
           also the colour dimensions used by the colour chooser you use to select your guesses.
         </p>
       </MBodySection>
+
       <MBodySection>
         <OptionsOneLine
           label={'Track Statistics'}

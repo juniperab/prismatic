@@ -1,34 +1,43 @@
 import { call, put, takeEvery } from 'typed-redux-saga'
 import { appSelect } from '../hooks'
 import { getPuzzleAnswerFromServer, submitGuessToServer } from './puzzleClient'
-import { PuzzleId } from '../../lib/puzzle/puzzle'
-import { Hint, isHint } from '../../lib/puzzle/hint'
+import { Hint, HintType, isHint } from '../../lib/puzzle/hint'
 import {
   giveUp,
   makeGuess,
   MakeGuessAction,
   receiveAnswer,
   receiveHint,
-  resetPuzzleState,
+  selectPuzzleState,
   setCurrentColour,
-  setStartingColour,
 } from './puzzleSlice'
 import { AnyColour, NamedColour } from '../../lib/colour/colours'
-import { getNewPuzzle } from '../../lib/puzzle/puzzleServer'
-import { toNamed } from '../../lib/colour/colourConversions'
-import { generateRandomColour } from '../../lib/colour/colourMath'
+import { toCMYK, toHSB, toRGB } from '../../lib/colour/colourConversions'
+import { selectConfigState } from '../config/configSlice'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function* evaluateGuess(action: MakeGuessAction) {
-  const guess: AnyColour = action.payload
-  const puzzleId: PuzzleId = yield* appSelect((state) => state.puzzle.puzzleId)
+  let guess: AnyColour = action.payload
+  const { hintType } = yield* appSelect(selectConfigState)
+  const { puzzleId } = yield* appSelect(selectPuzzleState)
+  switch (hintType) {
+    case HintType.CMYK:
+      guess = toCMYK(guess)
+      break
+    case HintType.HSB:
+      guess = toHSB(guess)
+      break
+    case HintType.RGB:
+      guess = toRGB(guess)
+      break
+  }
   const response: Hint | NamedColour = yield* call(submitGuessToServer, guess, puzzleId)
   if (isHint(response)) {
     const hints = yield* appSelect((state) => state.puzzle.hints)
-    const guessGridShape: [number, number] = yield* appSelect((state) => state.config.guessGridShape)
+    const { guessGridShape } = yield* appSelect(selectConfigState)
     yield* put(receiveHint(response))
     if (hints.length + 1 === guessGridShape[0] * guessGridShape[1]) {
-      // lost the game -- used all hints and did not get the right answer
+      // used all hints and did not get the right answer => lost the game
       yield* put(giveUp())
     }
   } else {
@@ -38,23 +47,14 @@ function* evaluateGuess(action: MakeGuessAction) {
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function* getAnswer() {
-  const puzzleId: PuzzleId = yield* appSelect((state) => state.puzzle.puzzleId)
+  const { puzzleId } = yield* appSelect(selectPuzzleState)
   const response: NamedColour = yield* call(getPuzzleAnswerFromServer, puzzleId)
   yield* put(receiveAnswer(response))
   yield* put(setCurrentColour(response))
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function* initializePuzzle() {
-  const startingColour = toNamed(generateRandomColour())
-  yield* put(setStartingColour(startingColour))
-  yield* put(setCurrentColour(startingColour))
-  yield* put(resetPuzzleState(getNewPuzzle()))
-}
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function* puzzleSaga() {
   yield* takeEvery(makeGuess, evaluateGuess)
   yield* takeEvery(giveUp, getAnswer)
-  yield* initializePuzzle()
 }

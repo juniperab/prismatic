@@ -7,6 +7,8 @@ import { createLogger } from 'redux-logger'
 import { puzzleSaga } from './puzzle/puzzleSaga'
 import { all, call, FixedTask, SagaGenerator, spawn } from 'typed-redux-saga'
 import { AllEffect, ForkEffect } from '@redux-saga/core/effects'
+import { configSaga } from './config/configSaga'
+import { appSaga } from './app/appSaga'
 
 const logger = createLogger({
   level: {
@@ -32,7 +34,7 @@ export const store = configureStore({
 })
 
 function* rootSaga(): Generator<AllEffect<SagaGenerator<FixedTask<void>, ForkEffect<void>>>, void> {
-  const sagas = [puzzleSaga]
+  const sagas = [appSaga, configSaga, puzzleSaga]
   // spawn each saga independently, and restart each after an error.
   // ref: https://redux-saga.js.org/docs/advanced/RootSaga
   // and: https://github.com/redux-saga/redux-saga/issues/570

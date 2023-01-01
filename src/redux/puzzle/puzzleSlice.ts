@@ -1,29 +1,25 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../store'
-import { Hint, HintType } from '../../lib/puzzle/hint'
+import { Hint } from '../../lib/puzzle/hint'
 import { getPuzzleId, PuzzleId } from '../../lib/puzzle/puzzle'
 import { AnyColour, NamedColour } from '../../lib/colour/colours'
-import { toCMYK, toHSB, toRGB } from '../../lib/colour/colourConversions'
+import { configSlice } from '../config/configSlice'
 
 export interface PuzzleState {
   answer?: NamedColour
   currentColour: AnyColour
   gaveUp: boolean
-  guessMode: HintType
   guesses: AnyColour[]
   hints: Hint[]
   puzzleId: PuzzleId
-  startingColour: AnyColour
 }
 
 const initialState: PuzzleState = {
-  currentColour: 'white',
+  currentColour: configSlice.getInitialState().startingColour,
   gaveUp: false,
-  guessMode: HintType.HSB,
   guesses: [],
   hints: [],
   puzzleId: getPuzzleId({ answer: 'white', precision: 3 }),
-  startingColour: 'white',
 }
 
 export type MakeGuessAction = PayloadAction<AnyColour>
@@ -51,35 +47,13 @@ export const puzzleSlice = createSlice({
       state.gaveUp = false
       state.hints = []
       state.puzzleId = action.payload
-      state.startingColour = state.currentColour
     },
     setCurrentColour: (state, action: PayloadAction<AnyColour>) => {
-      if (state.guessMode === HintType.CMYK) state.currentColour = toCMYK(action.payload)
-      else if (state.guessMode === HintType.HSB) state.currentColour = toHSB(action.payload)
-      else if (state.guessMode === HintType.RGB) state.currentColour = toRGB(action.payload)
-      else throw new Error('invalid colour type')
-    },
-    setGuessMode: (state, action: PayloadAction<HintType>) => {
-      state.guessMode = action.payload
-      if (state.guessMode === HintType.CMYK) state.currentColour = toCMYK(state.currentColour)
-      else if (state.guessMode === HintType.HSB) state.currentColour = toHSB(state.currentColour)
-      else if (state.guessMode === HintType.RGB) state.currentColour = toRGB(state.currentColour)
-    },
-    setStartingColour: (state, action: PayloadAction<AnyColour>) => {
-      state.startingColour = action.payload
+      state.currentColour = action.payload
     },
   },
 })
 
-export const {
-  giveUp,
-  makeGuess,
-  receiveAnswer,
-  receiveHint,
-  resetPuzzleState,
-  setCurrentColour,
-  setGuessMode,
-  setStartingColour,
-} = puzzleSlice.actions
+export const { giveUp, makeGuess, receiveAnswer, receiveHint, resetPuzzleState, setCurrentColour } = puzzleSlice.actions
 export const selectPuzzleState = (state: RootState): PuzzleState => state.puzzle
 export default puzzleSlice.reducer
