@@ -28,10 +28,6 @@ export function SettingsModal(): ReactElement | null {
           optionFormatter={(opt) => titleCase(opt.toString())}
           selected={themeName}
         />
-        <p>The puzzle mode determines the type of hints that you will receive.</p>
-      </MBodySection>
-
-      <MBodySection>
         <OptionsOneLine
           label={'Hint Style'}
           onSelect={(selectedOption) => dispatch(setHintStyle(selectedOption))}
@@ -39,11 +35,11 @@ export function SettingsModal(): ReactElement | null {
           optionFormatter={(opt) => opt.toString().toUpperCase()}
           selected={hintStyle}
         />
-        <p>The puzzle mode determines the type of hints that you will receive.</p>
         <p>
-          HSB hints will give you information about the Hue, Saturation, and Brightness of the secret colour. These are
-          also the colour dimensions used by the colour chooser you use to select your guesses.
+          Easy hints give you visual cues about the direction you'll need to move on the colour chooser.
+          With hard hints, you'll need to figure out what to do from the colours of the hints alone.
         </p>
+
       </MBodySection>
 
       <MBodySection>
@@ -52,10 +48,9 @@ export function SettingsModal(): ReactElement | null {
           onSelect={() => {}}
           options={['On', 'Off', 'Reset']}
           selected={'Off'}
+          disabledOptions={['On', 'Reset']}
         />
         <p>Whether or not to track statistics, by means of a small cookie stored on your device.</p>
-        <p>Choose 'reset' to erase all the statistics you have accumulated this far.</p>
-        <p>Note: this feature is not implemented yet. 'Off' is the only option that can be selected.</p>
       </MBodySection>
     </Modal>
   )

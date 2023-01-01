@@ -1,5 +1,5 @@
-import { CSSProperties, ReactElement } from 'react'
-import { OptionsItem, OptionsLabel, OptionsOneLineOuter } from './optionsOneLineLayout'
+import { ReactElement } from 'react'
+import { _OptionsItem as OItem, _OptionsLabel as OLabel, _OptionsOneLine as OptionsOneLineElement } from './optionsOneLineLayout'
 
 export interface OptionsOneLineProps<T> {
   label: string
@@ -7,6 +7,7 @@ export interface OptionsOneLineProps<T> {
   options: T[]
   optionFormatter?: (opt: T) => string
   selected: T | undefined
+  disabledOptions?: T[]
 }
 
 function renderOptionsItemContents<T>(
@@ -17,12 +18,9 @@ function renderOptionsItemContents<T>(
   const sel = option === selected
   const pre = sel ? '[ ' : ''
   const post = sel ? ' ]' : ''
-  const style: CSSProperties = {
-    fontWeight: sel ? 700 : undefined,
-  }
   const text = formatter?.(option) ?? (option as any).toString()
   return (
-    <span style={style}>
+    <span>
       {pre}
       {text}
       {post}
@@ -31,20 +29,21 @@ function renderOptionsItemContents<T>(
 }
 
 export function OptionsOneLine<T>(props: OptionsOneLineProps<T>): ReactElement {
-  const { label, onSelect, options, optionFormatter, selected } = props
+  const { disabledOptions, label, onSelect, options, optionFormatter, selected } = props
 
   const items = options.map((opt, idx) => {
+    const onClick = (disabledOptions ?? []).includes(opt) ? undefined : () => onSelect(opt)
     return (
-      <OptionsItem key={idx} onClick={() => onSelect(opt)}>
+      <OItem key={idx} onClick={onClick} data-selected={opt === selected}>
         {renderOptionsItemContents(opt, selected, optionFormatter)}
-      </OptionsItem>
+      </OItem>
     )
   })
 
   return (
-    <OptionsOneLineOuter>
-      <OptionsLabel>{label}:</OptionsLabel>
+    <OptionsOneLineElement>
+      <OLabel>{label}:</OLabel>
       {items}
-    </OptionsOneLineOuter>
+    </OptionsOneLineElement>
   )
 }
