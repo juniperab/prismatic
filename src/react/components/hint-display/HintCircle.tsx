@@ -1,10 +1,10 @@
-import { ReactElement } from "react";
-import { _HintCircle as HintCircleElement } from "./hintCircleLayout";
-import { Hint, HintStyle, HintType } from "../../../lib/puzzle/hint";
-import { renderHintDisplayCentre } from "./hintCircleCommon";
-import { HintCircleHSB } from "./HintCircleHSB";
-import { toCssColour } from "../../../lib/colour/colourConversions";
-import { AnyColour } from "../../../lib/colour/colours";
+import { ReactElement } from 'react'
+import { _HintCircle as HintCircleElement } from './hintCircleLayout'
+import { Hint, HintStyle, HintType } from '../../../lib/puzzle/hint'
+import { renderHintDisplayCentre } from './hintCircleCommon'
+import { HintCircleHSB } from './HintCircleHSB'
+import { toCssColour } from '../../../lib/colour/colourConversions'
+import { AnyColour } from '../../../lib/colour/colours'
 
 export interface HintDisplayProps {
   answer?: AnyColour

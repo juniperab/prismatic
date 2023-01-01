@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../store'
-import { HintStyle, HintType } from "../../lib/puzzle/hint";
+import { HintStyle, HintType } from '../../lib/puzzle/hint'
 import { AnyColour } from '../../lib/colour/colours'
 
 export interface ConfigState {

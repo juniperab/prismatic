@@ -8,7 +8,7 @@ import { ThemeName } from '../../../react/components/theme/theme'
 import { titleCase } from 'title-case'
 import { selectConfigState, setHintStyle } from '../../../redux/config/configSlice'
 import { enumKeys } from '../../../lib/util/enumKeys'
-import { HintStyle } from "../../../lib/puzzle/hint";
+import { HintStyle } from '../../../lib/puzzle/hint'
 
 export function SettingsModal(): ReactElement | null {
   const { activeModal, theme: themeName } = useAppSelector(selectAppState)

@@ -1,6 +1,6 @@
 import { CSSProperties, ReactElement, useEffect, useState } from 'react'
 import { _HintGrid as HintGridElement, hintGridLayout } from './hintGridLayout'
-import { Hint, HintStyle } from "../../../lib/puzzle/hint";
+import { Hint, HintStyle } from '../../../lib/puzzle/hint'
 import { HintCircle } from './HintCircle'
 import { AnyColour } from '../../../lib/colour/colours'
 
@@ -24,7 +24,9 @@ export function HintGrid(props: HintGridProps): ReactElement {
     setVisible(true)
   }, [])
 
-  const items = hints.slice(0, maxItems).map((hint, idx) => <HintCircle hint={hint} hintStyle={hintStyle} key={idx} onClick={onClick} />)
+  const items = hints
+    .slice(0, maxItems)
+    .map((hint, idx) => <HintCircle hint={hint} hintStyle={hintStyle} key={idx} onClick={onClick} />)
   if (items.length < maxItems && answer !== undefined) {
     items.push(<HintCircle answer={answer} key="answer" onClick={onClick} hintStyle={hintStyle} />)
   }

@@ -1,12 +1,12 @@
-import { CSSProperties, ReactElement } from "react";
-import { _HintCircle as HintCircleElement } from "./hintCircleLayout";
-import { HintDisplayProps } from "./HintCircle";
-import { HintItem, HintStyle, HSBHint } from "../../../lib/puzzle/hint";
-import { renderHintDisplayCentre } from "./hintCircleCommon";
-import { mostContrasting, toCssColour } from "../../../lib/colour/colourConversions";
-import { AnyColour } from "../../../lib/colour/colours";
-import { useTheme } from "styled-components";
-import { Theme } from "../theme/theme";
+import { CSSProperties, ReactElement } from 'react'
+import { _HintCircle as HintCircleElement } from './hintCircleLayout'
+import { HintDisplayProps } from './HintCircle'
+import { HintItem, HintStyle, HSBHint } from '../../../lib/puzzle/hint'
+import { renderHintDisplayCentre } from './hintCircleCommon'
+import { mostContrasting, toCssColour } from '../../../lib/colour/colourConversions'
+import { AnyColour } from '../../../lib/colour/colours'
+import { useTheme } from 'styled-components'
+import { Theme } from '../theme/theme'
 
 export interface HintDisplayHSBProps extends HintDisplayProps {
   hint: HSBHint
@@ -79,7 +79,7 @@ export function HintCircleHSB(props: HintDisplayHSBProps): ReactElement {
   const { hint, hintStyle, onClick } = props
   const theme = useTheme() as Theme
 
-  const gradients = [... hint.cssGradients]
+  const gradients = [...hint.cssGradients]
   if (hintStyle === HintStyle.EASY) {
     gradients.unshift(conicGradiantMask(theme.colours.appBackground, hint.saturation, hint.brightness))
   }
