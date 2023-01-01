@@ -120,6 +120,7 @@ export const _ModalHeaderSectionEdge = styled(_ModalHeaderSection)`
 export const _ModalBody = styled.div.attrs({
   className: 'modal-body',
 })`
+  text-align: justify;
   .modal-body-section {
     border-bottom-width: ${modalLayout.body.section.separatorBorder}px;
     border-bottom-style: dashed;
