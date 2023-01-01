@@ -25,7 +25,7 @@ const initialState: PuzzleState = {
   guessMode: HintType.HSB,
   guesses: [],
   hints: [],
-  puzzleId: getPuzzleId({ answer: 'mediumseagreen', precision: 3 }), // mediumseagreen
+  puzzleId: getNewPuzzle(), // getPuzzleId({ answer: 'mediumseagreen', precision: 3 }), // mediumseagreen
   startingColour,
 }
 

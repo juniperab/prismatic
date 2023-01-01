@@ -5,8 +5,8 @@ import {
   _PlayingViewSectionLower as PVSectionLower,
   _PlayingView as PlayingViewElement,
   _PlayingViewSectionUpper as PVSectionUpper,
-  playingViewLayout,
-} from './playingViewLayout'
+  playingViewLayout, _PlayingViewSectionLowerOverlay as PVSectionLowerOverlay
+} from "./playingViewLayout";
 import { HintGrid } from '../../components/hint-grid/HintGrid'
 import { makeGuess, selectPuzzleState, setCurrentColour } from '../../../redux/puzzle/puzzleSlice'
 import { ColourChooser, NewColourCallback } from '../../components/colour-chooser/ColourChooser'
@@ -14,6 +14,7 @@ import { selectConfigState } from '../../../redux/config/configSlice'
 import { useResizeDetector } from 'react-resize-detector'
 import { hintGridLayout } from '../../components/hint-grid/hintGridLayout'
 import { AnyColour } from '../../../lib/colour/colours'
+import { toCssColour } from "../../../lib/colour/colourConversions";
 
 export function PlayingView(): ReactElement | null {
   const { activeView } = useAppSelector(selectAppState)
@@ -51,6 +52,16 @@ export function PlayingView(): ReactElement | null {
     marginTop: playingViewLayout.gap,
   }
 
+  const lowerOverlay: ReactElement | undefined = ((): ReactElement | undefined => {
+    if (answerName === undefined) return undefined
+    const style: CSSProperties = {
+      backgroundColor: toCssColour(answerName)
+    }
+    return <PVSectionLowerOverlay style={style}>
+      {answerName}
+    </PVSectionLowerOverlay>
+  })()
+
   return (
     <PlayingViewElement ref={ref}>
       <PVSectionUpper style={styleUpper}>
@@ -71,6 +82,7 @@ export function PlayingView(): ReactElement | null {
           colour={currentColour}
           disabled={answerName !== undefined || hints.length >= maxHints}
         />
+        {lowerOverlay}
       </PVSectionLower>
     </PlayingViewElement>
   )
