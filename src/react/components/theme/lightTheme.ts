@@ -17,13 +17,16 @@ import logo from './images/logo.png'
 
 export const lightTheme: Theme = {
   colours: {
-    background: 'white',
-    text: 'black',
-    border: 'black',
+    appBackground: 'white',
+    appBorders: 'black',
+    appBordersAlt: ['white'],
+    appText: 'black',
+    appTextAlt: ['white'],
     modalBackground: 'lightgrey',
-    modalBorder: 'darkgrey',
+    modalBorders: 'darkgrey',
     modalBoxShadow: 'rgba(0, 0, 0, 30%)',
     modalSectionBorder: 'black',
+    modalText: 'black',
   },
   icons: {
     close: { svg: iconClose, colour: '#783f6b' },

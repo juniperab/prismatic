@@ -65,7 +65,7 @@ export function PlayingView(): ReactElement | null {
     if (answer === undefined) return undefined
     const style: CSSProperties = {
       backgroundColor: toCssColour(answer),
-      color: toCssColour(mostContrasting(answer, theme.colours.text, theme.colours.background)),
+      color: toCssColour(mostContrasting(answer, theme.colours.appText, ...theme.colours.appTextAlt)),
     }
     return (
       <PVSLOverlay style={style}>

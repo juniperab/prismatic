@@ -1,14 +1,15 @@
 import React, { ReactElement } from 'react'
-import { ModalType, selectAppState, setActiveModal } from '../../../redux/app/appSlice'
+import { ModalType, selectAppState, setActiveModal, setTheme } from '../../../redux/app/appSlice'
 import { Modal } from '../../../react/components/modal/Modal'
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
 import { OptionsOneLine } from '../../../react/components/options/OptionsOneLine'
 import { _ModalBodySection as MBodySection } from '../../../react/components/modal/modalLayout'
 import { selectPuzzleState, setGuessMode } from '../../../redux/puzzle/puzzleSlice'
 import { HintType } from '../../../lib/puzzle/hint'
+import { ThemeName } from '../../../react/components/theme/theme'
 
 export function SettingsModal(): ReactElement | null {
-  const { activeModal } = useAppSelector(selectAppState)
+  const { activeModal, theme: themeName } = useAppSelector(selectAppState)
   const { guessMode } = useAppSelector(selectPuzzleState)
   const dispatch = useAppDispatch()
 
@@ -18,6 +19,17 @@ export function SettingsModal(): ReactElement | null {
 
   return (
     <Modal title="Settings" onClickClose={() => dispatch(setActiveModal(undefined))}>
+      <MBodySection>
+        <OptionsOneLine
+          label={'Theme'}
+          onSelect={(selectedOption) => dispatch(setTheme(selectedOption))}
+          options={[ThemeName.light, ThemeName.dark]}
+          optionFormatter={(opt) => opt.toString().toUpperCase()}
+          selected={themeName}
+        />
+        <p>The puzzle mode determines the type of hints that you will receive.</p>
+      </MBodySection>
+
       <MBodySection>
         <OptionsOneLine
           label={'Puzzle Mode'}

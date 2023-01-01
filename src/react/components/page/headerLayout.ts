@@ -3,6 +3,7 @@ import { H1 } from '../theme/elements/H1'
 import { IconClickable } from '../theme/elements/Icon'
 import { ImgClickable } from '../theme/elements/Image'
 import { windowLayout } from './windowLayout'
+import { Theme } from '../theme/theme'
 
 export const headerLayout = {
   height: 40,
@@ -24,7 +25,7 @@ export const _Header = styled.div.attrs({
 })`
   align-items: flex-end;
   border-bottom: ${headerLayout.border.bottom}px solid;
-  border-color: ${(props) => props.theme.colours.border};
+  border-color: ${(props) => (props.theme as Theme).colours.appBorders};
   border-left: ${headerLayout.border.sides}px solid;
   border-right: ${headerLayout.border.sides}px solid;
   border-top: ${headerLayout.border.top}px solid;

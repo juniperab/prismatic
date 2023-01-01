@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { Theme } from '../../react/components/theme/theme'
 
 export const playingViewLayout = {
   upper: {
@@ -29,7 +30,7 @@ const _PlayingViewSection = styled.div.attrs({
   box-sizing: border-box;
   text-align: center;
   border-style: solid;
-  border-color: ${(props) => props.theme.colours.border};
+  border-color: ${(props) => (props.theme as Theme).colours.appBorders};
   width: 100%;
   position: relative;
 `

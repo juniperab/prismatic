@@ -17,13 +17,16 @@ import { ReactComponent as iconTada } from './icons/icon-tada.svg'
 
 export const darkTheme: Theme = {
   colours: {
-    background: 'black',
-    text: 'white',
-    border: 'white',
+    appBackground: 'black',
+    appText: 'white',
+    appBorders: 'white',
     modalBackground: 'darkgrey',
-    modalBorder: 'lightgrey',
+    modalBorders: 'lightgrey',
     modalBoxShadow: 'rgba(255, 255, 255, 70%)',
-    modalSectionBorder: 'white',
+    modalSectionBorder: 'black',
+    appBordersAlt: ['white'],
+    appTextAlt: ['black'],
+    modalText: 'white',
   },
   icons: {
     close: { svg: iconClose, colour: '#a45490' },

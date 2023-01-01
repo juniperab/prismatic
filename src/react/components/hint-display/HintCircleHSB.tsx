@@ -81,12 +81,16 @@ export function HintCircleHSB(props: HintDisplayHSBProps): ReactElement {
   const hintCircleStyle: CSSProperties = {
     backgroundColor: 'white',
     backgroundImage: [
-      conicGradiantMask(theme.colours.background, hint.saturation, hint.brightness),
+      conicGradiantMask(theme.colours.appBackground, hint.saturation, hint.brightness),
       ...hint.cssGradients,
     ].join(', '),
   }
 
-  const centreBorderColour = mostContrasting(hint.guessedColour, theme.colours.border, theme.colours.background)
+  const centreBorderColour = mostContrasting(
+    hint.guessedColour,
+    theme.colours.appBorders,
+    ...theme.colours.appBordersAlt
+  )
 
   return (
     <HintCircleElement style={hintCircleStyle}>

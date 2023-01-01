@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { Theme } from '../theme/theme'
 
 export const hintCircleLayout = {
   container: {
@@ -24,7 +25,7 @@ export const _HintCircle = styled.div.attrs({
   position: relative;
   border-style: solid;
   border-width: ${hintCircleLayout.container.border.width}px;
-  border-color: ${(props) => props.theme.colours.border};
+  border-color: ${(props) => (props.theme as Theme).colours.appBorders};
   border-radius: 50%;
   display: flex;
   flex-flow: row wrap;
@@ -52,7 +53,7 @@ export const _HintCircleCentre = styled.div.attrs({
   width: ${hintCircleLayout.centre.diameter}%;
   border-style: solid;
   border-width: ${hintCircleLayout.centre.border.width}px;
-  border-color: ${(props) => props.theme.colours.border};
+  border-color: ${(props) => (props.theme as Theme).colours.appBorders};
   border-radius: 50%;
   position: absolute;
   top: 50%;

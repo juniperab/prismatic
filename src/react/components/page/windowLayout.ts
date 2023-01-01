@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { Theme } from '../theme/theme'
 
 export const windowLayout = {
   padding: {
@@ -15,9 +16,9 @@ export const windowLayout = {
 export const _Window = styled.div.attrs({
   className: 'window',
 })`
-  background-color: ${(props) => props.theme.colours.background};
+  background-color: ${(props) => (props.theme as Theme).colours.appBackground};
   box-sizing: border-box;
-  color: ${(props) => props.theme.colours.text};
+  color: ${(props) => (props.theme as Theme).colours.appText};
   height: 100%;
   left: 50%;
   padding-bottom: ${windowLayout.padding.bottom}px;

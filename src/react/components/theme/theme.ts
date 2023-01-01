@@ -15,12 +15,15 @@ export enum ThemeName {
 }
 
 export interface ThemeColours {
-  background: string
-  text: string
-  border: string
+  appBackground: string
+  appText: string
+  appTextAlt: string[]
+  appBorders: string
+  appBordersAlt: string[]
   modalBackground: string
-  modalBorder: string
+  modalBorders: string
   modalBoxShadow: string
+  modalText: string
   modalSectionBorder: string
 }
 

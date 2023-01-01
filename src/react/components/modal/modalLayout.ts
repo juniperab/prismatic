@@ -4,6 +4,7 @@ import { windowLayout } from '../page/windowLayout'
 import { footerLayout } from '../page/footerLayout'
 import { Icon } from '../theme/elements/Icon'
 import { H2 } from '../theme/elements/H1'
+import { Theme } from '../theme/theme'
 
 export const modalLayout = {
   margin: {
@@ -76,9 +77,9 @@ export const _ModalWindow = styled.div.attrs({
   className: 'modal-window',
 })`
   box-sizing: border-box;
-  background-color: ${(props) => props.theme.colours.modalBackground};
+  background-color: ${(props) => (props.theme as Theme).colours.modalBackground};
   border-radius: 15px;
-  border: 2px solid ${(props) => props.theme.colours.modalBorder};
+  border: 2px solid ${(props) => (props.theme as Theme).colours.modalBorders};
   height: auto;
   max-height: 100%;
   overflow-y: scroll;
@@ -89,7 +90,7 @@ export const _ModalWindow = styled.div.attrs({
   padding-left: ${modalLayout.padding.side}px;
   padding-right: ${modalLayout.padding.side}px;
   padding-top: ${modalLayout.padding.bottom}px;
-  box-shadow: 0 4px 23px 0 ${(props) => props.theme.colours.modalBoxShadow};
+  box-shadow: 0 4px 23px 0 ${(props) => (props.theme as Theme).colours.modalBoxShadow};
 `
 
 export const _ModalHeader = styled.div.attrs({
@@ -122,7 +123,7 @@ export const _ModalBody = styled.div.attrs({
   .modal-body-section {
     border-bottom-width: ${modalLayout.body.section.separatorBorder}px;
     border-bottom-style: dashed;
-    border-bottom-color: ${(props) => props.theme.colours.modalSectionBorder};
+    border-bottom-color: ${(props) => (props.theme as Theme).colours.modalSectionBorder};
   }
   .modal-body-section:last-child {
     border-bottom: none;

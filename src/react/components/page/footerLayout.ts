@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { windowLayout } from './windowLayout'
+import { Theme } from '../theme/theme'
 
 export const footerLayout = {
   border: {
@@ -30,7 +31,7 @@ export const _Footer = styled.div.attrs({
 })`
   align-items: flex-end;
   border-bottom: ${footerLayout.border.bottom}px solid;
-  border-color: ${(props) => props.theme.colours.border};
+  border-color: ${(props) => (props.theme as Theme).colours.appBorders};
   border-left: ${footerLayout.border.sides}px solid;
   border-right: ${footerLayout.border.sides}px solid;
   border-top: ${footerLayout.border.top}px solid;
