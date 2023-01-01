@@ -8,6 +8,11 @@ export enum HintType {
   CMYK = 'cmyk',
 }
 
+export enum HintStyle {
+  EASY = 'easy',
+  HARD = 'hard',
+}
+
 export interface HintItem {
   match: boolean
   error: number

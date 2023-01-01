@@ -26,7 +26,7 @@ import { getNewPuzzle } from '../../lib/puzzle/puzzleServer'
 
 export function PlayingView(): ReactElement | null {
   const { activeView } = useAppSelector(selectAppState)
-  const { guessGridShape } = useAppSelector(selectConfigState)
+  const { guessGridShape, hintStyle } = useAppSelector(selectConfigState)
   const { answer, currentColour, gaveUp, hints } = useAppSelector(selectPuzzleState)
   const { width, height, ref } = useResizeDetector()
   const theme = useTheme() as Theme
@@ -104,6 +104,7 @@ export function PlayingView(): ReactElement | null {
         <HintGrid
           answer={answer}
           hints={hints}
+          hintStyle={hintStyle}
           maxHeight={upperHeight}
           maxWidth={w}
           numCols={guessGridShape[0]}

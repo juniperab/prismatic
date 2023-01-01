@@ -1,12 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../store'
-import { HintType } from '../../lib/puzzle/hint'
+import { HintStyle, HintType } from "../../lib/puzzle/hint";
 import { AnyColour } from '../../lib/colour/colours'
-
-export enum HintStyle {
-  EASY = 'easy',
-  HARD = 'hard',
-}
 
 export interface ConfigState {
   guessGridShape: [number, number] // cols, rows

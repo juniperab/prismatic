@@ -6,8 +6,9 @@ import { OptionsOneLine } from '../../../react/components/options/OptionsOneLine
 import { _ModalBodySection as MBodySection } from '../../../react/components/modal/modalLayout'
 import { ThemeName } from '../../../react/components/theme/theme'
 import { titleCase } from 'title-case'
-import { HintStyle, selectConfigState, setHintStyle } from '../../../redux/config/configSlice'
+import { selectConfigState, setHintStyle } from '../../../redux/config/configSlice'
 import { enumKeys } from '../../../lib/util/enumKeys'
+import { HintStyle } from "../../../lib/puzzle/hint";
 
 export function SettingsModal(): ReactElement | null {
   const { activeModal, theme: themeName } = useAppSelector(selectAppState)
