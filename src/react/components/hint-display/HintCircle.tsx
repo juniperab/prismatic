@@ -1,6 +1,6 @@
 import { ReactElement } from 'react'
 import { _HintCircle as HintCircleElement } from './hintCircleLayout'
-import { Hint, HintType } from '../../../lib/puzzle/hint/hint'
+import { Hint, HintType } from '../../../lib/puzzle/hint'
 import { renderHintDisplayCentre } from './hintCircleCommon'
 import { HintCircleHSB } from './HintCircleHSB'
 import { toCssColour } from '../../../lib/colour/colourConversions'

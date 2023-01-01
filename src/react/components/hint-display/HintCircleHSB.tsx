@@ -1,7 +1,7 @@
 import { CSSProperties, ReactElement } from 'react'
 import { _HintCircle as HintCircleElement } from './hintCircleLayout'
 import { HintDisplayProps } from './HintCircle'
-import { HintItem, HSBHint } from '../../../lib/puzzle/hint/hint'
+import { HintItem, HSBHint } from '../../../lib/puzzle/hint'
 import { renderHintDisplayCentre } from './hintCircleCommon'
 import { mostContrasting, toCssColour } from '../../../lib/colour/colourConversions'
 import { AnyColour } from '../../../lib/colour/colours'

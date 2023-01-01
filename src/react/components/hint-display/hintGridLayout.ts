@@ -7,7 +7,7 @@ export const hintGridLayout = {
 }
 
 export const _HintGrid = styled.div.attrs({
-  className: 'hint-grid',
+  className: 'hint-generators-grid',
 })`
   box-sizing: border-box;
   display: grid;

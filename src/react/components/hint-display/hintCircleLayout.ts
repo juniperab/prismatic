@@ -15,7 +15,7 @@ export const hintCircleLayout = {
 }
 
 export const _HintCircle = styled.div.attrs({
-  className: 'hint-circle',
+  className: 'hint-generators-circle',
 })`
   place-self: stretch;
 
@@ -36,7 +36,7 @@ export const _HintCircle = styled.div.attrs({
 `
 
 export const _HintCircleQuadrant = styled.div.attrs({
-  className: 'hint-circle-quadrant',
+  className: 'hint-generators-circle-quadrant',
 })`
   box-sizing: border-box;
   height: 50%;
@@ -45,7 +45,7 @@ export const _HintCircleQuadrant = styled.div.attrs({
 `
 
 export const _HintCircleCentre = styled.div.attrs({
-  className: 'hint-circle-centre',
+  className: 'hint-generators-circle-centre',
 })`
   box-sizing: border-box;
   aspect-ratio: 1;
