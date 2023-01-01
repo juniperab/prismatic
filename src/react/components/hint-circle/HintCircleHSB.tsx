@@ -3,7 +3,7 @@ import { _HintCircle as HintCircleElement } from './hintCircleLayout'
 import { HintDisplayProps } from './HintCircle'
 import { HintItem, HSBHint } from '../../../lib/puzzle/hint/hint'
 import { renderHintDisplayCentre } from './hintCircleCommon'
-import { toCssColour } from '../../../lib/colour/colourConversions'
+import { mostContrasting, toCssColour } from "../../../lib/colour/colourConversions";
 import { AnyColour } from '../../../lib/colour/colours'
 import { useTheme } from 'styled-components'
 import { Theme } from '../theme/theme'
@@ -86,9 +86,11 @@ export function HintCircleHSB(props: HintDisplayHSBProps): ReactElement {
     ].join(', '),
   }
 
+  const centreBorderColour = mostContrasting(hint.guessedColour, theme.colours.border, theme.colours.background)
+
   return (
     <HintCircleElement style={hintCircleStyle}>
-      {renderHintDisplayCentre(hint.guessedColour, () => onClick?.(hint))}
+      {renderHintDisplayCentre(hint.guessedColour, centreBorderColour, () => onClick?.(hint))}
     </HintCircleElement>
   )
 }
