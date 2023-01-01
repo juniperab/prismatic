@@ -36,10 +36,9 @@ export function SettingsModal(): ReactElement | null {
           selected={hintStyle}
         />
         <p>
-          Easy hints give you visual cues about the direction you'll need to move on the colour chooser.
-          With hard hints, you'll need to figure out what to do from the colours of the hints alone.
+          Easy hints give you visual cues about the direction you'll need to move on the colour chooser. With hard
+          hints, you'll need to figure out what to do from the colours of the hints alone.
         </p>
-
       </MBodySection>
 
       <MBodySection>

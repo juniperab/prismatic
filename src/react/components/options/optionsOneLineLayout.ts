@@ -5,7 +5,7 @@ export const optionsOneLineLayout = {
     margin: {
       bottom: 15,
       top: 15,
-    }
+    },
   },
   label: {
     margin: {
@@ -39,16 +39,19 @@ export const _OptionsItem = styled.span.attrs({
   cursor: default;
   margin-left: ${optionsOneLineLayout.item.margin.sides}px;
   margin-right: ${optionsOneLineLayout.item.margin.sides}px;
-  ${(props) => (props as any)['data-selected'] === true ? `
+  ${(props) =>
+    (props as any)['data-selected'] === true
+      ? `
     font-weight: 700;
-  ` : props.onClick !== undefined ? `
+  `
+      : props.onClick !== undefined
+      ? `
     &:hover {
       text-decoration: underline;
       cursor: pointer;
     }
-  ` :
   `
+      : `
     text-decoration: line-through;
   `}
-  
 `

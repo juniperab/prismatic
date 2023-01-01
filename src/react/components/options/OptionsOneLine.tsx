@@ -1,5 +1,9 @@
 import { ReactElement } from 'react'
-import { _OptionsItem as OItem, _OptionsLabel as OLabel, _OptionsOneLine as OptionsOneLineElement } from './optionsOneLineLayout'
+import {
+  _OptionsItem as OItem,
+  _OptionsLabel as OLabel,
+  _OptionsOneLine as OptionsOneLineElement,
+} from './optionsOneLineLayout'
 
 export interface OptionsOneLineProps<T> {
   label: string
