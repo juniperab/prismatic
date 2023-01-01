@@ -1,6 +1,6 @@
 import React, { CSSProperties, ReactElement } from 'react'
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
-import { selectAppState, ViewType } from '../../../redux/app/appSlice'
+import { useAppDispatch, useAppSelector } from '../../redux/hooks'
+import { selectAppState, ViewType } from '../../redux/app/appSlice'
 import {
   _PlayingViewSectionLower as PVSectionLower,
   _PlayingView as PlayingViewElement,
@@ -9,20 +9,20 @@ import {
   _PlayingViewSectionLowerOverlay as PVSLOverlay,
   _PlayingViewSectionLowerOverlaySection as PVSLOverlaySection,
 } from './playingViewLayout'
-import { HintGrid } from '../../components/hint-grid/HintGrid'
-import { makeGuess, resetPuzzleState, selectPuzzleState, setCurrentColour } from '../../../redux/puzzle/puzzleSlice'
-import { ColourChooser, NewColourCallback } from '../../components/colour-chooser/ColourChooser'
-import { selectConfigState } from '../../../redux/config/configSlice'
+import { HintGrid } from '../../react/components/hint-display/HintGrid'
+import { makeGuess, resetPuzzleState, selectPuzzleState, setCurrentColour } from '../../redux/puzzle/puzzleSlice'
+import { ColourChooser, NewColourCallback } from '../../react/components/colour-chooser/ColourChooser'
+import { selectConfigState } from '../../redux/config/configSlice'
 import { useResizeDetector } from 'react-resize-detector'
-import { hintGridLayout } from '../../components/hint-grid/hintGridLayout'
-import { AnyColour } from '../../../lib/colour/colours'
-import { mostContrasting, toCssColour } from '../../../lib/colour/colourConversions'
+import { hintGridLayout } from '../../react/components/hint-display/hintGridLayout'
+import { AnyColour } from '../../lib/colour/colours'
+import { mostContrasting, toCssColour } from '../../lib/colour/colourConversions'
 import { useTheme } from 'styled-components'
-import { Theme } from '../../components/theme/theme'
-import { Icon } from '../../components/theme/elements/Icon'
-import { H1 } from '../../components/theme/elements/H1'
-import { SpanClickable } from '../../components/theme/elements/Span'
-import { getNewPuzzle } from '../../../lib/puzzle/puzzleServer'
+import { Theme } from '../../react/components/theme/theme'
+import { Icon } from '../../react/components/theme/elements/Icon'
+import { H1 } from '../../react/components/theme/elements/H1'
+import { SpanClickable } from '../../react/components/theme/elements/Span'
+import { getNewPuzzle } from '../../lib/puzzle/puzzleServer'
 
 export function PlayingView(): ReactElement | null {
   const { activeView } = useAppSelector(selectAppState)

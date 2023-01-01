@@ -1,4 +1,4 @@
-import { HintGeneratorConfig } from './hint/hintGeneratorConfig'
+import { HintGeneratorConfig } from './hint-generators/hintGeneratorConfig'
 import { PuzzleConfig } from './puzzle'
 
 const hintGeneratorConfig: HintGeneratorConfig = {

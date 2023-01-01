@@ -1,4 +1,4 @@
-import { HintItem } from './hint'
+import { HintItem } from '../hint'
 import { bounded } from '../../math/math'
 
 export function simpleHintItem(

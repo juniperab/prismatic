@@ -1,11 +1,11 @@
 import React, { ReactElement } from 'react'
-import { ModalType, selectAppState, setActiveModal } from '../../../../redux/app/appSlice'
-import { Modal } from '../../../components/modal/Modal'
-import { useAppDispatch, useAppSelector } from '../../../../redux/hooks'
-import { OptionsOneLine } from '../../../components/options/OptionsOneLine'
-import { _ModalBodySection as MBodySection } from '../../../components/modal/modalLayout'
-import { selectPuzzleState, setGuessMode } from '../../../../redux/puzzle/puzzleSlice'
-import { HintType } from '../../../../lib/puzzle/hint/hint'
+import { ModalType, selectAppState, setActiveModal } from '../../../redux/app/appSlice'
+import { Modal } from '../../../react/components/modal/Modal'
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
+import { OptionsOneLine } from '../../../react/components/options/OptionsOneLine'
+import { _ModalBodySection as MBodySection } from '../../../react/components/modal/modalLayout'
+import { selectPuzzleState, setGuessMode } from '../../../redux/puzzle/puzzleSlice'
+import { HintType } from '../../../lib/puzzle/hint'
 
 export function SettingsModal(): ReactElement | null {
   const { activeModal } = useAppSelector(selectAppState)

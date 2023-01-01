@@ -2,7 +2,7 @@ import { call, put, takeEvery } from 'typed-redux-saga'
 import { appSelect } from '../hooks'
 import { getPuzzleAnswerFromServer, submitGuessToServer } from './puzzleClient'
 import { PuzzleId } from '../../lib/puzzle/puzzle'
-import { Hint, isHint } from '../../lib/puzzle/hint/hint'
+import { Hint, isHint } from '../../lib/puzzle/hint'
 import {
   giveUp,
   makeGuess,

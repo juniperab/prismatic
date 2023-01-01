@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
-import { ModalType, selectAppState, setActiveModal } from '../../../../redux/app/appSlice'
-import { Modal } from '../../../components/modal/Modal'
-import { useAppDispatch, useAppSelector } from '../../../../redux/hooks'
+import { ModalType, selectAppState, setActiveModal } from '../../../redux/app/appSlice'
+import { Modal } from '../../../react/components/modal/Modal'
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
 
 export function UserModal(): ReactElement | null {
   const { activeModal } = useAppSelector(selectAppState)

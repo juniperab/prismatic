@@ -1,11 +1,11 @@
 import { toNamed } from '../colour/colourConversions'
 import { generateRandomColour } from '../colour/colourMath'
 import { getPuzzleId, loadPuzzleById, Puzzle, PuzzleId } from './puzzle'
-import { Hint, visitHintItems } from './hint/hint'
+import { Hint, visitHintItems } from './hint'
 import { puzzleConfig } from './puzzleConfig'
-import { generateHintRGB } from './hint/hintGeneratorRGB'
-import { generateHintHSB } from './hint/hintGeneratorHSB'
-import { generateHintCMYK } from './hint/hintGeneratorCMYK'
+import { generateHintRGB } from './hint-generators/hintGeneratorRGB'
+import { generateHintHSB } from './hint-generators/hintGeneratorHSB'
+import { generateHintCMYK } from './hint-generators/hintGeneratorCMYK'
 import { AnyColour, NamedColour, visitColourOrThrow } from '../colour/colours'
 
 export function getNewPuzzle(): PuzzleId {

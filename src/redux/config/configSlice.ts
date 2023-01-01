@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../store'
-import { HintType } from '../../lib/puzzle/hint/hint'
+import { HintType } from '../../lib/puzzle/hint'
 
 export interface ConfigState {
   guessGridShape: [number, number] // cols, rows

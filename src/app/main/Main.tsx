@@ -1,20 +1,20 @@
 import React, { ReactElement, useEffect } from 'react'
 import { ThemeProvider } from 'styled-components'
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
-import { ModalType, selectAppState, setActiveModal } from '../../../redux/app/appSlice'
+import { useAppDispatch, useAppSelector } from '../../redux/hooks'
+import { ModalType, selectAppState, setActiveModal } from '../../redux/app/appSlice'
 import { handleKeyDown, handleKeyUp } from './keyPressHandlers'
-import { getTheme } from '../../components/theme/themeRegistry'
-import { Window } from '../../components/page/Window'
-import { Header } from '../../components/page/Header'
-import { Footer } from '../../components/page/Footer'
-import { Body } from '../../components/page/Body'
+import { getTheme } from '../../react/components/theme/themeRegistry'
+import { Window } from '../../react/components/page/Window'
+import { Header } from '../../react/components/page/Header'
+import { Footer } from '../../react/components/page/Footer'
+import { Body } from '../../react/components/page/Body'
 import { HelpModal } from '../modals/help/HelpModal'
 import { UserModal } from '../modals/user/UserModal'
 import { SettingsModal } from '../modals/settings/SettingsModal'
 import { PlayingView } from '../views/PlayingView'
 import { handleWindowResize } from './resizeHandlers'
 
-export function App(): ReactElement {
+export function Main(): ReactElement {
   const { theme } = useAppSelector(selectAppState)
   const dispatch = useAppDispatch()
 
@@ -38,7 +38,7 @@ export function App(): ReactElement {
   // listen for window resize
   const receiveResize = (): void => handleWindowResize()
   useEffect(() => {
-    receiveResize() // fire once on app load
+    receiveResize() // fire once on main load
     window.addEventListener('resize', receiveResize)
     return function cleanup() {
       window.removeEventListener('resize', receiveResize)

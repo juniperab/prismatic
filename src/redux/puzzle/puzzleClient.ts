@@ -1,4 +1,4 @@
-import { Hint } from '../../lib/puzzle/hint/hint'
+import { Hint } from '../../lib/puzzle/hint'
 import { PuzzleId } from '../../lib/puzzle/puzzle'
 import { evaluateGuess, revealAnswer } from '../../lib/puzzle/puzzleServer'
 import { AnyColour, NamedColour } from '../../lib/colour/colours'

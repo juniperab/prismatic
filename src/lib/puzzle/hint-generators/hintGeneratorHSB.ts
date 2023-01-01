@@ -1,11 +1,11 @@
 import { toCssColour, toHSB } from '../../colour/colourConversions'
-import { HintItem, HintType, HSBHint } from './hint'
+import { HintItem, HintType, HSBHint } from '../hint'
 import { hueDiff, rotateHue } from '../../colour/colourMath'
 import { HintGeneratorConfigHSB } from './hintGeneratorConfig'
 import { simpleHintItem } from './hintGeneratorCommon'
 import { HSBColour } from '../../colour/colours'
 import { Puzzle } from '../puzzle'
-import { hintCircleLayout } from '../../../react/components/hint-circle/hintCircleLayout'
+import { hintCircleLayout } from '../../../react/components/hint-display/hintCircleLayout'
 
 const innerVisibleRadius = hintCircleLayout.centre.diameter * 0.8
 const outerVisibleRadius = 75

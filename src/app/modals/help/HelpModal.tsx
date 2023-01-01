@@ -1,11 +1,11 @@
 import React, { ReactElement } from 'react'
-import { ModalType, selectAppState, setActiveModal } from '../../../../redux/app/appSlice'
-import { Modal } from '../../../components/modal/Modal'
-import { useAppDispatch, useAppSelector } from '../../../../redux/hooks'
+import { ModalType, selectAppState, setActiveModal } from '../../../redux/app/appSlice'
+import { Modal } from '../../../react/components/modal/Modal'
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
 import {
   _ModalBodySection as MBSection,
   _ModalBodySectionTitle as MBSectionTitle,
-} from '../../../components/modal/modalLayout'
+} from '../../../react/components/modal/modalLayout'
 import { BrowserView, MobileView } from 'react-device-detect'
 
 export function HelpModal(): ReactElement | null {
@@ -129,7 +129,7 @@ export function HelpModal(): ReactElement | null {
       </MBSection>
       <MBSection>
         <MBSectionTitle>The Hints</MBSectionTitle>
-        <p>After each guess, you will receive a hint to help you find the secret colour.</p>
+        <p>After each guess, you will receive a hint-generators to help you find the secret colour.</p>
         <p></p>
       </MBSection>
 

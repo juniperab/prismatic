@@ -1,4 +1,4 @@
-import { HintType, RGBHint } from './hint'
+import { HintType, RGBHint } from '../hint'
 import { HintGeneratorConfigRGB } from './hintGeneratorConfig'
 import { simpleHintItem } from './hintGeneratorCommon'
 import { RGBColour } from '../../colour/colours'

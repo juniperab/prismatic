@@ -1,4 +1,4 @@
-import { HintType, CMYKHint } from './hint'
+import { HintType, CMYKHint } from '../hint'
 import { HintGeneratorConfigCMYK } from './hintGeneratorConfig'
 import { simpleHintItem } from './hintGeneratorCommon'
 import { CMYKColour } from '../../colour/colours'

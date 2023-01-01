@@ -1,7 +1,7 @@
 import { CSSProperties, ReactElement, useEffect, useState } from 'react'
 import { _HintGrid as HintGridElement, hintGridLayout } from './hintGridLayout'
 import { Hint } from '../../../lib/puzzle/hint'
-import { HintCircle } from '../hint-circle/HintCircle'
+import { HintCircle } from './HintCircle'
 import { AnyColour } from '../../../lib/colour/colours'
 
 export interface HintGridProps {

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../store'
-import { Hint, HintType } from '../../lib/puzzle/hint/hint'
+import { Hint, HintType } from '../../lib/puzzle/hint'
 import { getPuzzleId, PuzzleId } from '../../lib/puzzle/puzzle'
 import { AnyColour, NamedColour } from '../../lib/colour/colours'
 import { toCMYK, toHSB, toRGB } from '../../lib/colour/colourConversions'

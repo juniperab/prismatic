@@ -1,6 +1,6 @@
 import reducer, { PuzzleState, setCurrentColour, setStartingColour } from './puzzleSlice'
 import { getPuzzleId, Puzzle } from '../../lib/puzzle/puzzle'
-import { HintType } from '../../lib/puzzle/hint/hint'
+import { HintType } from '../../lib/puzzle/hint'
 import { NamedColour } from '../../lib/colour/colours'
 
 const testInitialPuzzle: Puzzle = {
