@@ -1,9 +1,12 @@
 {
   "files": {
-    "main.css": "/prismatic/static/css/main.f7dd0d2e.css",
-    "main.js": "/prismatic/static/js/main.ef899cd2.js",
+    "main.css": "/prismatic/static/css/main.cb1a4f01.css",
+    "main.js": "/prismatic/static/js/main.37446af8.js",
     "static/js/787.a039ecf8.chunk.js": "/prismatic/static/js/787.a039ecf8.chunk.js",
     "static/media/logo.png": "/prismatic/static/media/logo.39c003d21bbc9126d3fe.png",
+    "static/media/hint-brighter-less-saturated.png": "/prismatic/static/media/hint-brighter-less-saturated.328945dccb5f96197e47.png",
+    "static/media/hint-no-hue.png": "/prismatic/static/media/hint-no-hue.54be643daff5718ba1c3.png",
+    "static/media/hint-darker.png": "/prismatic/static/media/hint-darker.90621f08cd3d868ef645.png",
     "static/media/PinchZoom.png": "/prismatic/static/media/PinchZoom.33da1a1f4c36636ccb0a.png",
     "static/media/ModifiedDrag.png": "/prismatic/static/media/ModifiedDrag.febbba185d477f0de8e4.png",
     "static/media/Rotate.png": "/prismatic/static/media/Rotate.dbb6c6dde0141b05669e.png",
@@ -23,12 +26,12 @@
     "static/media/icon-search.svg": "/prismatic/static/media/icon-search.e68dfb7fbe62eae61400bc282d2cf1e2.svg",
     "static/media/icon-menu.svg": "/prismatic/static/media/icon-menu.72f2127dbed8a0df28654b6d9d5df46a.svg",
     "static/media/icon-close.svg": "/prismatic/static/media/icon-close.32c18bc0e396b89781110e2034e62030.svg",
-    "main.f7dd0d2e.css.map": "/prismatic/static/css/main.f7dd0d2e.css.map",
-    "main.ef899cd2.js.map": "/prismatic/static/js/main.ef899cd2.js.map",
+    "main.cb1a4f01.css.map": "/prismatic/static/css/main.cb1a4f01.css.map",
+    "main.37446af8.js.map": "/prismatic/static/js/main.37446af8.js.map",
     "787.a039ecf8.chunk.js.map": "/prismatic/static/js/787.a039ecf8.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.f7dd0d2e.css",
-    "static/js/main.ef899cd2.js"
+    "static/css/main.cb1a4f01.css",
+    "static/js/main.37446af8.js"
   ]
 }
