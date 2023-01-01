@@ -9,6 +9,7 @@ export const playingViewLayout = {
     padding: 0,
     border: 0,
     minHeight: 200,
+    iconSize: 100,
   },
   gap: 10,
 }
@@ -45,7 +46,9 @@ export const _PlayingViewSectionLower = styled(_PlayingViewSection)`
   bottom: 0;
 `
 
-export const _PlayingViewSectionLowerOverlay = styled.div`
+export const _PlayingViewSectionLowerOverlay = styled.div.attrs({
+  className: 'playing-view-lower-overlay',
+})`
   position: absolute;
   width: 100%;
   height: 100%;
@@ -53,4 +56,23 @@ export const _PlayingViewSectionLowerOverlay = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1;
+  font-size: large;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  align-items: center;
+  box-sizing: border-box;
+  .icon {
+    height: ${playingViewLayout.lower.iconSize}px;
+  }
+`
+
+export const _PlayingViewSectionLowerOverlaySection = styled.div.attrs({
+  className: 'playing-view-lower-overlay-section',
+})`
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
 `

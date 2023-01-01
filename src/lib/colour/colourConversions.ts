@@ -248,11 +248,12 @@ export function toCssColour(colour: AnyColour): string {
 }
 
 export function mostContrasting(baseColour: AnyColour, ...otherColours: AnyColour[]): AnyColour {
-  const baseColourHSBQuad = toQuad(toHSB(baseColour))
-  const distances = otherColours
-    .map((c) => toQuad(toHSB(c)))
-    .map((cQuad) => euclideanDistance(baseColourHSBQuad, cQuad))
-  const maxDistanceIdx = distances.indexOf(Math.max(...distances))
-  if (maxDistanceIdx < 0 || maxDistanceIdx >= otherColours.length) throw new Error('index out of bounds')
-  return otherColours[maxDistanceIdx]
+  // TODO: this is a hack; need a better algorithm
+  const baseBrightness = toHSB(baseColour).b
+  const diffBrightness = otherColours
+    .map(c => toHSB(c).b - baseBrightness)
+    .map(diff => diff > 0 ? diff : diff / -2)
+  const maxDiffBrightnessIdx = diffBrightness.indexOf(Math.max(...diffBrightness))
+  if (maxDiffBrightnessIdx < 0 || maxDiffBrightnessIdx >= otherColours.length) throw new Error('index out of bounds')
+  return otherColours[maxDiffBrightnessIdx]
 }
