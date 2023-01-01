@@ -7,22 +7,22 @@ import {
   _PlayingViewSectionUpper as PVSectionUpper,
   playingViewLayout,
   _PlayingViewSectionLowerOverlay as PVSLOverlay,
-  _PlayingViewSectionLowerOverlaySection as PVSLOverlaySection
-} from "./playingViewLayout";
+  _PlayingViewSectionLowerOverlaySection as PVSLOverlaySection,
+} from './playingViewLayout'
 import { HintGrid } from '../../components/hint-grid/HintGrid'
-import { makeGuess, resetPuzzleState, selectPuzzleState, setCurrentColour } from "../../../redux/puzzle/puzzleSlice";
+import { makeGuess, resetPuzzleState, selectPuzzleState, setCurrentColour } from '../../../redux/puzzle/puzzleSlice'
 import { ColourChooser, NewColourCallback } from '../../components/colour-chooser/ColourChooser'
 import { selectConfigState } from '../../../redux/config/configSlice'
 import { useResizeDetector } from 'react-resize-detector'
 import { hintGridLayout } from '../../components/hint-grid/hintGridLayout'
 import { AnyColour } from '../../../lib/colour/colours'
-import { mostContrasting, toCssColour } from "../../../lib/colour/colourConversions";
-import { useTheme } from "styled-components";
-import { Theme } from "../../components/theme/theme";
-import { Icon } from "../../components/theme/elements/Icon";
-import { H1 } from "../../components/theme/elements/H1";
-import { SpanClickable } from "../../components/theme/elements/Span";
-import { getNewPuzzle } from "../../../lib/puzzle/puzzleServer";
+import { mostContrasting, toCssColour } from '../../../lib/colour/colourConversions'
+import { useTheme } from 'styled-components'
+import { Theme } from '../../components/theme/theme'
+import { Icon } from '../../components/theme/elements/Icon'
+import { H1 } from '../../components/theme/elements/H1'
+import { SpanClickable } from '../../components/theme/elements/Span'
+import { getNewPuzzle } from '../../../lib/puzzle/puzzleServer'
 
 export function PlayingView(): ReactElement | null {
   const { activeView } = useAppSelector(selectAppState)
@@ -65,21 +65,25 @@ export function PlayingView(): ReactElement | null {
     if (answer === undefined) return undefined
     const style: CSSProperties = {
       backgroundColor: toCssColour(answer),
-      color: toCssColour(mostContrasting(answer, theme.colours.text, theme.colours.background))
+      color: toCssColour(mostContrasting(answer, theme.colours.text, theme.colours.background)),
     }
-    return <PVSLOverlay style={style}>
-      <PVSLOverlaySection>
-        <Icon color={style.color}>{gaveUp ? <theme.icons.pottedPlant.svg/> : <theme.icons.tada.svg/> }</Icon>
-      </PVSLOverlaySection>
-      <PVSLOverlaySection>
-        <div><H1>{answer}</H1></div>
-        <div><p>
-          <SpanClickable onClick={() => dispatch(resetPuzzleState(getNewPuzzle()))}>
-            New Game?
-          </SpanClickable>
-        </p></div>
-      </PVSLOverlaySection>
-    </PVSLOverlay>
+    return (
+      <PVSLOverlay style={style}>
+        <PVSLOverlaySection>
+          <Icon color={style.color}>{gaveUp ? <theme.icons.pottedPlant.svg /> : <theme.icons.tada.svg />}</Icon>
+        </PVSLOverlaySection>
+        <PVSLOverlaySection>
+          <div>
+            <H1>{answer}</H1>
+          </div>
+          <div>
+            <p>
+              <SpanClickable onClick={() => dispatch(resetPuzzleState(getNewPuzzle()))}>New Game?</SpanClickable>
+            </p>
+          </div>
+        </PVSLOverlaySection>
+      </PVSLOverlay>
+    )
   })()
 
   const colourChooser: ReactElement | undefined = ((): ReactElement | undefined => {

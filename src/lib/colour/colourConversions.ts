@@ -1,5 +1,4 @@
 import convert from 'color-convert'
-import { euclideanDistance } from '../math/math'
 import {
   AnyColour,
   CMYKColour,
@@ -251,8 +250,8 @@ export function mostContrasting(baseColour: AnyColour, ...otherColours: AnyColou
   // TODO: this is a hack; need a better algorithm
   const baseBrightness = toHSB(baseColour).b
   const diffBrightness = otherColours
-    .map(c => toHSB(c).b - baseBrightness)
-    .map(diff => diff > 0 ? diff : diff / -2)
+    .map((c) => toHSB(c).b - baseBrightness)
+    .map((diff) => (diff > 0 ? diff : diff / -2))
   const maxDiffBrightnessIdx = diffBrightness.indexOf(Math.max(...diffBrightness))
   if (maxDiffBrightnessIdx < 0 || maxDiffBrightnessIdx >= otherColours.length) throw new Error('index out of bounds')
   return otherColours[maxDiffBrightnessIdx]
