@@ -141,7 +141,7 @@ function cmykWithAlpha(colour: CMYKColour, alpha: number | undefined): CMYKColou
 }
 
 function hexWithAlpha(colour: HexColour, alpha: number | undefined): HexColour {
-  const hexWithoutAlpha = colour.slice(0, 7)
+  const hexWithoutAlpha = colour.slice(1, 7)
   if (alpha === undefined) return asHex(hexWithoutAlpha)
   const alphaString = Math.round((alpha * 255) / 100).toString(16)
   return asHex(`${hexWithoutAlpha}${alphaString}`)

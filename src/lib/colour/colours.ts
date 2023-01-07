@@ -26,6 +26,11 @@ export interface HSLColour {
 
 export type NamedColour = string
 
+export interface NamedColour2 {
+  name: string
+  hex: HexColour
+}
+
 export interface RGBColour {
   a?: number | undefined
   r: number
