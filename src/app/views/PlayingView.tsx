@@ -10,7 +10,7 @@ import {
   _PlayingViewSectionLowerOverlaySection as PVSLOverlaySection,
 } from './playingViewLayout'
 import { HintGrid } from '../../react/components/hint-display/HintGrid'
-import { makeGuess, resetPuzzleState, selectPuzzleState, setCurrentColour } from '../../redux/puzzle/puzzleSlice'
+import { makeGuess, selectPuzzleState, setCurrentColour } from '../../redux/puzzle/puzzleSlice'
 import { ColourChooser, NewColourCallback } from '../../react/components/colour-chooser/ColourChooser'
 import { selectConfigState } from '../../redux/config/configSlice'
 import { useResizeDetector } from 'react-resize-detector'
@@ -22,7 +22,7 @@ import { Theme } from '../../react/components/theme/theme'
 import { Icon } from '../../react/components/theme/elements/Icon'
 import { H1 } from '../../react/components/theme/elements/H1'
 import { SpanClickable } from '../../react/components/theme/elements/Span'
-import { getNewPuzzle } from '../../lib/puzzle/puzzleServer'
+import { restartWithNewPuzzle } from "../../redux/app/appActions";
 
 export function PlayingView(): ReactElement | null {
   const { activeView } = useAppSelector(selectAppState)
@@ -74,11 +74,11 @@ export function PlayingView(): ReactElement | null {
         </PVSLOverlaySection>
         <PVSLOverlaySection>
           <div>
-            <H1>{answer}</H1>
+            <H1>{answer.name}</H1>
           </div>
           <div>
             <p>
-              <SpanClickable onClick={() => dispatch(resetPuzzleState(getNewPuzzle()))}>New Game?</SpanClickable>
+              <SpanClickable onClick={() => dispatch(restartWithNewPuzzle)}>New Game?</SpanClickable>
             </p>
           </div>
         </PVSLOverlaySection>

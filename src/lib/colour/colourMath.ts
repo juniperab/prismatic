@@ -1,5 +1,5 @@
 import { isHex, isHSB, isHSL, isRGB, toHSB, toHSL, toRGB } from './colourConversions'
-import { AnyColour } from './colours'
+import { AnyColour, HSBColour, RGBColour } from "./colours";
 
 /**
  * Rotate a hue around the colour wheel by some number of degrees. The result will be in [0, 360).
@@ -60,10 +60,18 @@ export function isSameColour(a: AnyColour, b: AnyColour, precision: number): boo
 /**
  * Generate a random colour.
  */
-export function generateRandomColour(): AnyColour {
+export function uniformRandomColourHSB(): HSBColour {
+  function fixedPointRandomInclusive(lower: number, upper: number, fractionDigits: number): number {
+    const range = upper - lower
+    let num = Math.random()
+    num = (num * range + lower)
+    num *= Math.pow(10, fractionDigits + 1)
+    num = Math.round(num) / Math.pow(10, fractionDigits + 1)
+    return num
+  }
   return {
-    r: Math.random() * 256,
-    g: Math.random() * 256,
-    b: Math.random() * 256,
+    h: Math.random() * 360,
+    s: fixedPointRandomInclusive(0, 100, 2),
+    b: fixedPointRandomInclusive(0, 100, 2),
   }
 }

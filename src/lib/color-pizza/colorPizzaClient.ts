@@ -1,6 +1,6 @@
-import { AnyColour, HexColour, NamedColour2, RGBColour } from "../colour/colours";
+import { AnyColour, NamedColour, RGBColour } from "../colour/colours";
 import { IRequestOptions, IRestResponse, RestClient } from "typed-rest-client";
-import { toHex } from "../colour/colourConversions";
+import { toHex, withAlpha } from "../colour/colourConversions";
 
 const client: RestClient = new RestClient('prismatic', 'https://api.color.pizza/v1/')
 
@@ -14,8 +14,8 @@ interface LookupNamedColourResponseItem {
     rgb: RGBColour
 }
 
-export async function lookupColourName(colour: AnyColour): Promise<NamedColour2 | undefined> {
-    const hex: string = toHex(colour).slice(1,7)
+export async function lookupColourName(colour: AnyColour): Promise<NamedColour | undefined> {
+    const hex: string = toHex(withAlpha(colour, undefined)).slice(1,7)
     const options: IRequestOptions = {
         queryParameters: {
             params: {

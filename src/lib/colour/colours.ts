@@ -24,9 +24,9 @@ export interface HSLColour {
   l: number
 }
 
-export type NamedColour = string
+// export type NamedColour = string
 
-export interface NamedColour2 {
+export interface NamedColour {
   name: string
   hex: HexColour
 }

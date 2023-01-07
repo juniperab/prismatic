@@ -6,7 +6,7 @@ describe('color pizza client', () => {
   jest.setTimeout(10000)
   it('should look up a name for a hex colour', async() => {
     const colour: HexColour = toHex('#ABFECD')
-    const foo = await lookupColourName(colour)
-    expect(foo).toEqual({ hex: '#AAFFCC', name: 'Neo Mint' })
+    const namedColour = await lookupColourName(colour)
+    expect(namedColour).toEqual({ hex: '#AAFFCC', name: 'Neo Mint' })
   })
 })
