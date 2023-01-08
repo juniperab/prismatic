@@ -32,11 +32,14 @@
     "@types/react-dom": "^18.0.9",
     "@types/styled-components": "^5.1.26",
     "base-64": "^1.0.0",
+    "browserify-fs": "^1.0.0",
     "canvas": "^2.10.2",
     "classnames": "^2.3.2",
     "color-convert": "^2.0.1",
+    "console-browserify": "^1.2.0",
     "hammerjs": "^2.0.8",
     "lodash": "^4.17.21",
+    "net-browserify": "^0.2.4",
     "react": "^18.2.0",
     "react-device-detect": "^2.2.2",
     "react-dom": "^18.2.0",
@@ -46,9 +49,9 @@
     "redux-logger": "^3.0.6",
     "redux-saga": "^1.2.2",
     "save-dev": "^0.0.1-security",
-    "stream-http": "^3.2.0",
     "styled-components": "^5.3.6",
     "title-case": "^3.0.3",
+    "tls-browserify": "^0.2.2",
     "typed-redux-saga": "^1.5.0",
     "typed-rest-client": "^1.8.9",
     "utf8": "^3.0.0",
@@ -63,6 +66,9 @@
     "@types/redux-logger": "^3.0.9",
     "@types/utf8": "^3.0.1",
     "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "assert": "^2.0.0",
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.0",
     "eslint": "^8.28.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard-with-typescript": "^23.0.0",
@@ -71,9 +77,17 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-promise": "^6.1.1",
     "gh-pages": "^4.0.0",
+    "https-browserify": "^1.0.0",
+    "node-polyfill-webpack-plugin": "^2.0.1",
+    "os-browserify": "^0.3.0",
     "prettier": "^2.8.0",
+    "process": "^0.11.10",
+    "react-app-rewired": "^2.2.1",
     "sass": "^1.56.1",
-    "typescript": "^4.9.3"
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "typescript": "^4.9.3",
+    "url": "^0.11.0"
   },
   "eslintConfig": {
     "extends": [
@@ -125,13 +139,13 @@
     "url": "https://github.com/juniperab/prismatic.git"
   },
   "scripts": {
-    "build": "react-scripts build",
+    "build": "react-app-rewired build",
     "deploy": "gh-pages -d build",
     "format": "npx prettier --write .",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "npm run lint -- --fix",
-    "start": "react-scripts start",
-    "test": "react-scripts test"
+    "start": "react-app-rewired start",
+    "test": "react-app-rewired test"
   },
   "version": "0.3.2"
 }
