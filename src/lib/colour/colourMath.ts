@@ -1,5 +1,5 @@
 import { isHex, isHSB, isHSL, isRGB, toHSB, toHSL, toRGB } from './colourConversions'
-import { AnyColour, HSBColour, RGBColour } from "./colours";
+import { AnyColour, HSBColour } from "./colours";
 
 /**
  * Rotate a hue around the colour wheel by some number of degrees. The result will be in [0, 360).
