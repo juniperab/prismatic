@@ -10,8 +10,8 @@ export interface ConfigState {
   startingColour: AnyColour
 }
 
-export const guessGridShapePortrait: [number, number] = [3, 3]
-export const guessGridShapeLandscape: [number, number] = [9, 1]
+export const guessGridShapePortrait: [number, number] = [1, 1]
+export const guessGridShapeLandscape: [number, number] = [1, 1]
 
 const initialState: ConfigState = {
   guessGridShape: guessGridShapePortrait,

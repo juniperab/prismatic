@@ -78,7 +78,7 @@ export function PlayingView(): ReactElement | null {
           </div>
           <div>
             <p>
-              <SpanClickable onClick={() => dispatch(restartWithNewPuzzle)}>New Game?</SpanClickable>
+              <SpanClickable onClick={() => dispatch(restartWithNewPuzzle())}>New Game?</SpanClickable>
             </p>
           </div>
         </PVSLOverlaySection>

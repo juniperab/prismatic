@@ -22,6 +22,7 @@ function* initializeWithStartingPuzzle() {
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function* reinitializeWithNewRandomPuzzle() {
+  console.log('new game')
   const newPuzzleId: PuzzleId = yield getNewRandomPuzzleFromServer()
   yield* put(reinitializePuzzle(newPuzzleId))
 }
@@ -30,5 +31,5 @@ function* reinitializeWithNewRandomPuzzle() {
 export function* appSaga() {
   yield* initializeWithStartingColour()
   yield* initializeWithStartingPuzzle()
-  yield* takeEvery(restartWithNewPuzzle.type, reinitializeWithNewRandomPuzzle)
+  yield* takeEvery(restartWithNewPuzzle, reinitializeWithNewRandomPuzzle)
 }

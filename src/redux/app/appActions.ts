@@ -1,3 +1,3 @@
-import { Action, createAction } from '@reduxjs/toolkit'
+import { createAction } from "@reduxjs/toolkit";
 
-export const restartWithNewPuzzle: Action = createAction('app/restartWithNewPuzzle')
+export const restartWithNewPuzzle = createAction('app/restartWithNewPuzzle')

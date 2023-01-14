@@ -58,6 +58,7 @@ export const _PlayingViewSectionLowerOverlay = styled.div.attrs({
   transform: translate(-50%, -50%);
   z-index: 1;
   font-size: large;
+  line-height: 2em;
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-around;
