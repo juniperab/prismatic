@@ -1,19 +1,34 @@
-import { toNamed } from '../../lib/colour/colourConversions'
-import { generateRandomColour } from '../../lib/colour/colourMath'
-import { put } from 'typed-redux-saga'
+import { uniformRandomColourHSB } from "../../lib/colour/colourMath";
+import { put, takeEvery } from "typed-redux-saga";
 import { setStartingColour } from '../config/configSlice'
-import { resetPuzzleState, setCurrentColour } from '../puzzle/puzzleSlice'
-import { getNewPuzzle } from '../../lib/puzzle/puzzleServer'
+import { reinitializePuzzle, setCurrentColour } from "../puzzle/puzzleSlice";
+import { getNewRandomPuzzleFromServer } from "../puzzle/puzzleClient";
+import { PuzzleId } from "../../lib/puzzle/puzzle";
+import { restartWithNewPuzzle } from "./appActions";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function* initializePuzzle() {
-  const startingColour = toNamed(generateRandomColour())
+function* initializeWithStartingColour() {
+  const startingColour = uniformRandomColourHSB()
   yield* put(setStartingColour(startingColour))
   yield* put(setCurrentColour(startingColour))
-  yield* put(resetPuzzleState(getNewPuzzle()))
+}
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+function* initializeWithStartingPuzzle() {
+  // TODO: load the puzzle-of-the-day instead of a random puzzle
+  const newPuzzleId: PuzzleId = yield getNewRandomPuzzleFromServer()
+  yield* put(reinitializePuzzle(newPuzzleId))
+}
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+function* reinitializeWithNewRandomPuzzle() {
+  const newPuzzleId: PuzzleId = yield getNewRandomPuzzleFromServer()
+  yield* put(reinitializePuzzle(newPuzzleId))
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function* appSaga() {
-  yield* initializePuzzle()
+  yield* initializeWithStartingColour()
+  yield* initializeWithStartingPuzzle()
+  yield* takeEvery(restartWithNewPuzzle.type, reinitializeWithNewRandomPuzzle)
 }

@@ -40,7 +40,7 @@ export function isHex(colour: any): colour is HexColour {
 
 export function isNamed(colour: any): colour is NamedColour {
   const named = colour as NamedColour
-  return !isHex(colour) && named.length > 0 && named === named.toLowerCase()
+  return named.name !== undefined && named.hex !== undefined && named.name.length > 0 && isHex(named.hex)
 }
 
 function toTriple(colour: AnyColour): ColourTriple {
@@ -97,10 +97,6 @@ function asHex(colour: string): HexColour {
   return `#${colour.toUpperCase()}`
 }
 
-function asNamed(colour: string): NamedColour {
-  return colour.toLowerCase()
-}
-
 function getHexAlpha(colour: HexColour): number | undefined {
   if (colour.length !== 9) {
     return undefined
@@ -108,8 +104,8 @@ function getHexAlpha(colour: HexColour): number | undefined {
   return (parseInt(colour.slice(-2), 16) / 255) * 100
 }
 
-function getNamedAlpha(_: NamedColour): number | undefined {
-  return undefined
+function getNamedAlpha(colour: NamedColour): number | undefined {
+  return getHexAlpha(colour.hex)
 }
 
 function rgbWithAlpha(colour: RGBColour, alpha: number | undefined): RGBColour {
@@ -141,15 +137,17 @@ function cmykWithAlpha(colour: CMYKColour, alpha: number | undefined): CMYKColou
 }
 
 function hexWithAlpha(colour: HexColour, alpha: number | undefined): HexColour {
-  const hexWithoutAlpha = colour.slice(0, 7)
+  const hexWithoutAlpha = colour.slice(1, 7)
   if (alpha === undefined) return asHex(hexWithoutAlpha)
   const alphaString = Math.round((alpha * 255) / 100).toString(16)
   return asHex(`${hexWithoutAlpha}${alphaString}`)
 }
 
-function namedWithAlpha(colour: NamedColour, _: number | undefined): NamedColour {
-  // cannot specify alpha for a named colour
-  return colour
+function namedWithAlpha(colour: NamedColour, alpha: number | undefined): NamedColour {
+  return {
+    name: colour.name,
+    hex: hexWithAlpha(colour.hex, alpha),
+  }
 }
 
 export function withAlpha(colour: AnyColour, alpha?: number): AnyColour {
@@ -158,7 +156,7 @@ export function withAlpha(colour: AnyColour, alpha?: number): AnyColour {
     hex: (c) => hexWithAlpha(c, alpha),
     hsb: (c) => hsbWithAlpha(c, alpha),
     hsl: (c) => hslWithAlpha(c, alpha),
-    named: (c) => rgbWithAlpha(toRGB(c), alpha),
+    named: (c) => namedWithAlpha(c, alpha),
     rgb: (c) => rgbWithAlpha(c, alpha),
   })
 }
@@ -218,17 +216,6 @@ export function toHex(colour: AnyColour): HexColour {
   })
 }
 
-export function toNamed(colour: AnyColour): NamedColour {
-  return visitColourOrThrow<NamedColour>(colour, {
-    cmyk: (c) => namedWithAlpha(asNamed(convert.cmyk.keyword(toQuad(c))), c.a),
-    hex: (c) => namedWithAlpha(asNamed(convert.hex.keyword(c.slice(1))), getHexAlpha(c)),
-    hsb: (c) => namedWithAlpha(asNamed(convert.hsv.keyword(toTriple(c))), c.a),
-    hsl: (c) => namedWithAlpha(asNamed(convert.hsl.keyword(toTriple(c))), c.a),
-    named: (c) => c,
-    rgb: (c) => namedWithAlpha(asNamed(convert.rgb.keyword(toTriple(c))), c.a),
-  })
-}
-
 export function toCssColour(colour: AnyColour): string {
   return visitColourOrThrow<string>(colour, {
     cmyk: (c) => toCssColour(toRGB(c)),
@@ -238,7 +225,7 @@ export function toCssColour(colour: AnyColour): string {
       c.a !== undefined
         ? `hsla(${c.h.toFixed(1)}, ${c.s.toFixed(1)}%, ${c.l.toFixed(1)}%, ${c.a.toFixed(1)}%)`
         : `hsl(${c.h.toFixed(1)}, ${c.s.toFixed(1)}%, ${c.l.toFixed(1)}%)`,
-    named: (c) => c,
+    named: (c) => c.hex,
     rgb: (c) =>
       c.a !== undefined
         ? `rgba(${c.r.toFixed(1)}, ${c.g.toFixed(1)}, ${c.b.toFixed(1)}, ${c.a.toFixed(1)}%)`

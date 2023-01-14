@@ -5,7 +5,7 @@ import { AnyColour } from '../../lib/colour/colours'
 describe('puzzle reducer', () => {
   it('should handle initial state', () => {
     const realInitialPuzzle: Puzzle = {
-      answer: 'white',
+      answer: { name: 'white', hex: '#FFFFFF' },
       precision: 3,
     }
     const realStartingColour: AnyColour = { h: 120, s: 50, b: 50 }
