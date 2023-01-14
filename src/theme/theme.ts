@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { HexColour, KeywordColour } from '../lib/colour/colours'
 
 export type SVG = React.FunctionComponent<React.SVGProps<SVGSVGElement>>
 
@@ -15,16 +16,16 @@ export enum ThemeName {
 }
 
 export interface ThemeColours {
-  appBackground: string
-  appText: string
-  appTextAlt: string[]
-  appBorders: string
-  appBordersAlt: string[]
-  modalBackground: string
-  modalBorders: string
+  appBackground: KeywordColour | HexColour
+  appText: KeywordColour | HexColour
+  appTextAlt: Array<KeywordColour | HexColour>
+  appBorders: KeywordColour | HexColour
+  appBordersAlt: Array<KeywordColour | HexColour>
+  modalBackground: KeywordColour | HexColour
+  modalBorders: KeywordColour | HexColour
   modalBoxShadow: string
-  modalText: string
-  modalSectionBorder: string
+  modalText: KeywordColour | HexColour
+  modalSectionBorder: KeywordColour | HexColour
 }
 
 export interface SVGIcon {

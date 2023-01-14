@@ -16,7 +16,7 @@ import { ColourChooserHelpOverlay, HelpOverlayState, useHelpOverlayState } from 
 import { defaultTo } from 'lodash'
 import { HammerOnChangeCallback, HammerOnResizeCallback, HammerOnTapCallback } from '../hammer/hammerAreaTypes'
 import { useTheme } from 'styled-components'
-import { Theme } from '../theme/theme'
+import { Theme } from '../../../theme/theme'
 import { AnyColour, HSBColour } from '../../../lib/colour/colours'
 
 export type NewColourCallback = (colour: HSBColour) => void

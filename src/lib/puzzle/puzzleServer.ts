@@ -1,5 +1,4 @@
-import { toNamed } from '../colour/colourConversions'
-import { generateRandomColour } from '../colour/colourMath'
+import { uniformRandomColourHSB } from '../colour/colourMath'
 import { getPuzzleId, loadPuzzleById, Puzzle, PuzzleId } from './puzzle'
 import { Hint, visitHintItems } from './hint'
 import { puzzleConfig } from './puzzleConfig'
@@ -7,9 +6,12 @@ import { generateHintRGB } from './hint-generators/hintGeneratorRGB'
 import { generateHintHSB } from './hint-generators/hintGeneratorHSB'
 import { generateHintCMYK } from './hint-generators/hintGeneratorCMYK'
 import { AnyColour, NamedColour, visitColourOrThrow } from '../colour/colours'
+import { lookupColourName } from '../color-pizza/colorPizzaClient'
 
-export function getNewPuzzle(): PuzzleId {
-  const answer = toNamed(generateRandomColour())
+export async function getNewPuzzle(): Promise<PuzzleId> {
+  const seedColour = uniformRandomColourHSB()
+  const answer = await lookupColourName(seedColour)
+  if (answer === undefined) throw new Error('failed to generate a new puzzle')
   const newPuzzleSpec: Puzzle = { answer, precision: 3 }
   return getPuzzleId(newPuzzleSpec)
 }

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../store'
-import { ThemeName } from '../../react/components/theme/theme'
+import { ThemeName } from '../../theme/theme'
 
 export interface AppState {
   activeModal?: ModalType

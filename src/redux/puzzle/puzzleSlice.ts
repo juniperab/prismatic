@@ -19,7 +19,7 @@ const initialState: PuzzleState = {
   gaveUp: false,
   guesses: [],
   hints: [],
-  puzzleId: getPuzzleId({ answer: 'white', precision: 3 }),
+  puzzleId: getPuzzleId({ answer: { name: 'white', hex: '#FFFFFF' }, precision: 3 }),
 }
 
 export type MakeGuessAction = PayloadAction<AnyColour>
@@ -42,7 +42,7 @@ export const puzzleSlice = createSlice({
     receiveHint: (state, action: ReceiveHintAction) => {
       state.hints.push(action.payload)
     },
-    resetPuzzleState: (state, action: PayloadAction<PuzzleId>) => {
+    reinitializePuzzle: (state, action: PayloadAction<PuzzleId>) => {
       state.answer = undefined
       state.gaveUp = false
       state.hints = []
@@ -54,6 +54,7 @@ export const puzzleSlice = createSlice({
   },
 })
 
-export const { giveUp, makeGuess, receiveAnswer, receiveHint, resetPuzzleState, setCurrentColour } = puzzleSlice.actions
+export const { giveUp, makeGuess, receiveAnswer, receiveHint, reinitializePuzzle, setCurrentColour } =
+  puzzleSlice.actions
 export const selectPuzzleState = (state: RootState): PuzzleState => state.puzzle
 export default puzzleSlice.reducer

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Theme } from '../../react/components/theme/theme'
+import { Theme } from '../../theme/theme'
 
 export const playingViewLayout = {
   upper: {

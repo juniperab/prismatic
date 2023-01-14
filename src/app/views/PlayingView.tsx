@@ -10,7 +10,7 @@ import {
   _PlayingViewSectionLowerOverlaySection as PVSLOverlaySection,
 } from './playingViewLayout'
 import { HintGrid } from '../../react/components/hint-display/HintGrid'
-import { makeGuess, resetPuzzleState, selectPuzzleState, setCurrentColour } from '../../redux/puzzle/puzzleSlice'
+import { makeGuess, selectPuzzleState, setCurrentColour } from '../../redux/puzzle/puzzleSlice'
 import { ColourChooser, NewColourCallback } from '../../react/components/colour-chooser/ColourChooser'
 import { selectConfigState } from '../../redux/config/configSlice'
 import { useResizeDetector } from 'react-resize-detector'
@@ -18,11 +18,11 @@ import { hintGridLayout } from '../../react/components/hint-display/hintGridLayo
 import { AnyColour } from '../../lib/colour/colours'
 import { mostContrasting, toCssColour } from '../../lib/colour/colourConversions'
 import { useTheme } from 'styled-components'
-import { Theme } from '../../react/components/theme/theme'
-import { Icon } from '../../react/components/theme/elements/Icon'
-import { H1 } from '../../react/components/theme/elements/H1'
-import { SpanClickable } from '../../react/components/theme/elements/Span'
-import { getNewPuzzle } from '../../lib/puzzle/puzzleServer'
+import { Theme } from '../../theme/theme'
+import { Icon } from '../../theme/elements/Icon'
+import { H1 } from '../../theme/elements/H1'
+import { SpanClickable } from '../../theme/elements/Span'
+import { restartWithNewPuzzle } from '../../redux/app/appActions'
 
 export function PlayingView(): ReactElement | null {
   const { activeView } = useAppSelector(selectAppState)
@@ -74,11 +74,11 @@ export function PlayingView(): ReactElement | null {
         </PVSLOverlaySection>
         <PVSLOverlaySection>
           <div>
-            <H1>{answer}</H1>
+            <H1>{answer.name}</H1>
           </div>
           <div>
             <p>
-              <SpanClickable onClick={() => dispatch(resetPuzzleState(getNewPuzzle()))}>New Game?</SpanClickable>
+              <SpanClickable onClick={() => dispatch(restartWithNewPuzzle)}>New Game?</SpanClickable>
             </p>
           </div>
         </PVSLOverlaySection>
