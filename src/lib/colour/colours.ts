@@ -1,4 +1,4 @@
-import { isCMYK, isHex, isHSB, isHSL, isNamed, isRGB } from './colourConversions'
+import { isCMYK, isHex, isHSB, isHSL, isKeyword, isNamed, isRGB } from "./colourConversions";
 
 export interface CMYKColour {
   a?: number | undefined
@@ -24,7 +24,7 @@ export interface HSLColour {
   l: number
 }
 
-// export type NamedColour = string
+export type KeywordColour = string
 
 export interface NamedColour {
   name: string
@@ -38,13 +38,14 @@ export interface RGBColour {
   b: number
 }
 
-export type AnyColour = CMYKColour | HexColour | HSBColour | HSLColour | NamedColour | RGBColour
+export type AnyColour = CMYKColour | HexColour | HSBColour | HSLColour | KeywordColour | NamedColour | RGBColour
 
 export interface ColourVisitor<T> {
   cmyk?: (c: CMYKColour) => T
   hex?: (c: HexColour) => T
   hsb?: (c: HSBColour) => T
   hsl?: (c: HSLColour) => T
+  keyword?: (c: KeywordColour) => T
   named?: (c: NamedColour) => T
   rgb?: (c: RGBColour) => T
 }
@@ -58,6 +59,8 @@ export function visitColour<T>(colour: AnyColour, visitor: ColourVisitor<T>): T 
     return visitor.hsb?.(colour)
   } else if (isHSL(colour)) {
     return visitor.hsl?.(colour)
+  } else if (isKeyword(colour)) {
+    return visitor.keyword?.(colour)
   } else if (isNamed(colour)) {
     return visitor.named?.(colour)
   } else if (isRGB(colour)) {
