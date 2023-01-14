@@ -7,9 +7,9 @@ import {
   HSLColour,
   KeywordColour,
   NamedColour,
-  RGBColour,
-  visitColourOrThrow,
-} from './colours'
+  RGBColour, visitColour,
+  visitColourOrThrow
+} from "./colours";
 import { floatEquals } from '../math/math'
 
 type ColourTriple = [number, number, number]
@@ -134,7 +134,7 @@ function getNamedAlpha(colour: NamedColour): number | undefined {
 }
 
 export function getAlpha(colour: AnyColour): number | undefined {
-  return visitColourOrThrow<number | undefined>(colour, {
+  return visitColour<number | undefined>(colour, {
     cmyk: (c) => c.a,
     hex: (c) => getHexAlpha(c),
     hsb: (c) => c.a,
