@@ -54,6 +54,7 @@ export const puzzleSlice = createSlice({
   },
 })
 
-export const { giveUp, makeGuess, receiveAnswer, receiveHint, reinitializePuzzle, setCurrentColour } = puzzleSlice.actions
+export const { giveUp, makeGuess, receiveAnswer, receiveHint, reinitializePuzzle, setCurrentColour } =
+  puzzleSlice.actions
 export const selectPuzzleState = (state: RootState): PuzzleState => state.puzzle
 export default puzzleSlice.reducer

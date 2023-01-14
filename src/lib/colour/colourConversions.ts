@@ -4,12 +4,13 @@ import {
   CMYKColour,
   HexColour,
   HSBColour,
-  HSLColour, KeywordColour,
+  HSLColour,
+  KeywordColour,
   NamedColour,
   RGBColour,
-  visitColourOrThrow
-} from "./colours";
-import { floatEquals } from "../math/math";
+  visitColourOrThrow,
+} from './colours'
+import { floatEquals } from '../math/math'
 
 type ColourTriple = [number, number, number]
 type ColourQuad = [number, number, number, number]
@@ -132,6 +133,18 @@ function getNamedAlpha(colour: NamedColour): number | undefined {
   return getHexAlpha(colour.hex)
 }
 
+export function getAlpha(colour: AnyColour): number | undefined {
+  return visitColourOrThrow<number | undefined>(colour, {
+    cmyk: (c) => c.a,
+    hex: (c) => getHexAlpha(c),
+    hsb: (c) => c.a,
+    hsl: (c) => c.a,
+    keyword: (_) => undefined,
+    named: (c) => getNamedAlpha(c),
+    rgb: (c) => c.a,
+  })
+}
+
 function cmykWithAlpha(colour: CMYKColour, alpha: number | undefined): CMYKColour {
   return {
     ...colour,
@@ -239,6 +252,18 @@ export function toHSL(colour: AnyColour): HSLColour {
   })
 }
 
+export function toKeyword(colour: AnyColour): KeywordColour {
+  return visitColourOrThrow<KeywordColour>(colour, {
+    cmyk: (c) => keywordWithAlpha(asKeyword(convert.cmyk.keyword(toQuad(c))), c.a),
+    hex: (c) => keywordWithAlpha(asKeyword(convert.hex.keyword(c.slice(1))), getHexAlpha(c)),
+    hsb: (c) => keywordWithAlpha(asKeyword(convert.hsv.keyword(toTriple(c))), c.a),
+    hsl: (c) => keywordWithAlpha(asKeyword(convert.hsl.keyword(toTriple(c))), c.a),
+    keyword: (c) => c,
+    named: (c) => keywordWithAlpha(asKeyword(convert.hex.keyword(c.hex.slice(1))), getNamedAlpha(c)),
+    rgb: (c) => keywordWithAlpha(asKeyword(convert.rgb.keyword(toTriple(c))), c.a),
+  })
+}
+
 export function toRGB(colour: AnyColour): RGBColour {
   return visitColourOrThrow<RGBColour>(colour, {
     cmyk: (c) => rgbWithAlpha(asRGB(convert.cmyk.rgb(toQuad(c))), c.a),
@@ -252,6 +277,13 @@ export function toRGB(colour: AnyColour): RGBColour {
 }
 
 export function toCssColour(colour: AnyColour): string {
+  // use a keyword if it's an exact match
+  if (floatEquals(getAlpha(colour) ?? 1, 0)) return 'transparent'
+  const hex: HexColour = toHex(colour)
+  const keyword: KeywordColour = toKeyword(colour)
+  if (toHex(keyword) === hex) return keyword
+
+  // use the simplest css formatting possible
   return visitColourOrThrow<string>(colour, {
     cmyk: (c) => toCssColour(toRGB(c)),
     hex: (c) => c,
@@ -262,10 +294,7 @@ export function toCssColour(colour: AnyColour): string {
         : `hsl(${c.h.toFixed(1)}, ${c.s.toFixed(1)}%, ${c.l.toFixed(1)}%)`,
     keyword: (c) => c,
     named: (c) => c.hex,
-    rgb: (c) =>
-      c.a !== undefined
-        ? `rgba(${c.r.toFixed(1)}, ${c.g.toFixed(1)}, ${c.b.toFixed(1)}, ${c.a.toFixed(1)}%)`
-        : `rgb(${c.r.toFixed(1)}, ${c.g.toFixed(1)}, ${c.b.toFixed(1)})`,
+    rgb: (c) => toHex(c),
   })
 }
 

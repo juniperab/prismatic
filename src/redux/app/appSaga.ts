@@ -1,10 +1,10 @@
-import { uniformRandomColourHSB } from "../../lib/colour/colourMath";
-import { put, takeEvery } from "typed-redux-saga";
+import { uniformRandomColourHSB } from '../../lib/colour/colourMath'
+import { put, takeEvery } from 'typed-redux-saga'
 import { setStartingColour } from '../config/configSlice'
-import { reinitializePuzzle, setCurrentColour } from "../puzzle/puzzleSlice";
-import { getNewRandomPuzzleFromServer } from "../puzzle/puzzleClient";
-import { PuzzleId } from "../../lib/puzzle/puzzle";
-import { restartWithNewPuzzle } from "./appActions";
+import { reinitializePuzzle, setCurrentColour } from '../puzzle/puzzleSlice'
+import { getNewRandomPuzzleFromServer } from '../puzzle/puzzleClient'
+import { PuzzleId } from '../../lib/puzzle/puzzle'
+import { restartWithNewPuzzle } from './appActions'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function* initializeWithStartingColour() {

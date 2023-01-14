@@ -1,9 +1,8 @@
-
 export interface FetchError {
   error: {
-    status: number,
-    message: string,
-  },
+    status: number
+    message: string
+  }
 }
 
 export function isFetchError(err: any): err is FetchError {
@@ -15,4 +14,3 @@ export async function typedFetch<T>(uri: string): Promise<T | FetchError> {
   const response: Response = await window.fetch(uri)
   return await response.json()
 }
-

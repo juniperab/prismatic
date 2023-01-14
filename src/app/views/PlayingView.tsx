@@ -22,7 +22,7 @@ import { Theme } from '../../theme/theme'
 import { Icon } from '../../theme/elements/Icon'
 import { H1 } from '../../theme/elements/H1'
 import { SpanClickable } from '../../theme/elements/Span'
-import { restartWithNewPuzzle } from "../../redux/app/appActions";
+import { restartWithNewPuzzle } from '../../redux/app/appActions'
 
 export function PlayingView(): ReactElement | null {
   const { activeView } = useAppSelector(selectAppState)

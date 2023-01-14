@@ -1,5 +1,5 @@
 import { isHex, isHSB, isHSL, isRGB, toHSB, toHSL, toRGB } from './colourConversions'
-import { AnyColour, HSBColour } from "./colours";
+import { AnyColour, HSBColour } from './colours'
 
 /**
  * Rotate a hue around the colour wheel by some number of degrees. The result will be in [0, 360).
@@ -64,7 +64,7 @@ export function uniformRandomColourHSB(): HSBColour {
   function fixedPointRandomInclusive(lower: number, upper: number, fractionDigits: number): number {
     const range = upper - lower
     let num = Math.random()
-    num = (num * range + lower)
+    num = num * range + lower
     num *= Math.pow(10, fractionDigits + 1)
     num = Math.round(num) / Math.pow(10, fractionDigits + 1)
     return num

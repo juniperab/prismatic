@@ -1,4 +1,4 @@
-import { isCMYK, isHex, isHSB, isHSL, isKeyword, isNamed, isRGB } from "./colourConversions";
+import { isCMYK, isHex, isHSB, isHSL, isKeyword, isNamed, isRGB } from './colourConversions'
 
 export interface CMYKColour {
   a?: number | undefined
