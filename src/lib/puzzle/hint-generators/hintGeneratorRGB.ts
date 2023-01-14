@@ -6,7 +6,7 @@ import { Puzzle } from '../puzzle'
 import { toRGB } from '../../colour/colourConversions'
 
 export function generateHintRGB(guess: RGBColour, puzzle: Puzzle, config: HintGeneratorConfigRGB): RGBHint {
-  const { precision } = puzzle
+  const { precision } = config
   const answer = toRGB(puzzle.answer)
   return {
     type: HintType.RGB,

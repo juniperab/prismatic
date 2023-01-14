@@ -13,7 +13,7 @@ const innerVisibleLine = 40
 const outerVisibleLine = 90
 
 export function generateHintHSB(guess: HSBColour, puzzle: Puzzle, config: HintGeneratorConfigHSB): HSBHint {
-  const { precision } = puzzle
+  const { precision } = config
   const answer = toHSB(puzzle.answer)
 
   let huePrecision = precision

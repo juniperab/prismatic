@@ -1,8 +1,11 @@
 import { HintGeneratorConfig } from './hint-generators/hintGeneratorConfig'
 import { PuzzleConfig } from './puzzle'
 
+const precision = 3
+
 const hintGeneratorConfig: HintGeneratorConfig = {
   cmyk: {
+    precision,
     cyanCutoff: 128,
     cyanRange: 64,
     magentaCutoff: 128,
@@ -13,6 +16,7 @@ const hintGeneratorConfig: HintGeneratorConfig = {
     blackRange: 64,
   },
   hsb: {
+    precision,
     hueCutoff: 90,
     hueRange: 60,
     saturationCutoff: 33,
@@ -26,6 +30,7 @@ const hintGeneratorConfig: HintGeneratorConfig = {
     brightnessRange: 40,
   },
   rgb: {
+    precision,
     redCutoff: 128,
     redRange: 64,
     greenCutoff: 128,

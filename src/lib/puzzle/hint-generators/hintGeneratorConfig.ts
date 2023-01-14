@@ -1,4 +1,9 @@
-export interface HintGeneratorConfigCMYK {
+
+export interface HintGeneratorConfigBase {
+  precision: number
+}
+
+export interface HintGeneratorConfigCMYK extends HintGeneratorConfigBase {
   cyanCutoff: number
   cyanRange: number
   magentaCutoff: number
@@ -9,7 +14,7 @@ export interface HintGeneratorConfigCMYK {
   blackRange: number
 }
 
-export interface HintGeneratorConfigHSB {
+export interface HintGeneratorConfigHSB extends HintGeneratorConfigBase {
   hueCutoff: number
   hueRange: number
 
@@ -24,7 +29,7 @@ export interface HintGeneratorConfigHSB {
   brightnessRange: number
 }
 
-export interface HintGeneratorConfigRGB {
+export interface HintGeneratorConfigRGB extends HintGeneratorConfigBase {
   redCutoff: number
   redRange: number
   greenCutoff: number

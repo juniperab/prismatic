@@ -1,5 +1,5 @@
 import { uniformRandomColourHSB } from '../colour/colourMath'
-import { getPuzzleId, loadPuzzleById, Puzzle, PuzzleId } from './puzzle'
+import { getPuzzleId, loadPuzzleById, PuzzleId } from './puzzle'
 import { Hint, visitHintItems } from './hint'
 import { puzzleConfig } from './puzzleConfig'
 import { generateHintRGB } from './hint-generators/hintGeneratorRGB'
@@ -12,8 +12,7 @@ export async function getNewPuzzle(): Promise<PuzzleId> {
   const seedColour = uniformRandomColourHSB()
   const answer = await lookupColourName(seedColour)
   if (answer === undefined) throw new Error('failed to generate a new puzzle')
-  const newPuzzleSpec: Puzzle = { answer, precision: 3 }
-  return getPuzzleId(newPuzzleSpec)
+  return getPuzzleId({ answer, version: 0 })
 }
 
 export function evaluateGuess(guess: AnyColour, puzzleId: PuzzleId): Hint | NamedColour {

@@ -19,7 +19,7 @@ const initialState: PuzzleState = {
   gaveUp: false,
   guesses: [],
   hints: [],
-  puzzleId: getPuzzleId({ answer: { name: 'white', hex: '#FFFFFF' }, precision: 3 }),
+  puzzleId: getPuzzleId({ answer: { name: 'white', hex: '#FFFFFF' }, version: 0 }),
 }
 
 export type MakeGuessAction = PayloadAction<AnyColour>

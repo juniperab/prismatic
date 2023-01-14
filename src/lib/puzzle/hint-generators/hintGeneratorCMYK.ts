@@ -6,7 +6,7 @@ import { Puzzle } from '../puzzle'
 import { toCMYK } from '../../colour/colourConversions'
 
 export function generateHintCMYK(guess: CMYKColour, puzzle: Puzzle, config: HintGeneratorConfigCMYK): CMYKHint {
-  const { precision } = puzzle
+  const { precision } = config
   const answer = toCMYK(puzzle.answer)
   return {
     type: HintType.CMYK,
