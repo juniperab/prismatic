@@ -18,10 +18,10 @@ import { hintGridLayout } from '../../react/components/hint-display/hintGridLayo
 import { AnyColour } from '../../lib/colour/colours'
 import { mostContrasting, toCssColour } from '../../lib/colour/colourConversions'
 import { useTheme } from 'styled-components'
-import { Theme } from '../../react/components/theme/theme'
-import { Icon } from '../../react/components/theme/elements/Icon'
-import { H1 } from '../../react/components/theme/elements/H1'
-import { SpanClickable } from '../../react/components/theme/elements/Span'
+import { Theme } from '../../theme/theme'
+import { Icon } from '../../theme/elements/Icon'
+import { H1 } from '../../theme/elements/H1'
+import { SpanClickable } from '../../theme/elements/Span'
 import { restartWithNewPuzzle } from "../../redux/app/appActions";
 
 export function PlayingView(): ReactElement | null {
