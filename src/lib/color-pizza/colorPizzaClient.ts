@@ -1,6 +1,7 @@
 import { AnyColour, NamedColour, RGBColour } from '../colour/colours'
 import { toHex, withAlpha } from '../colour/colourConversions'
 import { isFetchError, typedFetch } from '../fetch/typedFetch'
+import { memoize } from "lodash";
 
 const colorPizzaBaseUri = 'https://api.color.pizza/v1'
 
@@ -14,7 +15,7 @@ interface LookupNamedColourResponseItem {
   rgb: RGBColour
 }
 
-export async function lookupColourName(colour: AnyColour): Promise<NamedColour | undefined> {
+async function lookupColourNameInternal(colour: AnyColour): Promise<NamedColour | undefined> {
   const hex: string = toHex(withAlpha(colour, undefined)).slice(1, 7).toLowerCase()
   const uri: string = `${colorPizzaBaseUri}/?values=${encodeURIComponent(hex)}`
   const response = await typedFetch<LookupNamedColourResponse>(uri)
@@ -32,3 +33,5 @@ export async function lookupColourName(colour: AnyColour): Promise<NamedColour |
     hex: toHex(item.rgb),
   }
 }
+
+export const lookupColourName = memoize(lookupColourNameInternal)

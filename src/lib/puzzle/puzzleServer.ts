@@ -15,8 +15,8 @@ export async function getNewPuzzle(): Promise<PuzzleId> {
   return getPuzzleId({ answer, version: 0 })
 }
 
-export function evaluateGuess(guess: AnyColour, puzzleId: PuzzleId): Hint | NamedColour {
-  const puzzle = loadPuzzleById(puzzleId)
+export async function evaluateGuess(guess: AnyColour, puzzleId: PuzzleId): Promise<Hint | NamedColour> {
+  const puzzle = await loadPuzzleById(puzzleId)
   const hintConfig = puzzleConfig.hintGenerators
   const hint = visitColourOrThrow<Hint>(
     guess,
@@ -33,6 +33,7 @@ export function evaluateGuess(guess: AnyColour, puzzleId: PuzzleId): Hint | Name
   return hint
 }
 
-export function revealAnswer(puzzleId: PuzzleId): NamedColour {
-  return loadPuzzleById(puzzleId).answer
+export async function revealAnswer(puzzleId: PuzzleId): Promise<NamedColour> {
+  const puzzle = await loadPuzzleById(puzzleId)
+  return puzzle.answer
 }

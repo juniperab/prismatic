@@ -10,10 +10,10 @@ export async function getNewRandomPuzzleFromServer(): Promise<PuzzleId> {
 
 export async function submitGuessToServer(guess: AnyColour, puzzleId: PuzzleId): Promise<Hint | NamedColour> {
   // a mock call to a server-side puzzle controller
-  return evaluateGuess(guess, puzzleId)
+  return await evaluateGuess(guess, puzzleId)
 }
 
 export async function getPuzzleAnswerFromServer(puzzleId: PuzzleId): Promise<NamedColour> {
   // a mock call to a server-side puzzle controller
-  return revealAnswer(puzzleId)
+  return await revealAnswer(puzzleId)
 }

@@ -1,8 +1,9 @@
 import base64 from 'base-64'
 import utf8 from 'utf8'
 import { HintGeneratorConfig } from './hint-generators/hintGeneratorConfig'
-import { NamedColour } from '../colour/colours'
-import { isNamed } from "../colour/colourConversions";
+import { HexColour, NamedColour } from "../colour/colours";
+import { isNamed, toHex } from "../colour/colourConversions";
+import { lookupColourName } from "../color-pizza/colorPizzaClient";
 
 export type PuzzleId = string
 
@@ -29,17 +30,20 @@ export interface PuzzleConfig {
 
 export function getPuzzleId(puzzle: Puzzle): PuzzleId {
   if (isPuzzleV1(puzzle)) {
-    return base64.encode(utf8.encode('0' + JSON.stringify(puzzle.answer)))
+    // return '0' + base64.encode(utf8.encode(JSON.stringify(toHex(puzzle.answer))))
+    return '0' + base64.encode(utf8.encode(toHex(puzzle.answer).slice(1)))
   }
   throw new Error('invalid puzzle')
 }
 
-export function loadPuzzleById(id: PuzzleId): Puzzle {
+export async function loadPuzzleById(id: PuzzleId): Promise<Puzzle> {
   // theoretically, this function could load a stored puzzle definition from a database
   // for now, it will parse structured data stored in the PuzzleId string
+  console.log(id)
   if (id.startsWith('0')) {
-    const answer: NamedColour =  JSON.parse(utf8.decode(base64.decode(id.slice(1))))
-    return { answer, version: 0 }
+    const hex: HexColour =  '#' + utf8.decode(base64.decode(id.slice(1)))
+    const answer = await lookupColourName(hex)
+    if (answer !== undefined) return { answer, version: 0 }
   }
   throw new Error(`malformed puzzle id: ${id}`)
 }

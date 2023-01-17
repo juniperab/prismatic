@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../store'
 import { Hint } from '../../lib/puzzle/hint'
-import { getPuzzleId, PuzzleId } from '../../lib/puzzle/puzzle'
+import { PuzzleId } from '../../lib/puzzle/puzzle'
 import { AnyColour, NamedColour } from '../../lib/colour/colours'
 import { configSlice } from '../config/configSlice'
 
@@ -11,7 +11,7 @@ export interface PuzzleState {
   gaveUp: boolean
   guesses: AnyColour[]
   hints: Hint[]
-  puzzleId: PuzzleId
+  puzzleId: PuzzleId | undefined
 }
 
 const initialState: PuzzleState = {
@@ -19,7 +19,7 @@ const initialState: PuzzleState = {
   gaveUp: false,
   guesses: [],
   hints: [],
-  puzzleId: getPuzzleId({ answer: { name: 'white', hex: '#FFFFFF' }, version: 0 }),
+  puzzleId: undefined,
 }
 
 export type MakeGuessAction = PayloadAction<AnyColour>

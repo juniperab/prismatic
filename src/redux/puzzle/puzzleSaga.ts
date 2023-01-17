@@ -17,9 +17,11 @@ import { selectConfigState } from '../config/configSlice'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function* evaluateGuess(action: MakeGuessAction) {
+  const { puzzleId } = yield* appSelect(selectPuzzleState)
+  if (puzzleId === undefined) return
+
   let guess: AnyColour = action.payload
   const { hintType } = yield* appSelect(selectConfigState)
-  const { puzzleId } = yield* appSelect(selectPuzzleState)
   switch (hintType) {
     case HintType.CMYK:
       guess = toCMYK(guess)
@@ -48,6 +50,7 @@ function* evaluateGuess(action: MakeGuessAction) {
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function* getAnswer() {
   const { puzzleId } = yield* appSelect(selectPuzzleState)
+  if (puzzleId === undefined) return
   const response: NamedColour = yield* call(getPuzzleAnswerFromServer, puzzleId)
   yield* put(receiveAnswer(response))
   yield* put(setCurrentColour(response))
