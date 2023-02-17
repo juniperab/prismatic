@@ -1,12 +1,12 @@
 import { CSSProperties, ReactElement } from 'react'
 import { _HintCircle as HintCircleElement } from './hintCircleLayout'
 import { HintDisplayProps } from './HintCircle'
-import { HintItem, HintStyle, HSBHint } from '../../../lib/puzzle/hint'
+import { HintItem, HintStyle, HSBHint } from '../../lib/puzzle/hint'
 import { renderHintDisplayCentre } from './hintCircleCommon'
-import { mostContrasting, toCssColour } from '../../../lib/colour/colourConversions'
-import { AnyColour } from '../../../lib/colour/colours'
+import { mostContrasting, toCssColour } from '../../lib/colour/colourConversions'
+import { AnyColour } from '../../lib/colour/colours'
 import { useTheme } from 'styled-components'
-import { Theme } from '../../../theme/theme'
+import { Theme } from '../../theme/theme'
 
 export interface HintDisplayHSBProps extends HintDisplayProps {
   hint: HSBHint

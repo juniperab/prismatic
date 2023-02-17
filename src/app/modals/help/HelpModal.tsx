@@ -1,11 +1,11 @@
 import React, { ReactElement } from 'react'
 import { ModalType, selectAppState, setActiveModal } from '../../../redux/app/appSlice'
-import { Modal } from '../../../react/components/modal/Modal'
+import { Modal } from '../../modal/Modal'
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
 import {
   _ModalBodySection as MBSection,
   _ModalBodySectionTitle as MBSectionTitle,
-} from '../../../react/components/modal/modalLayout'
+} from '../../modal/modalLayout'
 import { BrowserView, MobileView } from 'react-device-detect'
 import { _HelpModalImage as HMImage } from './helpModalLayout'
 import hintBrighterLessSaturatedImageFile from './hint-brighter-less-saturated.png'

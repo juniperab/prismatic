@@ -8,7 +8,7 @@ import {
   _HeaderTitle as HTitle,
 } from './headerLayout'
 import { useTheme } from 'styled-components'
-import { Theme } from '../../../theme/theme'
+import { Theme } from '../../theme/theme'
 
 export interface HeaderProps {
   onClickLogo?: () => void

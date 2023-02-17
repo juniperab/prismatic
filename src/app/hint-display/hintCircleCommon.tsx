@@ -1,7 +1,7 @@
 import { CSSProperties, ReactElement } from 'react'
-import { toCssColour } from '../../../lib/colour/colourConversions'
+import { toCssColour } from '../../lib/colour/colourConversions'
 import { _HintCircleCentre as HCCentre } from './hintCircleLayout'
-import { AnyColour } from '../../../lib/colour/colours'
+import { AnyColour } from '../../lib/colour/colours'
 
 export function renderHintDisplayCentre(
   colour?: AnyColour,

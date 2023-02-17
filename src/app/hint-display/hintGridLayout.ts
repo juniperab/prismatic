@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { fadeInOut } from '../../../theme/styles/fadeInOut'
+import { fadeInOut } from '../../theme/styles/fadeInOut'
 
 export const hintGridLayout = {
   fadeIn: (show: any) => fadeInOut(show['data-show'], 1, 0),

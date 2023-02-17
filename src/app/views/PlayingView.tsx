@@ -9,12 +9,12 @@ import {
   _PlayingViewSectionLowerOverlay as PVSLOverlay,
   _PlayingViewSectionLowerOverlaySection as PVSLOverlaySection,
 } from './playingViewLayout'
-import { HintGrid } from '../../react/components/hint-display/HintGrid'
+import { HintGrid } from '../hint-display/HintGrid'
 import { makeGuess, selectPuzzleState, setCurrentColour } from '../../redux/puzzle/puzzleSlice'
 import { ColourChooser, NewColourCallback } from '../../react/components/colour-chooser/ColourChooser'
 import { selectConfigState } from '../../redux/config/configSlice'
 import { useResizeDetector } from 'react-resize-detector'
-import { hintGridLayout } from '../../react/components/hint-display/hintGridLayout'
+import { hintGridLayout } from '../hint-display/hintGridLayout'
 import { AnyColour } from '../../lib/colour/colours'
 import { mostContrasting, toCssColour } from '../../lib/colour/colourConversions'
 import { useTheme } from 'styled-components'

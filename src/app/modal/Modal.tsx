@@ -11,7 +11,7 @@ import {
   _ModalIcon as MIcon,
 } from './modalLayout'
 import { useTheme } from 'styled-components'
-import { Theme } from '../../../theme/theme'
+import { Theme } from '../../theme/theme'
 
 export interface ModalProps {
   children: ReactNode

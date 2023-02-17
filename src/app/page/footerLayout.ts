@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { windowLayout } from './windowLayout'
-import { Theme } from '../../../theme/theme'
+import { Theme } from '../../theme/theme'
 
 export const footerLayout = {
   border: {
