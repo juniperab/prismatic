@@ -9,12 +9,12 @@ import {
   _ColourChooserSelection as CCSelection,
   ColourChooserSelectionPending as CCSelectionPending,
 } from './colourChooserLayout'
-import { InfiniteHammerArea } from '../hammer/InfiniteHammerArea'
+import { InfiniteHammerArea } from '../hammer-area/InfiniteHammerArea'
 import { toCssColour, toHSB } from '../../../lib/colour/colourConversions'
 import { rotateHue } from '../../../lib/colour/colourMath'
 import { ColourChooserHelpOverlay, HelpOverlayState, useHelpOverlayState } from './ColourChooserHelpOverlay'
 import { defaultTo } from 'lodash'
-import { HammerOnChangeCallback, HammerOnResizeCallback, HammerOnTapCallback } from '../hammer/hammerAreaTypes'
+import { HammerOnChangeCallback, HammerOnResizeCallback, HammerOnTapCallback } from '../hammer-area/hammerAreaTypes'
 import { useTheme } from 'styled-components'
 import { Theme } from '../../../theme/theme'
 import { AnyColour, HSBColour } from '../../../lib/colour/colours'
