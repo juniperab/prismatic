@@ -156,7 +156,7 @@ export function toKeyword(colour: AnyColour): KeywordColour {
   })
 }
 
-export function toNamed(colour: AnyColour, name: string): NamedColour {
+export function setName(colour: AnyColour, name: string): NamedColour {
   if (isNamed(colour)) return colour
   return {
     name,
@@ -164,10 +164,10 @@ export function toNamed(colour: AnyColour, name: string): NamedColour {
   }
 }
 
-export async function toNamedLookup(colour: AnyColour, lookup: ColourNameLookup): Promise<NamedColour> {
-  const hex = toHex(colour)
-  const name = await lookup(hex)
-  return { name, hex }
+export async function toNamed(colour: AnyColour, lookup: ColourNameLookup): Promise<NamedColour> {
+  const named = await lookup(colour)
+  if (named === undefined) throw new Error(`Could not look up a name for the colour '${describeColour(colour)}'`)
+  return named
 }
 
 export function toRGB(colour: AnyColour): RGBColour {
@@ -186,6 +186,25 @@ export function toRGB(colour: AnyColour): RGBColour {
 export function toYIQ(colour: AnyColour): YIQColour {
   if (isYIQ(colour)) return colour
   return rgbToYIQ(toRGB(colour))
+}
+
+export function describeColour(colour: AnyColour): string {
+  const alpha = getAlpha(colour)
+  const alphaStr = alpha !== undefined ? `, [${alpha.toFixed(1)}%]` : ''
+  function nf(num: number): string {
+    return num.toFixed(1)
+  }
+  const descr = visitColourOrThrow<string>(colour, {
+    cmyk: (c) => `CMYK(${nf(c.c)}, ${nf(c.m)}, ${nf(c.y)}, ${nf(c.k)}${alphaStr})`,
+    hex: (c) => c,
+    hsb: (c) => `HSB(${nf(c.h)}, ${nf(c.s)}%, ${nf(c.b)}%${alphaStr})`,
+    hsl: (c) => `HSL(${nf(c.h)}, ${nf(c.s)}%, ${nf(c.l)}%${alphaStr})`,
+    keyword: (c) => c,
+    named: (c) => `${c.hex} (${c.name})`,
+    rgb: (c) => `RGB(${nf(c.r)}, ${nf(c.g)}, ${nf(c.b)}${alphaStr})`,
+    yiq: (c) => `YIQ(${nf(c.y)}%, ${nf(c.i)}%, ${nf(c.q)}%${alphaStr})`,
+  })
+  return descr
 }
 
 export function toCssColour(colour: AnyColour): string {

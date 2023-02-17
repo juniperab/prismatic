@@ -3,7 +3,7 @@ import { toHex } from '../colour/colourConversions'
 import { isFetchError, typedFetch } from '../fetch/typedFetch'
 import { memoize } from 'lodash'
 import { RGBColour } from '../colour/colourRGB'
-import { NamedColour } from '../colour/colourNamed'
+import { ColourNameLookup, NamedColour } from '../colour/colourNamed'
 
 const colorPizzaBaseUri = 'https://api.color.pizza/v1'
 
@@ -36,4 +36,4 @@ async function lookupColourNameInternal(colour: AnyColour): Promise<NamedColour 
   }
 }
 
-export const lookupColourName = memoize(lookupColourNameInternal)
+export const lookupColourPizzaName: ColourNameLookup = memoize(lookupColourNameInternal)

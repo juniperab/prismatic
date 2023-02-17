@@ -6,13 +6,14 @@ import { generateHintRGB } from './hint-generators/hintGeneratorRGB'
 import { generateHintHSB } from './hint-generators/hintGeneratorHSB'
 import { generateHintCMYK } from './hint-generators/hintGeneratorCMYK'
 import { AnyColour } from '../colour/colours'
-import { lookupColourName } from '../color-pizza/colorPizzaClient'
+import { lookupColourPizzaName } from '../color-pizza/colorPizzaClient'
 import { NamedColour } from '../colour/colourNamed'
 import { visitColourOrThrow } from '../colour/colourVisitor'
+import { toNamed } from '../colour/colourConversions'
 
 export async function getNewPuzzle(): Promise<PuzzleId> {
   const seedColour = uniformRandomColourHSB()
-  const answer = await lookupColourName(seedColour)
+  const answer = await toNamed(seedColour, lookupColourPizzaName)
   if (answer === undefined) throw new Error('failed to generate a new puzzle')
   return getPuzzleId({ answer, version: 0 })
 }

@@ -1,8 +1,8 @@
 import base64 from 'base-64'
 import utf8 from 'utf8'
 import { HintGeneratorConfig } from './hint-generators/hintGeneratorConfig'
-import { toHex } from '../colour/colourConversions'
-import { lookupColourName } from '../color-pizza/colorPizzaClient'
+import { toHex, toNamed } from '../colour/colourConversions'
+import { lookupColourPizzaName } from '../color-pizza/colorPizzaClient'
 import { isNamed, NamedColour } from '../colour/colourNamed'
 import { HexColour } from '../colour/colourHex'
 
@@ -43,7 +43,7 @@ export async function loadPuzzleById(id: PuzzleId): Promise<Puzzle> {
   console.log(id)
   if (id.startsWith('0')) {
     const hex: HexColour = '#' + utf8.decode(base64.decode(id.slice(1)))
-    const answer = await lookupColourName(hex)
+    const answer = await toNamed(hex, lookupColourPizzaName)
     if (answer !== undefined) return { answer, version: 0 }
   }
   throw new Error(`malformed puzzle id: ${id}`)

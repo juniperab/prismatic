@@ -1,11 +1,12 @@
 import { getHexAlpha, HexColour, hexWithAlpha, isHex } from './colourHex'
+import { AnyColour } from './colours'
 
 export interface NamedColour {
   name: string // a well-formatted colour name, title case, with spaces between words
   hex: HexColour
 }
 
-export type ColourNameLookup = (hex: HexColour) => Promise<string>
+export type ColourNameLookup = (colour: AnyColour) => Promise<NamedColour | undefined>
 
 export function isNamed(colour: any): colour is NamedColour {
   if (colour === undefined || typeof colour !== 'object') return false
