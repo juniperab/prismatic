@@ -3,9 +3,9 @@ import { HintItem, HintType, HSBHint } from '../hint'
 import { hueDiff, rotateHue } from '../../colour/colourMath'
 import { HintGeneratorConfigHSB } from './hintGeneratorConfig'
 import { simpleHintItem } from './hintGeneratorCommon'
-import { HSBColour } from '../../colour/colours'
 import { Puzzle } from '../puzzle'
 import { hintCircleLayout } from '../../../app/hint-display/hintCircleLayout'
+import { HSBColour } from '../../colour/colourHSB'
 
 const innerVisibleRadius = hintCircleLayout.centre.diameter * 0.8
 const outerVisibleRadius = 75

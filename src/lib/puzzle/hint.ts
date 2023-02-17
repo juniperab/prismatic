@@ -1,4 +1,7 @@
-import { AnyColour, CMYKColour, HSBColour, RGBColour } from '../colour/colours'
+import { AnyColour } from '../colour/colours'
+import { RGBColour } from '../colour/colourRGB'
+import { HSBColour } from '../colour/colourHSB'
+import { CMYKColour } from '../colour/colourCMYK'
 
 export type Hint = HSBHint | RGBHint | CMYKHint
 

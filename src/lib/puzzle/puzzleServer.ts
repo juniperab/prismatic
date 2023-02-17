@@ -5,8 +5,10 @@ import { puzzleConfig } from './puzzleConfig'
 import { generateHintRGB } from './hint-generators/hintGeneratorRGB'
 import { generateHintHSB } from './hint-generators/hintGeneratorHSB'
 import { generateHintCMYK } from './hint-generators/hintGeneratorCMYK'
-import { AnyColour, NamedColour, visitColourOrThrow } from '../colour/colours'
+import { AnyColour } from '../colour/colours'
 import { lookupColourName } from '../color-pizza/colorPizzaClient'
+import { NamedColour } from '../colour/colourNamed'
+import { visitColourOrThrow } from '../colour/colourVisitor'
 
 export async function getNewPuzzle(): Promise<PuzzleId> {
   const seedColour = uniformRandomColourHSB()

@@ -1,9 +1,9 @@
 import { HintType, CMYKHint } from '../hint'
 import { HintGeneratorConfigCMYK } from './hintGeneratorConfig'
 import { simpleHintItem } from './hintGeneratorCommon'
-import { CMYKColour } from '../../colour/colours'
 import { Puzzle } from '../puzzle'
 import { toCMYK } from '../../colour/colourConversions'
+import { CMYKColour } from '../../colour/colourCMYK'
 
 export function generateHintCMYK(guess: CMYKColour, puzzle: Puzzle, config: HintGeneratorConfigCMYK): CMYKHint {
   const { precision } = config

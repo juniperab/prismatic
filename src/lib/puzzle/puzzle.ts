@@ -1,9 +1,10 @@
 import base64 from 'base-64'
 import utf8 from 'utf8'
 import { HintGeneratorConfig } from './hint-generators/hintGeneratorConfig'
-import { HexColour, NamedColour } from "../colour/colours";
-import { isNamed, toHex } from "../colour/colourConversions";
-import { lookupColourName } from "../color-pizza/colorPizzaClient";
+import { toHex } from '../colour/colourConversions'
+import { lookupColourName } from '../color-pizza/colorPizzaClient'
+import { isNamed, NamedColour } from '../colour/colourNamed'
+import { HexColour } from '../colour/colourHex'
 
 export type PuzzleId = string
 
@@ -41,7 +42,7 @@ export async function loadPuzzleById(id: PuzzleId): Promise<Puzzle> {
   // for now, it will parse structured data stored in the PuzzleId string
   console.log(id)
   if (id.startsWith('0')) {
-    const hex: HexColour =  '#' + utf8.decode(base64.decode(id.slice(1)))
+    const hex: HexColour = '#' + utf8.decode(base64.decode(id.slice(1)))
     const answer = await lookupColourName(hex)
     if (answer !== undefined) return { answer, version: 0 }
   }

@@ -1,76 +1,44 @@
-import { isCMYK, isHex, isHSB, isHSL, isKeyword, isNamed, isRGB } from './colourConversions'
+import { CMYKColour } from './colourCMYK'
+import { getHexAlpha, HexColour, hexWithAlpha } from './colourHex'
+import { HSBColour } from './colourHSB'
+import { HSLColour } from './colourHSL'
+import { KeywordColour } from './colourKeyword'
+import { getNamedAlpha, NamedColour, namedWithAlpha } from './colourNamed'
+import { RGBColour } from './colourRGB'
+import { YIQColour } from './colourYIQ'
+import { visitColour, visitColourOrThrow } from './colourVisitor'
 
-export interface CMYKColour {
-  a?: number | undefined
-  c: number
-  m: number
-  y: number
-  k: number
+export type AnyColour =
+  | CMYKColour
+  | HexColour
+  | HSBColour
+  | HSLColour
+  | KeywordColour
+  | NamedColour
+  | RGBColour
+  | YIQColour
+
+export function getAlpha(colour: AnyColour): number | undefined {
+  return visitColour<number | undefined>(colour, {
+    cmyk: (c) => c.a,
+    hex: (c) => getHexAlpha(c),
+    hsb: (c) => c.a,
+    hsl: (c) => c.a,
+    named: (c) => getNamedAlpha(c),
+    rgb: (c) => c.a,
+    yiq: (c: YIQColour) => c.a,
+  })
 }
 
-export type HexColour = string
-
-export interface HSBColour {
-  a?: number | undefined
-  h: number
-  s: number
-  b: number
-}
-
-export interface HSLColour {
-  a?: number | undefined
-  h: number
-  s: number
-  l: number
-}
-
-export type KeywordColour = string
-
-export interface NamedColour {
-  name: string
-  hex: HexColour
-}
-
-export interface RGBColour {
-  a?: number | undefined
-  r: number
-  g: number
-  b: number
-}
-
-export type AnyColour = CMYKColour | HexColour | HSBColour | HSLColour | KeywordColour | NamedColour | RGBColour
-
-export interface ColourVisitor<T> {
-  cmyk?: (c: CMYKColour) => T
-  hex?: (c: HexColour) => T
-  hsb?: (c: HSBColour) => T
-  hsl?: (c: HSLColour) => T
-  keyword?: (c: KeywordColour) => T
-  named?: (c: NamedColour) => T
-  rgb?: (c: RGBColour) => T
-}
-
-export function visitColour<T>(colour: AnyColour, visitor: ColourVisitor<T>): T | undefined {
-  if (isCMYK(colour)) {
-    return visitor.cmyk?.(colour)
-  } else if (isHex(colour)) {
-    return visitor.hex?.(colour)
-  } else if (isHSB(colour)) {
-    return visitor.hsb?.(colour)
-  } else if (isHSL(colour)) {
-    return visitor.hsl?.(colour)
-  } else if (isKeyword(colour)) {
-    return visitor.keyword?.(colour)
-  } else if (isNamed(colour)) {
-    return visitor.named?.(colour)
-  } else if (isRGB(colour)) {
-    return visitor.rgb?.(colour)
-  }
-  throw new Error('invalid colour type')
-}
-
-export function visitColourOrThrow<T>(colour: AnyColour, visitor: ColourVisitor<T>, error?: Error): T {
-  const result = visitColour(colour, visitor)
-  if (result === undefined) throw error ?? new Error('ColourVisitor produced no result')
-  return result
+export function withAlpha<T extends AnyColour>(colour: AnyColour, alpha?: number): T {
+  return visitColourOrThrow<AnyColour>(colour, {
+    cmyk: (c) => ({ ...c, a: alpha }),
+    hex: (c) => hexWithAlpha(c, alpha),
+    hsb: (c) => ({ ...c, a: alpha }),
+    hsl: (c) => ({ ...c, a: alpha }),
+    keyword: (c) => c, // KeywordColour cannot have an alpha value
+    named: (c) => namedWithAlpha(c, alpha),
+    rgb: (c) => ({ ...c, a: alpha }),
+    yiq: (c) => ({ ...c, a: alpha }),
+  }) as T
 }

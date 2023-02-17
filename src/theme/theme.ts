@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { HexColour, KeywordColour } from '../lib/colour/colours'
+import { KeywordColour } from '../lib/colour/colourKeyword'
+import { HexColour } from '../lib/colour/colourHex'
 
 export type SVG = React.FunctionComponent<React.SVGProps<SVGSVGElement>>
 

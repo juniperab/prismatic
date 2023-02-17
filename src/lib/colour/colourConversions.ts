@@ -1,95 +1,58 @@
 import convert from 'color-convert'
-import {
-  AnyColour,
-  CMYKColour,
-  HexColour,
-  HSBColour,
-  HSLColour,
-  KeywordColour,
-  NamedColour,
-  RGBColour, visitColour,
-  visitColourOrThrow
-} from "./colours";
 import { floatEquals } from '../math/math'
+import { isYIQ, rgbToYIQ, YIQColour, yiqToRGB } from './colourYIQ'
+import { isRGB, RGBColour } from './colourRGB'
+import { HSLColour, isHSL } from './colourHSL'
+import { HSBColour, isHSB } from './colourHSB'
+import { CMYKColour, isCMYK } from './colourCMYK'
+import { HexColour, isHex } from './colourHex'
+import { isKeyword, KeywordColour } from './colourKeyword'
+import { ColourNameLookup, isNamed, NamedColour } from './colourNamed'
+import { AnyColour, getAlpha, withAlpha } from './colours'
+import { visitColourOrThrow } from './colourVisitor'
+import { RGB } from 'color-convert/conversions'
 
 type ColourTriple = [number, number, number]
 type ColourQuad = [number, number, number, number]
 
-export function isRGB(colour: any): colour is RGBColour {
-  if (colour === undefined || typeof colour !== 'object') return false
-  const rgb = colour as RGBColour
-  return rgb.r !== undefined && rgb.g !== undefined && rgb.b !== undefined
-}
-
-export function isHSL(colour: any): colour is HSLColour {
-  if (colour === undefined || typeof colour !== 'object') return false
-  const hsl = colour as HSLColour
-  return hsl.h !== undefined && hsl.s !== undefined && hsl.l !== undefined
-}
-
-export function isHSB(colour: any): colour is HSBColour {
-  if (colour === undefined || typeof colour !== 'object') return false
-  const hsb = colour as HSBColour
-  return hsb.h !== undefined && hsb.s !== undefined && hsb.b !== undefined
-}
-
-export function isCMYK(colour: any): colour is CMYKColour {
-  if (colour === undefined || typeof colour !== 'object') return false
-  const cmyk = colour as CMYKColour
-  return cmyk.c !== undefined && cmyk.m !== undefined && cmyk.y !== undefined && cmyk.k !== undefined
-}
-
-export function isHex(colour: any): colour is HexColour {
-  if (colour === undefined || typeof colour !== 'string') return false
-  return (colour.length === 7 || colour.length === 9) && colour.charAt(0) === '#' && colour.toUpperCase() === colour
-}
-
-export function isKeyword(colour: any): colour is KeywordColour {
-  if (isHex(colour)) return false
-  if (colour === undefined || typeof colour !== 'string') return false
-  return colour.length > 0
-}
-
-export function isNamed(colour: any): colour is NamedColour {
-  if (colour === undefined || typeof colour !== 'object') return false
-  const named = colour as NamedColour
-  return named.name !== undefined && named.hex !== undefined && named.name.length > 0 && isHex(named.hex)
-}
-
 function toTriple(colour: AnyColour): ColourTriple {
-  if (isRGB(colour)) {
-    return [colour.r, colour.g, colour.b]
-  } else if (isHSL(colour)) {
-    return [colour.h, colour.s, colour.l]
-  } else if (isHSB(colour)) {
-    return [colour.h, colour.s, colour.b]
-  } else if (isCMYK(colour)) {
+  if (isCMYK(colour)) {
     throw new Error('cannot convert CMYK colour to three-element vector')
   } else if (isHex(colour)) {
     return toTriple(toRGB(colour))
+  } else if (isHSB(colour)) {
+    return [colour.h, colour.s, colour.b]
+  } else if (isHSL(colour)) {
+    return [colour.h, colour.s, colour.l]
   } else if (isKeyword(colour)) {
     throw new Error('cannot convert keyword colour to vector')
   } else if (isNamed(colour)) {
     throw new Error('cannot convert named colour to vector')
+  } else if (isRGB(colour)) {
+    return [colour.r, colour.g, colour.b]
+  } else if (isYIQ(colour)) {
+    return [colour.y, colour.i, colour.q]
   }
   throw new Error('invalid colour type')
 }
 
 function toQuad(colour: AnyColour): ColourQuad {
-  if (isRGB(colour)) {
-    return [colour.r, colour.g, colour.b, colour.a !== undefined ? colour.a : 100]
-  } else if (isHSL(colour)) {
-    return [colour.h, colour.s, colour.l, colour.a !== undefined ? colour.a : 100]
-  } else if (isHSB(colour)) {
-    return [colour.h, colour.s, colour.b, colour.a !== undefined ? colour.a : 100]
-  } else if (isCMYK(colour)) {
+  if (isCMYK(colour)) {
     return [colour.c, colour.m, colour.y, colour.k]
   } else if (isHex(colour)) {
     return toQuad(toRGB(colour))
+  } else if (isHSB(colour)) {
+    return [colour.h, colour.s, colour.b, colour.a !== undefined ? colour.a : 100]
+  } else if (isHSL(colour)) {
+    return [colour.h, colour.s, colour.l, colour.a !== undefined ? colour.a : 100]
   } else if (isKeyword(colour)) {
     throw new Error('cannot convert keyword colour to vector')
   } else if (isNamed(colour)) {
     throw new Error('cannot convert named colour to vector')
+  } else if (isRGB(colour)) {
+    return [colour.r, colour.g, colour.b, colour.a !== undefined ? colour.a : 100]
+  } else if (isYIQ(colour)) {
+    return [colour.y, colour.i, colour.q, colour.a !== undefined ? colour.a : 100]
   }
   throw new Error('invalid colour type')
 }
@@ -118,162 +81,111 @@ function asRGB(colour: ColourTriple): RGBColour {
   return { r: colour[0], g: colour[1], b: colour[2] }
 }
 
-function getHexAlpha(colour: HexColour): number | undefined {
-  if (colour.length !== 9) {
-    return undefined
-  }
-  return (parseInt(colour.slice(-2), 16) / 255) * 100
-}
-
-function getKeywordAlpha(_: KeywordColour): number | undefined {
-  return undefined
-}
-
-function getNamedAlpha(colour: NamedColour): number | undefined {
-  return getHexAlpha(colour.hex)
-}
-
-export function getAlpha(colour: AnyColour): number | undefined {
-  return visitColour<number | undefined>(colour, {
-    cmyk: (c) => c.a,
-    hex: (c) => getHexAlpha(c),
-    hsb: (c) => c.a,
-    hsl: (c) => c.a,
-    keyword: (_) => undefined,
-    named: (c) => getNamedAlpha(c),
-    rgb: (c) => c.a,
-  })
-}
-
-function cmykWithAlpha(colour: CMYKColour, alpha: number | undefined): CMYKColour {
-  return {
-    ...colour,
-    a: alpha,
-  }
-}
-
-function hexWithAlpha(colour: HexColour, alpha: number | undefined): HexColour {
-  const hexWithoutAlpha = colour.slice(1, 7)
-  if (alpha === undefined) return asHex(hexWithoutAlpha)
-  const alphaString = Math.round((alpha * 255) / 100).toString(16)
-  return asHex(`${hexWithoutAlpha}${alphaString}`)
-}
-
-function hsbWithAlpha(colour: HSBColour, alpha: number | undefined): HSBColour {
-  return {
-    ...colour,
-    a: alpha,
-  }
-}
-
-function hslWithAlpha(colour: HSLColour, alpha: number | undefined): HSLColour {
-  return {
-    ...colour,
-    a: alpha,
-  }
-}
-
-function rgbWithAlpha(colour: RGBColour, alpha: number | undefined): RGBColour {
-  return {
-    ...colour,
-    a: alpha,
-  }
-}
-
-function keywordWithAlpha(colour: KeywordColour, alpha: number | undefined): KeywordColour | HexColour {
-  if (alpha === undefined) return colour
-  return hexWithAlpha(toHex(colour), alpha) // cannot specify alpha for a named colour
-}
-
-function namedWithAlpha(colour: NamedColour, alpha: number | undefined): NamedColour {
-  return {
-    name: colour.name,
-    hex: hexWithAlpha(colour.hex, alpha),
-  }
-}
-
-export function withAlpha(colour: AnyColour, alpha?: number): AnyColour {
-  return visitColourOrThrow<AnyColour>(colour, {
-    cmyk: (c) => cmykWithAlpha(c, alpha),
-    hex: (c) => hexWithAlpha(c, alpha),
-    hsb: (c) => hsbWithAlpha(c, alpha),
-    hsl: (c) => hslWithAlpha(c, alpha),
-    keyword: (c) => keywordWithAlpha(c, alpha),
-    named: (c) => namedWithAlpha(c, alpha),
-    rgb: (c) => rgbWithAlpha(c, alpha),
-  })
+function conv<I, O extends ColourTriple | ColourQuad | string, C extends AnyColour>(
+  colour: AnyColour,
+  inVal: I,
+  convert: (i: I) => O,
+  asOut: (o: O) => C
+): C {
+  const newColour = asOut(convert(inVal))
+  return withAlpha(newColour, getAlpha(colour))
 }
 
 export function toCMYK(colour: AnyColour): CMYKColour {
   return visitColourOrThrow<CMYKColour>(colour, {
     cmyk: (c) => c,
-    hex: (c) => cmykWithAlpha(asCMYK(convert.hex.cmyk(c.slice(1))), getHexAlpha(c)),
-    hsb: (c) => cmykWithAlpha(asCMYK(convert.hsv.cmyk(toTriple(c))), c.a),
-    hsl: (c) => cmykWithAlpha(asCMYK(convert.hsl.cmyk(toTriple(c))), c.a),
-    keyword: (c) => cmykWithAlpha(asCMYK(convert.keyword.cmyk(c as any)), getKeywordAlpha(c)),
-    named: (c) => cmykWithAlpha(asCMYK(convert.hex.cmyk(c.hex.slice(1))), getNamedAlpha(c)),
-    rgb: (c) => cmykWithAlpha(asCMYK(convert.rgb.cmyk(toTriple(c))), c.a),
+    hex: (c) => conv(c, c.slice(1), convert.hex.cmyk, asCMYK),
+    hsb: (c) => conv(c, toTriple(c), convert.hsv.cmyk, asCMYK),
+    hsl: (c) => conv(c, toTriple(c), convert.hsl.cmyk, asCMYK),
+    keyword: (c) => conv(c, c as any, convert.keyword.cmyk, asCMYK),
+    named: (c) => conv(c, c.hex.slice(1), convert.hex.cmyk, asCMYK),
+    rgb: (c) => conv(c, toTriple(c), convert.rgb.cmyk as (r: RGB) => ColourQuad, asCMYK),
+    yiq: (c) => conv(c, toTriple(yiqToRGB(c)), convert.rgb.cmyk as (r: RGB) => ColourQuad, asCMYK),
   })
 }
 
 export function toHex(colour: AnyColour): HexColour {
   return visitColourOrThrow<HexColour>(colour, {
-    cmyk: (c) => hexWithAlpha(asHex(convert.cmyk.hex(toQuad(c))), c.a),
+    cmyk: (c) => conv(c, toQuad(c), convert.cmyk.hex, asHex),
     hex: (c) => c,
-    hsb: (c) => hexWithAlpha(asHex(convert.hsv.hex(toTriple(c))), c.a),
-    hsl: (c) => hexWithAlpha(asHex(convert.hsl.hex(toTriple(c))), c.a),
-    keyword: (c) => hexWithAlpha(asHex(convert.keyword.hex(c as any)), getKeywordAlpha(c)),
+    hsb: (c) => conv(c, toTriple(c), convert.hsv.hex, asHex),
+    hsl: (c) => conv(c, toTriple(c), convert.hsl.hex, asHex),
+    keyword: (c) => conv(c, c as any, convert.keyword.hex, asHex),
     named: (c) => c.hex,
-    rgb: (c) => hexWithAlpha(asHex(convert.rgb.hex(toTriple(c))), c.a),
+    rgb: (c) => conv(c, toTriple(c), convert.rgb.hex as (r: RGB) => string, asHex),
+    yiq: (c) => conv(c, toTriple(yiqToRGB(c)), convert.rgb.hex as (r: RGB) => string, asHex),
   })
 }
 
 export function toHSB(colour: AnyColour): HSBColour {
   return visitColourOrThrow<HSBColour>(colour, {
-    cmyk: (c) => hsbWithAlpha(asHSB(convert.cmyk.hsv(toQuad(c))), c.a),
-    hex: (c) => hsbWithAlpha(asHSB(convert.hex.hsv(c.slice(1))), getHexAlpha(c)),
+    cmyk: (c) => conv(c, toQuad(c), convert.cmyk.hsv, asHSB),
+    hex: (c) => conv(c, c.slice(1), convert.hex.hsv, asHSB),
     hsb: (c) => c,
-    hsl: (c) => hsbWithAlpha(asHSB(convert.hsl.hsv(toTriple(c))), c.a),
-    keyword: (c) => hsbWithAlpha(asHSB(convert.keyword.hsv(c as any)), getKeywordAlpha(c)),
-    named: (c) => hsbWithAlpha(asHSB(convert.hex.hsv(c.hex.slice(1))), getNamedAlpha(c)),
-    rgb: (c) => hsbWithAlpha(asHSB(convert.rgb.hsv(toTriple(c))), c.a),
+    hsl: (c) => conv(c, toTriple(c), convert.hsl.hsv, asHSB),
+    keyword: (c) => conv(c, c as any, convert.keyword.hsv, asHSB),
+    named: (c) => conv(c, c.hex.slice(1), convert.hex.hsv, asHSB),
+    rgb: (c) => conv(c, toTriple(c), convert.rgb.hsv as (r: RGB) => ColourTriple, asHSB),
+    yiq: (c) => conv(c, toTriple(yiqToRGB(c)), convert.rgb.hsv as (r: RGB) => ColourTriple, asHSB),
   })
 }
 
 export function toHSL(colour: AnyColour): HSLColour {
   return visitColourOrThrow<HSLColour>(colour, {
-    cmyk: (c) => hslWithAlpha(asHSL(convert.cmyk.hsl(toQuad(c))), c.a),
-    hex: (c) => hslWithAlpha(asHSL(convert.hex.hsl(c.slice(1))), getHexAlpha(c)),
-    hsb: (c) => hslWithAlpha(asHSL(convert.hsv.hsl(toTriple(c))), c.a),
+    cmyk: (c) => conv(c, toQuad(c), convert.cmyk.hsl, asHSL),
+    hex: (c) => conv(c, c.slice(1), convert.hex.hsl, asHSL),
+    hsb: (c) => conv(c, toTriple(c), convert.hsv.hsl, asHSL),
     hsl: (c) => c,
-    keyword: (c) => hslWithAlpha(asHSL(convert.keyword.hsl(c as any)), getKeywordAlpha(c)),
-    named: (c) => hslWithAlpha(asHSL(convert.hex.hsl(c.hex.slice(1))), getNamedAlpha(c)),
-    rgb: (c) => hslWithAlpha(asHSL(convert.rgb.hsl(toTriple(c))), c.a),
+    keyword: (c) => conv(c, c as any, convert.keyword.hsl, asHSL),
+    named: (c) => conv(c, c.hex.slice(1), convert.hex.hsl, asHSL),
+    rgb: (c) => conv(c, toTriple(c), convert.rgb.hsl as (r: RGB) => ColourTriple, asHSL),
+    yiq: (c) => conv(c, toTriple(yiqToRGB(c)), convert.rgb.hsl as (r: RGB) => ColourTriple, asHSL),
   })
 }
 
 export function toKeyword(colour: AnyColour): KeywordColour {
   return visitColourOrThrow<KeywordColour>(colour, {
-    cmyk: (c) => keywordWithAlpha(asKeyword(convert.cmyk.keyword(toQuad(c))), c.a),
-    hex: (c) => keywordWithAlpha(asKeyword(convert.hex.keyword(c.slice(1))), getHexAlpha(c)),
-    hsb: (c) => keywordWithAlpha(asKeyword(convert.hsv.keyword(toTriple(c))), c.a),
-    hsl: (c) => keywordWithAlpha(asKeyword(convert.hsl.keyword(toTriple(c))), c.a),
+    cmyk: (c) => conv(c, toQuad(c), convert.cmyk.keyword, asKeyword),
+    hex: (c) => conv(c, c.slice(1), convert.hex.keyword, asKeyword),
+    hsb: (c) => conv(c, toTriple(c), convert.hsv.keyword, asKeyword),
+    hsl: (c) => conv(c, toTriple(c), convert.hsl.keyword, asKeyword),
     keyword: (c) => c,
-    named: (c) => keywordWithAlpha(asKeyword(convert.hex.keyword(c.hex.slice(1))), getNamedAlpha(c)),
-    rgb: (c) => keywordWithAlpha(asKeyword(convert.rgb.keyword(toTriple(c))), c.a),
+    named: (c) => conv(c, c.hex.slice(1), convert.hex.keyword, asKeyword),
+    rgb: (c) => conv(c, toTriple(c), convert.rgb.keyword as (r: RGB) => string, asKeyword),
+    yiq: (c) => conv(c, toTriple(yiqToRGB(c)), convert.rgb.keyword as (r: RGB) => string, asKeyword),
   })
+}
+
+export function toNamed(colour: AnyColour, name: string): NamedColour {
+  if (isNamed(colour)) return colour
+  return {
+    name,
+    hex: toHex(colour),
+  }
+}
+
+export async function toNamedLookup(colour: AnyColour, lookup: ColourNameLookup): Promise<NamedColour> {
+  const hex = toHex(colour)
+  const name = await lookup(hex)
+  return { name, hex }
 }
 
 export function toRGB(colour: AnyColour): RGBColour {
   return visitColourOrThrow<RGBColour>(colour, {
-    cmyk: (c) => rgbWithAlpha(asRGB(convert.cmyk.rgb(toQuad(c))), c.a),
-    hex: (c) => rgbWithAlpha(asRGB(convert.hex.rgb(c.slice(1))), getHexAlpha(c)),
-    hsb: (c) => rgbWithAlpha(asRGB(convert.hsv.rgb(toTriple(c))), c.a),
-    hsl: (c) => rgbWithAlpha(asRGB(convert.hsl.rgb(toTriple(c))), c.a),
-    keyword: (c) => rgbWithAlpha(asRGB(convert.keyword.rgb(c as any)), getKeywordAlpha(c)),
-    named: (c) => rgbWithAlpha(asRGB(convert.hex.rgb(c.hex.slice(1))), getNamedAlpha(c)),
+    cmyk: (c) => conv(c, toQuad(c), convert.cmyk.rgb, asRGB),
+    hex: (c) => conv(c, c.slice(1), convert.hex.rgb, asRGB),
+    hsb: (c) => conv(c, toTriple(c), convert.hsv.rgb, asRGB),
+    hsl: (c) => conv(c, toTriple(c), convert.hsl.rgb, asRGB),
+    keyword: (c) => conv(c, c as any, convert.keyword.rgb, asRGB),
+    named: (c) => conv(c, c.hex.slice(1), convert.hex.rgb, asRGB),
     rgb: (c) => c,
+    yiq: (c) => yiqToRGB(c),
   })
+}
+
+export function toYIQ(colour: AnyColour): YIQColour {
+  if (isYIQ(colour)) return colour
+  return rgbToYIQ(toRGB(colour))
 }
 
 export function toCssColour(colour: AnyColour): string {
@@ -295,16 +207,27 @@ export function toCssColour(colour: AnyColour): string {
     keyword: (c) => c,
     named: (c) => c.hex,
     rgb: (c) => toHex(c),
+    yiq: (c) => toHex(c),
   })
 }
 
-export function mostContrasting(baseColour: AnyColour, ...otherColours: AnyColour[]): AnyColour {
-  // TODO: this is a hack; need a better algorithm
-  const baseBrightness = toHSB(baseColour).b
-  const diffBrightness = otherColours
-    .map((c) => toHSB(c).b - baseBrightness)
-    .map((diff) => (diff > 0 ? diff : diff / -2))
-  const maxDiffBrightnessIdx = diffBrightness.indexOf(Math.max(...diffBrightness))
-  if (maxDiffBrightnessIdx < 0 || maxDiffBrightnessIdx >= otherColours.length) throw new Error('index out of bounds')
-  return otherColours[maxDiffBrightnessIdx]
+/**
+ * Choose the most visually contrasting colour compared with the base colour.
+ *
+ * This algorithm uses the relative luminance values of a color in the YIQ colour space
+ * to determine its contrast against another colour.
+ *
+ * If one or fewer options are provided, 'white' and 'black' are included as options.
+ *
+ * @param baseColour      the colour against which to contrast
+ * @param colourOptions   the colours from which to choose the most contrasting option
+ */
+export function mostContrasting(baseColour: AnyColour, ...colourOptions: AnyColour[]): AnyColour {
+  const otherColours = colourOptions.length <= 1 ? [...colourOptions, 'white', 'black'] : [...colourOptions]
+  // N.B. this function ignores alpha values when choosing the most contrasting colour
+  const baseY = toYIQ(baseColour).y
+  const diffs = otherColours.map((c) => Math.abs(toYIQ(c).y - baseY))
+  const maxDiffIdx = diffs.indexOf(Math.max(...diffs))
+  if (maxDiffIdx < 0 || maxDiffIdx >= otherColours.length) throw new Error('index out of bounds; should never happen')
+  return otherColours[maxDiffIdx]
 }

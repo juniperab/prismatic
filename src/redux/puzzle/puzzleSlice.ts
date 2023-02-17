@@ -2,8 +2,9 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../store'
 import { Hint } from '../../lib/puzzle/hint'
 import { PuzzleId } from '../../lib/puzzle/puzzle'
-import { AnyColour, NamedColour } from '../../lib/colour/colours'
+import { AnyColour } from '../../lib/colour/colours'
 import { configSlice } from '../config/configSlice'
+import { NamedColour } from '../../lib/colour/colourNamed'
 
 export interface PuzzleState {
   answer?: NamedColour

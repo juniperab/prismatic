@@ -1,6 +1,6 @@
 import { lookupColourName } from './colorPizzaClient'
-import { HexColour } from '../colour/colours'
 import { toHex } from '../colour/colourConversions'
+import { HexColour } from '../colour/colourHex'
 
 describe('color pizza client', () => {
   jest.setTimeout(10000)

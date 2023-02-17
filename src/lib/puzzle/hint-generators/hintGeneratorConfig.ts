@@ -1,4 +1,3 @@
-
 export interface HintGeneratorConfigBase {
   precision: number
 }

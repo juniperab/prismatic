@@ -11,9 +11,10 @@ import {
   selectPuzzleState,
   setCurrentColour,
 } from './puzzleSlice'
-import { AnyColour, NamedColour } from '../../lib/colour/colours'
+import { AnyColour } from '../../lib/colour/colours'
 import { toCMYK, toHSB, toRGB } from '../../lib/colour/colourConversions'
 import { selectConfigState } from '../config/configSlice'
+import { NamedColour } from '../../lib/colour/colourNamed'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function* evaluateGuess(action: MakeGuessAction) {

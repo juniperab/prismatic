@@ -1,8 +1,8 @@
-import { toCssColour } from "./colourConversions";
+import { toCssColour } from './colourConversions'
 
 describe('toCssColour', () => {
   it('formats an HSBColour as hsl', () => {
-    const cssColour = toCssColour({ h: 50, s: 50, b: 50})
+    const cssColour = toCssColour({ h: 50, s: 50, b: 50 })
     expect(cssColour).toEqual('hsl(50.0, 33.0%, 38.0%)')
   })
 

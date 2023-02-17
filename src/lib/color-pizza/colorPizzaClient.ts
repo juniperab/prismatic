@@ -1,7 +1,9 @@
-import { AnyColour, NamedColour, RGBColour } from '../colour/colours'
-import { toHex, withAlpha } from '../colour/colourConversions'
+import { AnyColour, withAlpha } from '../colour/colours'
+import { toHex } from '../colour/colourConversions'
 import { isFetchError, typedFetch } from '../fetch/typedFetch'
-import { memoize } from "lodash";
+import { memoize } from 'lodash'
+import { RGBColour } from '../colour/colourRGB'
+import { NamedColour } from '../colour/colourNamed'
 
 const colorPizzaBaseUri = 'https://api.color.pizza/v1'
 

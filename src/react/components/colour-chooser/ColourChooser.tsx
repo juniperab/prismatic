@@ -17,7 +17,8 @@ import { defaultTo } from 'lodash'
 import { HammerOnChangeCallback, HammerOnResizeCallback, HammerOnTapCallback } from '../hammer-area/hammerAreaTypes'
 import { useTheme } from 'styled-components'
 import { Theme } from '../../../theme/theme'
-import { AnyColour, HSBColour } from '../../../lib/colour/colours'
+import { AnyColour } from '../../../lib/colour/colours'
+import { HSBColour } from '../../../lib/colour/colourHSB'
 
 export type NewColourCallback = (colour: HSBColour) => void
 

@@ -1,8 +1,9 @@
 import { enumKeys } from '../lib/util/enumKeys'
 import { ThemeName } from './theme'
 import { getTheme } from './themeRegistry'
-import { isHex, isKeyword } from '../lib/colour/colourConversions'
 import { get } from 'lodash'
+import { isHex } from '../lib/colour/colourHex'
+import { isKeyword } from '../lib/colour/colourKeyword'
 
 describe('theme colours', () => {
   enumKeys(ThemeName)
