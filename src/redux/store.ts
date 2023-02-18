@@ -13,7 +13,7 @@ import { appSaga } from './app/appSaga'
 const logger = createLogger({
   level: {
     prevState: false,
-    action: 'info',
+    action: false, // 'info',
     nextState: false,
   },
 })

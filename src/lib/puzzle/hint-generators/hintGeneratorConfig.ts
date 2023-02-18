@@ -3,38 +3,34 @@ export interface HintGeneratorConfigBase {
 }
 
 export interface HintGeneratorConfigCMYK extends HintGeneratorConfigBase {
+  blackCutoff: number
+  blackRange: number
   cyanCutoff: number
   cyanRange: number
   magentaCutoff: number
   magentaRange: number
   yellowCutoff: number
   yellowRange: number
-  blackCutoff: number
-  blackRange: number
 }
 
 export interface HintGeneratorConfigHSB extends HintGeneratorConfigBase {
-  hueCutoff: number
-  hueRange: number
-
-  saturationCutoff: number
-  saturationPrecisionMultiplier: number
-  saturationPrecisionThreshold: number
-  saturationRange: number
-  saturationVisibilityThreshold: number
   brightnessCutoff: number
-  brightnessPrecisionMultiplier: number
-  brightnessPrecisionThreshold: number
-  brightnessRange: number
+  brightnessVisibilityFloor: number
+  brightnessRange?: number
+  hueCutoff: number
+  hueRange?: number
+  saturationCutoff: number
+  saturationVisibilityFloor: number
+  saturationRange?: number
 }
 
 export interface HintGeneratorConfigRGB extends HintGeneratorConfigBase {
-  redCutoff: number
-  redRange: number
-  greenCutoff: number
-  greenRange: number
   blueCutoff: number
   blueRange: number
+  greenCutoff: number
+  greenRange: number
+  redCutoff: number
+  redRange: number
 }
 
 export interface HintGeneratorConfig {

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../store'
-import { Hint } from '../../lib/puzzle/hint'
+import { Hint, HintItem, isHSBHint } from '../../lib/puzzle/hint'
 import { PuzzleId } from '../../lib/puzzle/puzzle'
 import { AnyColour } from '../../lib/colour/colours'
 import { configSlice } from '../config/configSlice'
@@ -41,6 +41,15 @@ export const puzzleSlice = createSlice({
       state.answer = action.payload
     },
     receiveHint: (state, action: ReceiveHintAction) => {
+      if (isHSBHint(action.payload)) {
+        const hint = action.payload
+        function fmtHintItem(hi?: HintItem): string {
+          return (hi?.match === true ? '==' : hi?.error.toFixed(2)) ?? '__'
+        }
+        console.log(
+          `H: ${fmtHintItem(hint.hue)}, S: ${fmtHintItem(hint.saturation)}, B: ${fmtHintItem(hint.brightness)}`
+        )
+      }
       state.hints.push(action.payload)
     },
     reinitializePuzzle: (state, action: PayloadAction<PuzzleId>) => {

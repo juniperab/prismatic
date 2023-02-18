@@ -40,7 +40,6 @@ export function getPuzzleId(puzzle: Puzzle): PuzzleId {
 export async function loadPuzzleById(id: PuzzleId): Promise<Puzzle> {
   // theoretically, this function could load a stored puzzle definition from a database
   // for now, it will parse structured data stored in the PuzzleId string
-  console.log(id)
   if (id.startsWith('0')) {
     const hex: HexColour = '#' + utf8.decode(base64.decode(id.slice(1)))
     const answer = await toNamed(hex, lookupColourPizzaName)

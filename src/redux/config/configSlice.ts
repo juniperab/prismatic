@@ -15,7 +15,7 @@ export const guessGridShapeLandscape: [number, number] = [9, 1]
 
 const initialState: ConfigState = {
   guessGridShape: guessGridShapePortrait,
-  hintStyle: HintStyle.EASY,
+  hintStyle: HintStyle.HARD,
   hintType: HintType.HSB,
   startingColour: { h: 120, s: 50, b: 50 },
 }
